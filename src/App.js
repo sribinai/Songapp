@@ -1,5 +1,7 @@
 import "./App.css";
+import React from 'react';
 import { Container } from "react-bootstrap";
+import Head from './components/Head';
 import FooterComponent from "./components/Footer/FooterComponent";
 
 function App() {
@@ -12,6 +14,7 @@ function App() {
         minHeight: "100vh",
       }}
     >
+      <Head/>
       <FooterComponent />
     </Container>
   );
