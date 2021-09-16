@@ -1,7 +1,7 @@
 import "./App.css";
-import React from 'react';
+import React from "react";
 import { Container } from "react-bootstrap";
-import Head from './components/Head';
+import Head from "./components/Header/Head";
 import FooterComponent from "./components/Footer/FooterComponent";
 
 function App() {
@@ -14,7 +14,11 @@ function App() {
         minHeight: "100vh",
       }}
     >
-      <Head/>
+      <Head
+        title='Play My PlayList'
+        headerText='A multiplayer Social Game to play along with your friends in a private
+        room.'
+      />
       <FooterComponent />
     </Container>
   );

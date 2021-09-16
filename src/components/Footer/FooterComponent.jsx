@@ -12,7 +12,7 @@ const FooterComponent = () => {
         padding: "0",
         width: "100%",
         position: "relative",
-        bottom: "20px",
+        bottom: "0",
         // backgroundColor: "red",
 
         display: "flex",
