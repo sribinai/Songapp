@@ -1,10 +1,19 @@
 import "./App.css";
+import { Container } from "react-bootstrap";
+import FooterComponent from "./components/Footer/FooterComponent";
 
 function App() {
   return (
-    <div className='app'>
-      <h1>Hello App</h1>
-    </div>
+    <Container
+      fluid
+      style={{
+        margin: "0",
+        padding: "0",
+        minHeight: "100vh",
+      }}
+    >
+      <FooterComponent />
+    </Container>
   );
 }
 
