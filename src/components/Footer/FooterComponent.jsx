@@ -13,7 +13,7 @@ const FooterComponent = () => {
           width: "350px",
           backgroundColor: "rgb(177, 37, 202)",
           minHeight: "60px",
-          marginTop: "30px",
+          marginTop: "90px",
           marginBottom: "10px",
           // border: "1px solid black",
           borderRadius: "10px",
@@ -28,17 +28,7 @@ const FooterComponent = () => {
       >
         How to Play&nbsp;&nbsp;&#10233;
       </Container>
-      <Image
-        className='footer-image'
-        src={waves}
-        alt='music waves'
-        style={{
-          margin: "0",
-          padding: "0",
-          height: "100px",
-          width: "100%",
-        }}
-      />
+      <Image className='footer-image' src={waves} alt='music waves' />
     </Container>
   );
 };
