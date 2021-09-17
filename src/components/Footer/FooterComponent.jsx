@@ -13,7 +13,7 @@ const FooterComponent = () => {
           width: "350px",
           backgroundColor: "rgb(177, 37, 202)",
           minHeight: "60px",
-          marginTop: "90px",
+          marginTop: "20px",
           marginBottom: "10px",
           // border: "1px solid black",
           borderRadius: "10px",

@@ -1,30 +1,28 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
 
-function Card1() {
+function CardComponent({ cardHeading }) {
   return (
     <Card
       style={{
-        width: "23rem",
-        height: "300px",
+        width: "450px",
+        minHeight: "300px",
         color: "white",
+        boxSizing: "border-box",
+        marginBottom: "10px",
         backgroundColor: "#29539b",
         backgroundImage: "linear-gradient(315deg, #29539b 0%, #1e3b70 74%)",
-        position: "relative",
-        left: "210px",
-        top: "30px",
       }}
     >
       <Card.Body>
-        <Card.Title style={{ fontSize: "40px", fontWeight: "bold" }}>
-          Create Room
+        <Card.Title style={{ fontSize: "36px", fontWeight: "bold" }}>
+          {cardHeading}
         </Card.Title>
         <Card.Text
           style={{
             fontFamily: "monospace",
             paddingTop: "10%",
-            fontSize: "30px",
+            fontSize: "26px",
           }}
         >
           Play along with your friends
@@ -35,4 +33,4 @@ function Card1() {
   );
 }
 
-export default Card1;
+export default CardComponent;
