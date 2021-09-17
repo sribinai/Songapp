@@ -3,24 +3,11 @@ import React from "react";
 import waves from "../../images/waves.png";
 import { Container, Image } from "react-bootstrap";
 
+import "./footer.styles.css";
+
 const FooterComponent = () => {
   return (
-    <Container
-      fluid
-      style={{
-        margin: "0",
-        padding: "0",
-        width: "100%",
-        position: "relative",
-        bottom: "0",
-        // backgroundColor: "red",
-
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <Container className='footer-div' fluid>
       <Container
         style={{
           width: "350px",
@@ -42,6 +29,7 @@ const FooterComponent = () => {
         How to Play&nbsp;&nbsp;&#10233;
       </Container>
       <Image
+        className='footer-image'
         src={waves}
         alt='music waves'
         style={{
@@ -49,8 +37,6 @@ const FooterComponent = () => {
           padding: "0",
           height: "100px",
           width: "100%",
-          //   position: "fixed",
-          //   bottom: "20px",
         }}
       />
     </Container>
