@@ -26,7 +26,7 @@ const FooterComponent = () => {
           width: "350px",
           backgroundColor: "rgb(177, 37, 202)",
           minHeight: "60px",
-          marginTop: "30px",
+          marginTop: "90px",
           marginBottom: "10px",
           // border: "1px solid black",
           borderRadius: "10px",
@@ -49,8 +49,8 @@ const FooterComponent = () => {
           padding: "0",
           height: "100px",
           width: "100%",
-          //   position: "fixed",
-          //   bottom: "20px",
+          position: "fixed",
+          bottom: "20px"
         }}
       />
     </Container>
