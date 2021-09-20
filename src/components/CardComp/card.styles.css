@@ -1,10 +1,12 @@
 .card-container {
-  width: 450px;
+  width: 80%;
+  /* width: 450px; */
   min-height: 300px;
   color: white;
   box-sizing: border-box;
   margin-top: 30px;
   margin-bottom: 10px;
+  padding-bottom: 50px;
   background-color: #29539b;
   background: linear-gradient(315deg, #29539b 0%, #1e3b70 74%);
   position: relative;
@@ -15,7 +17,7 @@
   font-weight: bold;
 }
 .card-text {
-  margin-top: 60px;
+  margin-top: 10%;
   font-family: monospace;
   font-size: 26px;
 }

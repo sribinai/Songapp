@@ -6,9 +6,7 @@ import "./head.styles.css";
 function Head({ title, headerText }) {
   return (
     <Container className='header'>
-      <Row>
-        <h1>{title}</h1>
-      </Row>
+      <Row className='heading-text'>{title}</Row>
       <Row className='hr-line' />
       <Row className='heading-content'>{headerText}</Row>
     </Container>

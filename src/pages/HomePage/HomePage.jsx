@@ -11,13 +11,15 @@ const HomePage = () => {
     <Container className='homepage-container' fluid>
       <Container className='homepage-main-div'>
         <Row>
-          <Head
-            title='Play My PlayList'
-            headerText='A multiplayer Social Game to play along with your friends in a private
-        room.'
-          />
+          <Col>
+            <Head
+              title='Play My PlayList'
+              headerText='A multiplayer Social Game to play along with your friends in a private
+          room.'
+            />
+          </Col>
         </Row>
-        <Row className='card-main-div'>
+        <Row xs={1} lg={2} className='card-main-div'>
           <Col className='card-div'>
             <CardComponent cardHeading='Create Room' />
           </Col>
