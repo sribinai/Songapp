@@ -1,0 +1,122 @@
+[33mcommit e72ba8a85ca2b990d6ef82d3952df55194da6c6c[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Mon Sep 20 20:11:48 2021 +0530
+
+    Changes in createRoom page
+
+[33mcommit fe93d4d484c2a2488fe8d0dadc73c0ce01cd1d10[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Mon Sep 20 18:17:29 2021 +0530
+
+    Added createRoom page
+
+[33mcommit 16a8fd2d1a028f9faf62e022f0b46b5483821a26[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Mon Sep 20 14:49:09 2021 +0530
+
+    Styling changes with responsiveness
+
+[33mcommit a79410b8be42ef8764c2031277022426972d69ca[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Mon Sep 20 13:30:12 2021 +0530
+
+    changes in README
+
+[33mcommit eafefdd9b3207efbfc0653c82648a078c4e6806a[m
+Merge: ebc6b4c 7934513
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Mon Sep 20 13:28:52 2021 +0530
+
+    Merge branch 'master' of https://github.com/godsy07/play-my-playlist-react-app
+
+[33mcommit ebc6b4cf2a265ab9c67cb04154b7686c5db57d71[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Mon Sep 20 13:27:58 2021 +0530
+
+    refactoring stylesheets and added react router dom for routing purpose
+
+[33mcommit 7934513060dc2c77dca065aefd7b19dde07b7c37[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Merge: 8b5f0d5 54a8a7f
+Author: Godson Emmanuel Burh <godsonemmanuel07@gmail.com>
+Date:   Fri Sep 17 15:19:21 2021 +0530
+
+    Merge pull request #2 from sribinai/master
+    
+    Update README.md
+
+[33mcommit 54a8a7f012097f65094b3e3e85797d8cdcc239aa[m
+Author: sribinai <86002373+sribinai@users.noreply.github.com>
+Date:   Fri Sep 17 15:11:00 2021 +0530
+
+    Update README.md
+
+[33mcommit 8b5f0d508d0c1007e01d65ec131b0594abfe0440[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Fri Sep 17 14:49:33 2021 +0530
+
+    Added changes to Card component
+
+[33mcommit 27a2489a1463218295c5789f73a9dd6d5493ca57[m
+Merge: 1bf6eed c1e5ab6
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Fri Sep 17 13:23:53 2021 +0530
+
+    Fixing push errors
+
+[33mcommit 1bf6eed900f9eb796fa16317decdc974747689e6[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Fri Sep 17 13:14:00 2021 +0530
+
+    styling changes in footer
+
+[33mcommit c1e5ab6dec8e865d754a98ee5e8de5e6e83747f3[m
+Author: Ramyaa S <ramyaasuresh01@gmail.com>
+Date:   Fri Sep 17 13:01:08 2021 +0530
+
+    Added Card Components
+
+[33mcommit e2abfc7c05d074f8c9891a94e03505829e2e2d92[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Thu Sep 16 15:59:12 2021 +0530
+
+    Modifications in header component styling
+
+[33mcommit ee5b448c6f51e01175e7ea0609283c4ca0596def[m
+Merge: b011357 87cf7ca
+Author: Godson Emmanuel Burh <godsonemmanuel07@gmail.com>
+Date:   Thu Sep 16 12:42:40 2021 +0530
+
+    Merge pull request #1 from sribinai/master
+    
+    added heading components
+
+[33mcommit 87cf7cafba97087268ff73b68f604aae84413456[m
+Merge: fb9bdb4 b011357
+Author: Godson Emmanuel Burh <godsonemmanuel07@gmail.com>
+Date:   Thu Sep 16 12:42:29 2021 +0530
+
+    Merge branch 'master' into master
+
+[33mcommit fb9bdb40b36c5f030c12575719ed7b35e73d8cab[m
+Author: sribinai <ammumatambi@gmail.com>
+Date:   Thu Sep 16 11:28:59 2021 +0530
+
+    added heading components
+
+[33mcommit b011357a55bfcfee330c29ab05cf6f3f6921dffc[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Thu Sep 16 08:22:12 2021 +0530
+
+    Added Footer component
+
+[33mcommit 73fe25fbcf091a576ba4e0da535426ccc356b148[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Wed Sep 15 17:31:56 2021 +0530
+
+    Removed unnecessary files and modified README file
+
+[33mcommit 961f0edd931fa53a8baba629d7836e2b41ac28de[m
+Author: unknown <godsonemmanuel07@gmail.com>
+Date:   Wed Sep 15 16:58:46 2021 +0530
+
+    First commit
