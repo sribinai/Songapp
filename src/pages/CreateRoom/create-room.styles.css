@@ -1,4 +1,4 @@
-.join-room-div {
+.create-room-div {
   margin: 30px 40px;
   padding: 10px;
   box-shadow: 0 2px 7px rgb(100, 100, 100, 0.7),
@@ -10,4 +10,11 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+
+  display: flex;
+}
+
+.create-room-inputs {
+  display: flex;
+  flex-direction: column;
 }
