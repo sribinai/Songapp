@@ -1,10 +1,9 @@
 .footer-div {
   margin: 0;
   padding: 0;
+  padding-top: 20px;
   width: 100%;
-  position: relative;
   bottom: 0;
-  /* background-color: red; */
 
   display: flex;
   flex-direction: column;
@@ -12,8 +11,34 @@
   align-items: center;
 }
 
+.footer-content {
+  width: 350px;
+  /* background-color: rgb(12, 53, 167); */
+  background-color: rgb(177, 37, 202);
+  min-height: 60px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 2px solid #000;
+  text-shadow: 2px 2px 2px #000;
+  color: rgb(252, 251, 199);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.arrow-symbol {
+  padding-left: 10px;
+  font-size: 50px;
+  line-height: 0;
+}
+
 .footer-image {
   margin: 0;
+  margin-top: 10px;
   padding: 0;
   height: 100px;
   width: 100%;
