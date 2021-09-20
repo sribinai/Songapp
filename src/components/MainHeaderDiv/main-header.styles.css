@@ -1,0 +1,11 @@
+.main-header {
+  margin: 0;
+  padding: 10px 40px;
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(199, 197, 197);
+  font-size: 22px;
+  font-weight: 500;
+  color: rgb(28, 28, 240);
+  border-bottom: 4px solid rgb(133, 133, 133);
+}

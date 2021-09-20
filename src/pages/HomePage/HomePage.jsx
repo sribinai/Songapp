@@ -8,8 +8,8 @@ import "./homepage.styles.css";
 
 const HomePage = () => {
   return (
-    <Container className='homepage-container' fluid>
-      <Container className='homepage-main-div'>
+    <div className='main-container'>
+      <Container>
         <Row>
           <Col>
             <Head
@@ -29,7 +29,7 @@ const HomePage = () => {
         </Row>
       </Container>
       <FooterComponent />
-    </Container>
+    </div>
   );
 };
 
