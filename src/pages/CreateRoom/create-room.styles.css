@@ -1,0 +1,20 @@
+.create-room-div {
+  margin: 30px 40px;
+  padding: 10px;
+  box-shadow: 0 2px 7px rgb(100, 100, 100, 0.7),
+    5px -2px 0.4em rgb(100, 100, 100, 0.7);
+  border-radius: 5px;
+  min-height: 500px;
+  /* background-color: rgb(201, 201, 201, 0.5); */
+  background-image: url("../../images/music.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  display: flex;
+}
+
+.create-room-inputs {
+  display: flex;
+  flex-direction: column;
+}

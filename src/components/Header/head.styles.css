@@ -1,6 +1,7 @@
-.header1 {
+.header {
   /* background-color: aquamarine; */
   text-align: center;
+  margin-top: 10px;
 
   display: flex;
   flex-direction: column;
@@ -9,17 +10,29 @@
 
 }
 
+.heading-text {
+  font-size: 30px;
+  font-weight: 600;
+}
+
 .hr-line {
   background-color: blue;
-  height: 3px;
-  width: 80%;
-  border-radius: 30%;
+  height: 0.4vh;
+  width: 40vw;
   margin: 10px 0;
 }
 
 .heading-content {
-  font-size: 18px;
-  min-height: 40px;
   font-size: 20px;
+  min-height: 40px;
   font-family: cursive;
+}
+
+@media screen and (max-width: 900px) {
+  .heading-text {
+    font-size: 20px;
+  }
+  .heading-content {
+    font-size: 15px;
+  }
 }
