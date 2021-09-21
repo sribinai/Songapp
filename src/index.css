@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .main-container {
   margin: 0;
   padding: 0;
