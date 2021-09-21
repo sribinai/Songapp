@@ -1,6 +1,6 @@
 .create-room-div {
   margin: 30px 40px;
-  padding: 10px;
+  padding: 30px;
   box-shadow: 0 2px 7px rgb(100, 100, 100, 0.7),
     5px -2px 0.4em rgb(100, 100, 100, 0.7);
   border-radius: 5px;
@@ -12,6 +12,13 @@
   background-size: cover;
 
   display: flex;
+  flex-direction: column;
+}
+
+.create-room-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 .create-room-inputs {
@@ -19,4 +26,34 @@
   width: 100%;
   /* flex-direction: column; */
   justify-content: space-between;
+}
+
+.create-column {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.input-div {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.create-room-button-div {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin: 30px 0;
+}
+.create-room-button {
+  width: 250px;
+  height: 50px;
+  /* box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.7), -2px -5px 10px rgb(0, 0, 0, 0.7); */
+  /* box-shadow: 2px 2px 10px rgb(255, 255, 255, 0.7),
+    -2px -5px 10px rgb(255, 255, 255, 0.7); */
 }
