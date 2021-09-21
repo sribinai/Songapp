@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import Head from "../../components/Header/Head";
+import HeaderDiv from "../../components/Header/Header";
 import FooterComponent from "../../components/Footer/FooterComponent";
 import CardComponent from "../../components/CardComp/CardComponent";
 
@@ -12,8 +12,7 @@ const HomePage = () => {
       <Container>
         <Row>
           <Col>
-            <Head
-              title='Play My PlayList'
+            <HeaderDiv
               headerText='A multiplayer Social Game to play along with your friends in a private
           room.'
             />

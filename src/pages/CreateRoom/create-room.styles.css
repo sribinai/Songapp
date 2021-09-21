@@ -16,5 +16,7 @@
 
 .create-room-inputs {
   display: flex;
-  flex-direction: column;
+  width: 100%;
+  /* flex-direction: column; */
+  justify-content: space-between;
 }

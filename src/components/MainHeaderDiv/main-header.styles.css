@@ -3,9 +3,16 @@
   padding: 10px 40px;
   display: flex;
   justify-content: space-between;
-  background-color: rgb(199, 197, 197);
+  background-color: rgb(223, 221, 221);
+  /* background-color: rgb(199, 197, 197); */
   font-size: 22px;
   font-weight: 500;
   color: rgb(28, 28, 240);
   border-bottom: 4px solid rgb(133, 133, 133);
+}
+
+.logo-image {
+  width: 160px;
+  /* filter: drop-shadow(2px 2px 4px #f2f2fd); */
+  /* image-rendering: crisp-edges; */
 }
