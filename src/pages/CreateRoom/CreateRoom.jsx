@@ -20,23 +20,23 @@ const CreateRoom = () => {
         <div className='create-room-inputs'>
           <div className='create-column'>
             <div className='input-div'>
-              <Form.Label>Room Name:</Form.Label>
+              <Form.Label className ="title">Room Name:</Form.Label>
               <div className='text-div'>
-                <input type='text' />
-                <Button>SAVE</Button>
+                <input type='text' className="inputBox"/>
+                <Button className="small-btns">SAVE</Button>
+              </div>
+            </div>
+
+            <div className='input-div' className='passcode-div'>
+              <Form.Label className="title"> Passcode: </Form.Label>
+              <div className='text-div'>
+                <input type='text' className="inputBox" />
+                <Button className="small-btns">&#128464;</Button>
               </div>
             </div>
 
             <div className='input-div'>
-              <Form.Label> Passcode: </Form.Label>
-              <div className='text-div'>
-                <input type='text' />
-                <Button>&#128464;</Button>
-              </div>
-            </div>
-
-            <div className='input-div'>
-              <Button>GENERATE PASSCODE</Button>
+              <Button className = "gp-btn">GENERATE PASSCODE</Button>
             </div>
           </div>
           <div className='create-column'>
