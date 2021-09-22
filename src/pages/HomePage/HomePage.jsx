@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import HeaderDiv from "../../components/Header/Header";
 import FooterComponent from "../../components/Footer/FooterComponent";
-import CardComponent from "../../components/CardComp/CardComponent";
+import CardComponent from "../../components/CardComponent/CardComponent";
 
 import "./homepage.styles.css";
 
