@@ -25,8 +25,8 @@ const CreateRoom = () => {
           </Row>
         </Container>
         <Container fluid>
-          <Row>
-            <Col className='create-column'>
+          <Row xs={1} md={2}>
+            <Col>
               <div className='input-div'>
                 <h3>Room Name:</h3>
                 <div className='text-div'>
@@ -47,7 +47,7 @@ const CreateRoom = () => {
                 <Button>GENERATE PASSCODE</Button>
               </div>
             </Col>
-            <Col className='create-column'>
+            <Col>
               <Participants title='Number of Participants' />
               <Textarea title='Game Rules' />
             </Col>

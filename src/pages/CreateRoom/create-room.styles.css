@@ -15,16 +15,6 @@
   flex-direction: column;
 }
 
-.create-column {
-  width: 500px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
 .input-div {
   display: flex;
   flex-direction: column;
