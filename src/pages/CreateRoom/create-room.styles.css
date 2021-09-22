@@ -4,7 +4,7 @@
   box-shadow: 0 2px 7px rgb(100, 100, 100, 0.7),
     5px -2px 0.4em rgb(100, 100, 100, 0.7);
   border-radius: 5px;
-  height: 85vh;
+  min-height: 500px;
   /* background-color: rgb(201, 201, 201, 0.5); */
   background-image: url("../../images/music.jpg");
   background-position: center;
@@ -29,7 +29,7 @@
 }
 
 .create-column {
-  width: 40%;
+  width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,31 +42,6 @@
   display: flex;
   flex-direction: column;
   margin: 10px 0;
-}
-
-.passcode-div{
-  margin-top: 5vh;
-}
-
-.inputBox{
-  width: 30vw;
-  margin-right: 10px;
-}
-
-.title{
-  font-size: 16px;
-  font-weight: bolder;
-}
-
-.small-btns{
-  width: 60px;
-  height: 40px;
-
-}
-
-.gp-btn{
-  width: 35vw;
-  margin-top: 9vh;
 }
 
 .create-room-button-div {
