@@ -1,0 +1,15 @@
+.avatar-icon-shape {
+  position: relative;
+  background-color: rgb(200, 0, 200);
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  /* box-shadow: 2px 2px 2px black; */
+}
+.avatar-icon {
+  /* height: 120px;
+  width: 120px; */
+  /* border: 10px solid red; */
+  filter: drop-shadow(3px 0 10px #fff) drop-shadow(-2px -5px 34px #fff);
+  /* background-color: rgb(100, 10, 200); */
+}

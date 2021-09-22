@@ -9,7 +9,7 @@ import "./create-room.styles.css";
 const CreateRoom = () => {
   return (
     <div className='main-container'>
-      <MainHeaderDiv title='Join Room' />
+      <MainHeaderDiv title='Join Room' routeName='Home' />
       <div className='create-room-div'>
         <Container fluid>
           <Row sm={2} xs={1}>
@@ -17,7 +17,6 @@ const CreateRoom = () => {
               <h1>Create Room</h1>
             </Col>
             <Col className='d-flex justify-content-end'>
-              {/* <Col style={{ textAlign: "right" }}> */}
               <Button size='lg' className='create-room-button'>
                 ROOM ID: THXQL &#128464;
               </Button>

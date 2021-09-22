@@ -19,7 +19,7 @@ function CardComponent({ cardHeading }) {
             cardHeading === "Create Room"
               ? "/createRoom"
               : cardHeading === "Join Room"
-              ? "#"
+              ? "/joinRoom"
               : "#"
           }`}
         >

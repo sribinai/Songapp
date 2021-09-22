@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import CreateRoom from "./pages/CreateRoom/CreateRoom";
+import JoinRoom from "./pages/JoinRoom/JoinRoom";
 
 function App() {
   return (
@@ -12,6 +13,9 @@ function App() {
         </Route>
         <Route exact path='/createRoom'>
           <CreateRoom />
+        </Route>
+        <Route exact path='/joinRoom'>
+          <JoinRoom />
         </Route>
       </Switch>
     </Router>
