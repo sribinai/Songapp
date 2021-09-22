@@ -7,8 +7,13 @@ import "./avatar-icon.styles.css";
 
 const AvatarIcon = ({ imageUrl, showStatus, statusDetails }) => {
   return (
-    <Figure className='avatar-icon-shape'>
+    <Figure
+      // style={{ height: "100px", width: "100px" }}
+      className='avatar-icon-shape'
+    >
       <Figure.Image
+        height='100px'
+        width='100px'
         alt='profile-image'
         src={imageUrl}
         className='avatar-icon'
@@ -16,25 +21,14 @@ const AvatarIcon = ({ imageUrl, showStatus, statusDetails }) => {
       />
       {showStatus && (
         <div
+          className='user-status'
           style={{
-            position: "absolute",
-            top: "4px",
-            right: "4px",
-            fontSize: "20px",
-            backgroundColor: "lightgreen",
-            borderRadius: "50%",
-            height: "25px",
-            width: "25px",
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            backgroundColor: statusDetails
+              ? "rgb(64, 241, 64)"
+              : "rgb(244, 153, 61)",
           }}
         >
           {statusDetails ? <FaRegCheckCircle /> : <BiWifiOff />}
-          {/* <FaRegCheckCircle /> */}
-          {/* <BiWifiOff /> */}
-          {/* &#128504; */}
         </div>
       )}
     </Figure>

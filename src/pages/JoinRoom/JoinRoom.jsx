@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/MainHeaderDiv/MainHeaderDiv";
 
@@ -9,9 +9,11 @@ const JoinRoom = () => {
   return (
     <div className='main-container'>
       <MainHeaderDiv title='Exit Room' routeName='Home' />
-      <div className='p-5 d-flex flex-column align-items-center' fluid>
-        {/* <Container className='p-4' style={{ backgroundColor: "red" }} fluid> */}
-        <Row sm={2} xs={1} className=' d-flex align-items-center'>
+      <div className='px-5 py-3 d-flex flex-column align-items-center' fluid>
+        <div
+          className='d-flex justify-content-between align-items-center'
+          style={{ width: "100%" }}
+        >
           <div>
             <AvatarIcon imageUrl='https://robohash.org/9?set=set2' />
           </div>
@@ -20,13 +22,28 @@ const JoinRoom = () => {
               HOW TO PLAY
             </Button>
           </div>
-        </Row>
-        <Container className='p-4' style={{ backgroundColor: "red" }}>
-          <Row sm={2} xs={1}>
-            <Col>
-              <h1>Create Room</h1>
-            </Col>
-          </Row>
+        </div>
+        <Container
+          className='p-4'
+          style={{ backgroundColor: "rgb(255, 210, 210)" }}
+        >
+          <div className='profile-icons-div'>
+            <AvatarIcon
+              imageUrl='https://robohash.org/9?set=set2'
+              statusDetails={true}
+              showStatus={true}
+            />
+            <AvatarIcon
+              imageUrl='https://robohash.org/9?set=set2'
+              statusDetails={false}
+              showStatus={true}
+            />
+            <AvatarIcon
+              imageUrl='https://robohash.org/9?set=set2'
+              statusDetails={true}
+              showStatus={true}
+            />
+          </div>
         </Container>
       </div>
     </div>
