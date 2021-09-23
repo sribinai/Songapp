@@ -13,7 +13,7 @@ const CreateRoom = () => {
       <MainHeaderDiv title='Join Room' routeName='Home' />
       <div className='create-room-div'>
         <Container fluid>
-          <Row sm={2} xs={1}>
+          <Row xs={1} sm={2}>
             <Col>
               <h1>Create Room</h1>
             </Col>

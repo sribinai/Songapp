@@ -1,22 +1,24 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import CreateRoom from "./pages/CreateRoom/CreateRoom";
-import JoinRoom from "./pages/JoinRoom/JoinRoom";
+import PlayerDashboard from "./pages/PlayerDashboard/PlayerDashboard";
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route exact path='/'>
-          <HomePage />
+          <Redirect to='/Home' />
         </Route>
-        <Route exact path='/createRoom'>
-          <CreateRoom />
-        </Route>
-        <Route exact path='/joinRoom'>
-          <JoinRoom />
-        </Route>
+        <Route exact path='/Home' component={HomePage} />
+        <Route exact path='/createRoom' component={CreateRoom} />
+        <Route exact path='/joinRoom' component={PlayerDashboard} />
       </Switch>
     </Router>
   );
