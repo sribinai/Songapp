@@ -44,6 +44,26 @@ const JoinRoom = () => {
               statusDetails={true}
               showStatus={true}
             />
+            <AvatarIcon
+              imageUrl='https://robohash.org/13?set=set2'
+              statusDetails={false}
+              showStatus={true}
+            />
+            <AvatarIcon
+              imageUrl='https://robohash.org/14?set=set2'
+              statusDetails={false}
+              showStatus={true}
+            />
+            <AvatarIcon
+              imageUrl='https://robohash.org/15?set=set2'
+              statusDetails={true}
+              showStatus={true}
+            />
+            <AvatarIcon
+              imageUrl='https://robohash.org/16?set=set2'
+              statusDetails={true}
+              showStatus={true}
+            />
           </div>
         </Container>
       </div>

@@ -2,7 +2,8 @@ import React from "react";
 import Participants from "../../components/Form/Participants";
 import Textarea from "../../components/Form/Textarea";
 import MainHeaderDiv from "../../components/MainHeaderDiv/MainHeaderDiv";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { FaCopy } from "react-icons/fa";
 
 import "./create-room.styles.css";
 
@@ -18,7 +19,8 @@ const CreateRoom = () => {
             </Col>
             <Col className='d-flex justify-content-end'>
               <Button size='lg' className='create-room-button'>
-                ROOM ID: THXQL &#128464;
+                {/* ROOM ID: THXQL &#128464; */}
+                ROOM ID: THXQL <FaCopy />
               </Button>
             </Col>
           </Row>
@@ -27,19 +29,21 @@ const CreateRoom = () => {
           <Row xs={1} md={2}>
             <Col>
               <div className='input-div'>
-                <h3>Room Name:</h3>
-                <div className='text-div'>
-                  <input type='text' />
+                <Form.Label size='lg'>Room Name:</Form.Label>
+                <Form.Group as={Col} className='text-div'>
+                  <Form.Control type='text' />
                   <Button>SAVE</Button>
-                </div>
+                </Form.Group>
               </div>
 
               <div className='input-div'>
-                <h3> Passcode: </h3>
-                <div className='text-div'>
-                  <input type='text' />
-                  <Button>&#128464;</Button>
-                </div>
+                <Form.Label> Passcode: </Form.Label>
+                <Form.Group as={Col} className='text-div'>
+                  <Form.Control type='text' />
+                  <Button>
+                    <FaCopy />
+                  </Button>
+                </Form.Group>
               </div>
 
               <div className='input-div'>
