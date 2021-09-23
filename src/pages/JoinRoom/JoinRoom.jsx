@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Button } from "react-bootstrap";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/MainHeaderDiv/MainHeaderDiv";
+import LinkSong from "../../components/Display/LinkSong";
 
 import "./join-room.styles.css";
 
@@ -29,23 +30,24 @@ const JoinRoom = () => {
         >
           <div className='profile-icons-div'>
             <AvatarIcon
-              imageUrl='https://robohash.org/9?set=set2'
+              imageUrl='https://robohash.org/10?set=set2'
               statusDetails={true}
               showStatus={true}
             />
             <AvatarIcon
-              imageUrl='https://robohash.org/9?set=set2'
+              imageUrl='https://robohash.org/11?set=set2'
               statusDetails={false}
               showStatus={true}
             />
             <AvatarIcon
-              imageUrl='https://robohash.org/9?set=set2'
+              imageUrl='https://robohash.org/12?set=set2'
               statusDetails={true}
               showStatus={true}
             />
           </div>
         </Container>
       </div>
+      <LinkSong />
     </div>
   );
 };
