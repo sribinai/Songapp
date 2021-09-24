@@ -10,7 +10,7 @@ import "./create-room.styles.css";
 const CreateRoom = () => {
   return (
     <div className='main-container'>
-      <MainHeaderDiv title='Join Room' routeName='Home' />
+      <MainHeaderDiv title='Join Room' routeName='JoinRoom' />
       <div className='create-room-div'>
         <Container fluid>
           <Row xs={1} sm={2}>

@@ -2,25 +2,58 @@ import React from "react";
 import "./join-room.styles.css";
 import MainHeaderDiv from "../../components/MainHeaderDiv/MainHeaderDiv";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import {IoMdEye} from "react-icons/io";
+
 
 const JoinRoom = () => {
   return (
     <div className='main-container'>
-      <h2>Join Room</h2>
-      <Container fluid>
+      <MainHeaderDiv title='Create Room' routeName='CreateRoom' />
+      <div className='join-room-div'>
+        <Container fluid>
+          <Row xs={1} sm={2}>
+            <Col>
+              <h1>Join Room</h1>
+            </Col>
+            <Col className='d-flex justify-content-end'>
+              <Button size='lg' className='join-room-button'>
+                
+                HOW TO PLAY
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+        <Container fluid>
           <Row xs={1} md={2}>
             <Col>
               <div className='input-div'>
-                <Form.Label size='lg'>Room Id:</Form.Label>
+                <Form.Label size='lg'>Room ID:</Form.Label>
                 <Form.Group as={Col} className='text-div'>
                   <Form.Control type='text' />
                   <Button>Check Server</Button>
                 </Form.Group>
               </div>
+
+              <div className='input-div'>
+                <Form.Label> Passcode: </Form.Label>
+                <Form.Group as={Col} className='text-div'>
+                  <Form.Control type='text' />
+                  <Button style={{fontSize:"20px"}}>
+                    <IoMdEye />
+                  </Button>
+                </Form.Group>
+              </div>
+
+              
             </Col>
           </Row>
-      </Container>
-
+        </Container>
+        <div className='join-room-button-div'>
+          <Button className='join-room-button' size='lg' variant='primary'>
+            JOIN ROOM
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
