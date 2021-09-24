@@ -1,6 +1,6 @@
 .create-room-div {
-  /* margin: 30px 40px;
-  padding: 30px; */
+  margin: 30px 40px;
+  padding: 30px;
   box-shadow: 0 2px 7px rgb(100, 100, 100, 0.7),
     5px -2px 0.4em rgb(100, 100, 100, 0.7);
   border-radius: 5px;
