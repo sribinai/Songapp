@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import CreateRoom from "./pages/CreateRoom/CreateRoom";
-// import PlayerDashboard from "./pages/PlayerDashboard/PlayerDashboard";
+import PlayerDashboard from "./pages/PlayerDashboard/PlayerDashboard";
 import JoinRoom from "./pages/JoinRoom/JoinRoom";
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
         <Route exact path='/Home' component={HomePage} />
         <Route exact path='/createRoom' component={CreateRoom} />
         <Route exact path='/joinRoom' component={JoinRoom} />
-        {/* <Route exact path='/joinRoom' component={PlayerDashboard} /> */}
+        <Route exact path='/dashboard' component={PlayerDashboard} />
       </Switch>
     </Router>
   );

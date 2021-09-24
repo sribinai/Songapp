@@ -1,5 +1,4 @@
 .header {
-  /* background-color: aquamarine; */
   text-align: center;
   margin-top: 10px;
 
@@ -8,10 +7,6 @@
   justify-content: center;
   align-items: center;
 }
-
-/* .heading-image {
-  width: 100px;
-} */
 
 .hr-line {
   background-color: blue;
@@ -24,13 +19,4 @@
   font-size: 20px;
   min-height: 40px;
   font-family: cursive;
-}
-
-@media screen and (max-width: 900px) {
-  .heading-text {
-    font-size: 20px;
-  }
-  .heading-content {
-    font-size: 15px;
-  }
 }

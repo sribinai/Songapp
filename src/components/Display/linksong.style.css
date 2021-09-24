@@ -1,73 +1,26 @@
-.ls{
-    background-color: blue;
-    border-top-left-radius: 60px;
-    border-top-right-radius: 60px;
-    width: 99vw;
-    height: 40vh;
+.ls {
+  position: relative;
+  background-color: rgb(15, 91, 163);
+  border-top-left-radius: 60px;
+  border-top-right-radius: 60px;
+  width: 100%;
+  min-height: 200px;
+  margin: 0;
+  padding: 0;
 }
 
-.ls-title{
-    //background-color: yellow;
-    text-align: center;
-    padding: 2vh;
+.start-game {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  min-height: 50px;
+  font-weight: 600;
+  font-size: 20px;
+  border: none;
+  background-color: rgb(240, 157, 3);
 }
-
-.ls-link{
-    //background-color: yellow;
-    margin: 4vh 4vw;
-    display: flex;
-    justify-content: space-between;
-
-}
-
-.ls-url{
-    height: 5vh;
-    border: none;
-    border-radius: 7px;
-    background-color: wheat;
-    width: 80vw;
-}
-
-.add{
-    height:5.3vh;
-    border: none;
-    border-radius: 5px;
-    background-color: wheat;
-    width: 10vw;
-
-}
-
-.ls-song{
-    margin: 4vh 4vw;
-    display: flex;
-    justify-content: space-between;
-
-}
-
-.ls-song-link{
-    background-color: yellow;
-    height: 5vh;
-    border-radius: 7px;
-    background-color: wheat;
-    width: 80vw;
-    text-align: center;
-
-}
-
-.ls-song-btn{
-    height:4.9vh;
-    border: none;
-    border-radius: 5px;
-    background-color: wheat;
-    width: 10vw;
-
-}
-
-
-.start-game{
-    width: 99vw;
-    height: 6vh;
-    border: none;
-    background-color: orange;
-    border-color: orang;
+.start-game:hover {
+  background-color: rgb(171, 255, 35);
+  font-size: 21px;
+  transition: all 0.2s linear;
 }

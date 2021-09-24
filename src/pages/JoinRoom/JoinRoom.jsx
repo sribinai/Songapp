@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import "./join-room.styles.css";
 import MainHeaderDiv from "../../components/MainHeaderDiv/MainHeaderDiv";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import {IoMdEye} from "react-icons/io";
-
+import { IoMdEye, IoIosEyeOff } from "react-icons/io";
 
 const JoinRoom = () => {
+  const [viewPassword, setViewPassword] = useState(false);
   return (
     <div className='main-container'>
       <MainHeaderDiv title='Create Room' routeName='CreateRoom' />
@@ -17,7 +17,6 @@ const JoinRoom = () => {
             </Col>
             <Col className='d-flex justify-content-end'>
               <Button size='lg' className='join-room-button'>
-                
                 HOW TO PLAY
               </Button>
             </Col>
@@ -27,7 +26,7 @@ const JoinRoom = () => {
           <Row xs={1} md={2}>
             <Col>
               <div className='input-div'>
-                <Form.Label size='lg'>Room ID:</Form.Label>
+                <Form.Label>Room ID:</Form.Label>
                 <Form.Group as={Col} className='text-div'>
                   <Form.Control type='text' />
                   <Button>Check Server</Button>
@@ -37,14 +36,17 @@ const JoinRoom = () => {
               <div className='input-div'>
                 <Form.Label> Passcode: </Form.Label>
                 <Form.Group as={Col} className='text-div'>
-                  <Form.Control type='text' />
-                  <Button style={{fontSize:"20px"}}>
-                    <IoMdEye />
+                  <Form.Control
+                    type={`${viewPassword ? "text" : "password"}`}
+                  />
+                  <Button
+                    style={{ fontSize: "20px" }}
+                    onClick={() => setViewPassword(!viewPassword)}
+                  >
+                    {viewPassword ? <IoIosEyeOff /> : <IoMdEye />}
                   </Button>
                 </Form.Group>
               </div>
-
-              
             </Col>
           </Row>
         </Container>

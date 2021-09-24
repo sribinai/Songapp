@@ -52,14 +52,14 @@ const CreateRoom = () => {
             <Col>
               <div className='input-div'>
                 <Form.Label size='lg'>Room Name:</Form.Label>
-                <Form.Group as={Col} className='text-div'>
-                  <Form.Control
-                    type='text'
-                    value={roomName}
-                    onChange={(e) => setRoomName(e.target.value)}
-                  />
-                  <Button>SAVE</Button>
-                </Form.Group>
+                {/* <Form.Group as={Col} className='text-div'> */}
+                <Form.Control
+                  type='text'
+                  value={roomName}
+                  onChange={(e) => setRoomName(e.target.value)}
+                />
+                {/* <Button>SAVE</Button> */}
+                {/* </Form.Group> */}
               </div>
 
               <div className='input-div'>

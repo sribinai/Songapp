@@ -18,11 +18,11 @@ const HomePage = () => {
             />
           </Col>
         </Row>
-        <Row xs={1} lg={2} className='card-main-div'>
-          <Col className='card-div'>
+        <Row xs={1} lg={2}>
+          <Col className='d-flex justify-content-center'>
             <CardComponent cardHeading='Create Room' />
           </Col>
-          <Col className='card-div'>
+          <Col className='d-flex justify-content-center'>
             <CardComponent cardHeading='Join Room' />
           </Col>
         </Row>
