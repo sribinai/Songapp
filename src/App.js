@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import CreateRoom from "./pages/CreateRoom/CreateRoom";
-import PlayerDashboard from "./pages/PlayerDashboard/PlayerDashboard";
+// import PlayerDashboard from "./pages/PlayerDashboard/PlayerDashboard";
 import JoinRoom from "./pages/JoinRoom/JoinRoom";
 
 function App() {
