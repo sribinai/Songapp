@@ -33,7 +33,7 @@ const CreateRoom = () => {
 
   return (
     <div className='main-container'>
-      <MainHeaderDiv title='Join Room' routeName='/joinRoom' />
+      <MainHeaderDiv title='Join Room' routeName='joinRoom' />
       <div className='create-room-div'>
         <Container fluid>
           <Row xs={1} sm={2}>

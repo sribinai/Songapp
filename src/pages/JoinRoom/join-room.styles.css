@@ -1,4 +1,4 @@
-.create-room-div {
+.join-room-div {
   margin: 30px 40px;
   padding: 30px;
   box-shadow: 0 2px 7px rgb(100, 100, 100, 0.7),
@@ -31,15 +31,15 @@
   margin-left: 3px;
   width: calc(30% - 3px);
 }
-.create-room-button-div {
+.join-room-button-div {
   display: flex;
   justify-content: center;
   align-content: center;
   margin: 40px 0;
 }
-.create-room-button {
-  max-width: 250px;
-  min-height: 60px;
+.join-room-button {
+  max-width: 300px;
+  min-height: 30px;
   /* box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.7), -2px -5px 10px rgb(0, 0, 0, 0.7); */
   box-shadow: 2px 2px 10px rgb(255, 255, 255, 0.7),
     -2px -5px 10px rgb(255, 255, 255, 0.7);
