@@ -9,7 +9,7 @@ import {
   Button,
 } from "react-bootstrap";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
-import MainHeaderDiv from "../../components/MainHeaderDiv/MainHeaderDiv";
+import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
 import { FaPlay, FaCloudUploadAlt } from "react-icons/fa";
 
 import "./player-dashboard.styles.css";

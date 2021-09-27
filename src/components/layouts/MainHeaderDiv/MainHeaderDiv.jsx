@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../images/PMPL-LOGO.png";
+import logo from "../../../images/PMPL-LOGO.png";
 import { Link } from "react-router-dom";
 import "./main-header.styles.css";
 
