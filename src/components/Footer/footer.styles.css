@@ -43,3 +43,18 @@
   height: 100px;
   width: 100%;
 }
+
+.footer-content-button-div {
+  width: 350px;
+  
+}
+
+.footer-content-button:active {
+  background-color: #B125CA !important ;
+}
+
+.footer-content-button:visited {
+  border:none  !important;
+
+}
+
