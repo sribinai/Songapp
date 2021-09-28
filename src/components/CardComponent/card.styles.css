@@ -1,7 +1,7 @@
 .card-container {
-  width: 80%;
+  width: 75%;
   /* width: 450px; */
-  min-height: 230px;
+  min-height: 300px;
   color: white;
   box-sizing: border-box;
   margin-top: 30px;
@@ -17,13 +17,13 @@
   font-weight: bold;
 }
 .card-text {
-  margin-top: 10%;
+  margin-top: 12%;
   font-family: monospace;
   font-size: 26px;
 }
 .card-arrow-symbol {
   position: absolute;
-  bottom: 50px;
+  bottom: 60px;
   line-height: 0;
   font-size: 100px;
   color: white;
