@@ -11,7 +11,7 @@ function HeaderDiv({ headerText }) {
         <Image
           src={logo}
           alt='Logo'
-          style={{ minWidth: "100px", maxWidth: "300px", marginBottom: "10px" }}
+          style={{ minWidth: "100px", maxWidth: "300px", marginBottom: "20px" }}
         />
       </Row>
       <Row className='hr-line' />
