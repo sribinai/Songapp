@@ -7,9 +7,10 @@
   margin-top: 30px;
   margin-bottom: 10px;
   padding-bottom: 50px;
-  background-color: #29539b;
+  /* background-color: #29539b; */
   background: linear-gradient(315deg, #29539b 0%, #1e3b70 74%);
   position: relative;
+  box-shadow: 10px 15px 10px skyblue;
 }
 
 .card-heading {

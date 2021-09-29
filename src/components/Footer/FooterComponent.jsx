@@ -1,7 +1,7 @@
 
 import MyVerticallyCenteredModal from "../../components/PlayInstructions/PlayInstructions";
-import React, { useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import React from "react";
+//import { Modal, Button } from "react-bootstrap";
 // import waves from "../../images/music_waves.png";
 import waves from "../../images/waves.png";
 import { Container, Row, Col, Image } from "react-bootstrap";
@@ -21,17 +21,16 @@ const FooterComponent = () => {
         
           How to Play
        
-        <span className='arrow-symbol'>&#129046;</span>
+          <span className='arrow-symbol'>&#129046;</span>
         
         
-      </div>
-      <MyVerticallyCenteredModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}></MyVerticallyCenteredModal>
-
-       
+        </div>       
         </Col>
       </Row>
+      <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}>
+      </MyVerticallyCenteredModal>
       <Image className='footer-image' src={waves} alt='music waves' />
       
     </Container>

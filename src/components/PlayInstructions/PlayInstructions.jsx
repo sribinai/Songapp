@@ -2,7 +2,11 @@ import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
 
+
+
+
 function MyVerticallyCenteredModal(props) {
+
     return (
       <Modal
         {...props}
@@ -12,15 +16,13 @@ function MyVerticallyCenteredModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Modal heading
+            PLAY MY PLAYLIST
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h4>Centered Modal</h4>
+          <h4>RULES</h4>
           <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-            consectetur ac, vestibulum at eros.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi quasi incidunt dolores praesentium. Ipsa laudantium blanditiis velit facilis corrupti tempora! Deleniti aspernatur sunt doloremque quidem rem debitis nihil excepturi ratione aperiam eos nisi exercitationem iste voluptatem placeat, consequuntur, corporis modi sint adipisci obcaecati facilis quo eaque qui! Eveniet, ducimus minus?
           </p>
         </Modal.Body>
         <Modal.Footer>
