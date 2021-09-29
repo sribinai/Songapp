@@ -57,7 +57,7 @@ const CreateRoom = () => {
             </Col>
           </Row>
         </Container>
-        <Container fluid>
+        <Container fluid >
           <Row xs={1} md={2}>
             <Col xs={12} md={6}>
               <Row className='py-2'>
