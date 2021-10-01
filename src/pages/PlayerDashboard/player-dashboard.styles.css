@@ -4,6 +4,7 @@
   /* grid-template-columns: repeat(9, 1fr); */
   gap: 10px;
   grid-auto-rows: minmax(100px, auto);
+  border-radius: 25px;
 }
 
 .add-songs-div {
