@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  InputGroup,
-  Button,
-} from "react-bootstrap";
+import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
-import { FaPlay, FaCloudUploadAlt } from "react-icons/fa";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMusic } from '@fortawesome/free-solid-svg-icons'
+import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
 
 import "./player-dashboard.styles.css";
 
@@ -35,7 +26,11 @@ const PlayerDashboard = () => {
         </div>
         <Container
           className='p-4'
-          style={{ backgroundColor: "rgb(255, 210, 210)", minHeight: "200px", borderRadius: "5px" }}
+          style={{
+            backgroundColor: "rgb(255, 210, 210)",
+            minHeight: "200px",
+            borderRadius: "5px",
+          }}
         >
           <div className='profile-icons-div'>
             <AvatarIcon
@@ -77,12 +72,7 @@ const PlayerDashboard = () => {
         </Container>
       </div>
       <div className='add-songs-div'>
-        <Container
-          className='text-center'
-          style={{
-            padding: "10px 0",
-          }}
-        >
+        <Container className='text-center py-3'>
           <Row className='mb-2'>
             <h3 className='text-white'>Add your songs here....</h3>
           </Row>
@@ -104,16 +94,27 @@ const PlayerDashboard = () => {
             </Col>
           </Row>
 
-          <Row xs={1} md={2} className='mb-2 px-4'>
+          <Row className='mb-2 px-4'>
             <Col xs={12} md={10}>
               <InputGroup>
-                <InputGroup.Text>
-                  <FontAwesomeIcon icon = {faMusic}
-                    height='30px'
-                    width='30px'
+                <InputGroup.Text
+                  style={{
+                    borderRadius: "50px 0 0 50px",
+                    backgroundColor: "rgb(240, 100,100)",
+                  }}
+                >
+                  <FaMusic
+                    style={{
+                      fontSize: "24px",
+                    }}
                   />
                 </InputGroup.Text>
-                <Form.Control type='url' value='Songs Title' disabled />
+                <Form.Control
+                  type='url'
+                  value='Songs Title'
+                  style={{ paddingLeft: "60px" }}
+                  disabled
+                />
                 <InputGroup.Text className='px-1'>
                   <FaPlay style={{ fontSize: "24px", width: "50px" }} />
                 </InputGroup.Text>

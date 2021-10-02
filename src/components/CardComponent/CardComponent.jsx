@@ -14,6 +14,18 @@ function CardComponent({ cardHeading }) {
         <Card.Text className='card-text'>
           Play along with your friends
         </Card.Text>
+        <p>
+          Click below to{" "}
+          <span
+            style={{
+              textTransform: "lowercase",
+              fontWeight: "600",
+              fontStyle: "italic",
+            }}
+          >
+            {cardHeading}
+          </span>
+        </p>
         <Link
           to={`${
             cardHeading === "Create Room"
