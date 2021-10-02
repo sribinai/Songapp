@@ -4,13 +4,14 @@ import {
   Row,
   Col,
   Form,
-  Image,
   InputGroup,
   Button,
 } from "react-bootstrap";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
 import { FaPlay, FaCloudUploadAlt } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMusic } from '@fortawesome/free-solid-svg-icons'
 
 import "./player-dashboard.styles.css";
 
@@ -34,7 +35,7 @@ const PlayerDashboard = () => {
         </div>
         <Container
           className='p-4'
-          style={{ backgroundColor: "rgb(255, 210, 210)", minHeight: "200px" }}
+          style={{ backgroundColor: "rgb(255, 210, 210)", minHeight: "200px", borderRadius: "5px" }}
         >
           <div className='profile-icons-div'>
             <AvatarIcon
@@ -107,8 +108,7 @@ const PlayerDashboard = () => {
             <Col xs={12} md={10}>
               <InputGroup>
                 <InputGroup.Text>
-                  <Image
-                    src='https://robohash.org/20?set=set2'
+                  <FontAwesomeIcon icon = {faMusic}
                     height='30px'
                     width='30px'
                   />
