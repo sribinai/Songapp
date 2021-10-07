@@ -30,3 +30,23 @@
   font-size: 21px;
   transition: all 0.2s linear;
 }
+
+/* .music-thumbnail { */
+  /* position: absolute;
+  z-index: 4;
+  left: 3px;
+  top: 3px;
+  height: 33px;
+  width: 33px; */
+  /* box-sizing: border-box; */
+  /* background-color: rgb(250, 100, 100);  *//*applied */
+  /* box-shadow: 1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100); */
+  /* box-shadow: 1px 1px 2px #000, -1px -1px 2px #000; */
+  /* border: 2px solid #fff; *//*applied*/
+  /* border: 2px solid rgb(200, 200, 200); */
+  /* border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center; */
+/* } */

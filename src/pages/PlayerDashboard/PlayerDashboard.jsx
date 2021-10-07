@@ -97,36 +97,28 @@ const PlayerDashboard = () => {
           <Row className='mb-2 px-4'>
             <Col xs={12} md={10}>
               <InputGroup style={{ position: "relative" }}>
-                <div
+                <span
                   style={{
                     position: "absolute",
                     zIndex: "4",
                     left: "3px",
                     top: "3px",
                     height: "33px",
-                    width: "33px",
-                    boxSizing: "border-box",
+                    width: "35px",
+                    overflow: "hidden",
                     backgroundColor: "rgb(250, 100, 100)",
                     boxShadow:
                       "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
-                    // boxShadow: "1px 1px 2px #000, -1px -1px 2px #000",
                     border: "2px solid #fff",
-                    // border: "2px solid rgb(200, 200, 200)",
                     borderRadius: "50%",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    textAlign: "center",
+                    color: "#fff",
                   }}
                 >
-                  <FaMusic
-                    style={{
-                      color: "#fff",
-                      height: "60%",
-                      width: "60%",
-                    }}
-                  />
-                </div>
+                  <FaMusic />
+                </span>
                 <Form.Control
                   type='url'
                   value='Songs Title'
