@@ -3,16 +3,11 @@ const app = express();
 
 app.use(express.json());
 
-//app.get('/createRoom', (req,res) => {
-
-
-    app.get('/playlist/api', (req,res) => {
-    const roomId = createRoomId()
-    res.send(roomId);
-
+app.get('/playlist/api/createRoom', (req,res) => {
+    const roomID = createRoomId()
+    res.send({ roomID });
 });
 
-//const port = process.env.PORT || 3001;
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 

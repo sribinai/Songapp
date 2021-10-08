@@ -11,14 +11,11 @@ import {
 } from "react-bootstrap";
 import { FaCopy } from "react-icons/fa";
 
-import {
-  createRoomCode,
-  createRandomPassCode,
-} from "../../functionalities/createPage.function";
+import { createRandomPassCode } from "../../functionalities/createPage.function";
 import "./create-room.styles.css";
 
 const CreateRoom = () => {
-  const [roomID, setRoomID] = useState("THXQL");
+  const [roomID, setRoomID] = useState('');
   const [roomName, setRoomName] = useState("");
   const [passCode, setPassCode] = useState("");
   const [noOfPlayers, setNoOfPlayers] = useState(1);
@@ -28,7 +25,12 @@ const CreateRoom = () => {
 
   useEffect(() => {
     // Room Code set during mount
-    setRoomID(createRoomCode());
+    fetch('http://localhost:4000/playlist/api/createRoom')
+      .then(res => res.json())
+      .then(data => {
+          setRoomID(data.roomID);
+      })
+      .catch(error => console.error(error));
   }, []);
 
   // Functions to copy text for roomID and room passcode to clipboard
