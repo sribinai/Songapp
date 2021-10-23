@@ -3,13 +3,12 @@ const roomModel = require("../model/roomModel");
 const Joi = require("joi");
 
 const router = express.Router();
+
 // route to create random roomID
 router.get("/createRoomID", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
   let roomID = createRoomId();
-  let roomData = await roomModel.find({ room_id: roomID });
   try {
+    let roomData = await roomModel.find({ room_id: roomID });
     // console.log(`arrayLength: ${roomData.length}`);
     while (roomData.length !== 0) {
       // check if roomData exists in collection roomdatas reset to some other roomID
@@ -17,10 +16,11 @@ router.get("/createRoomID", async (req, res) => {
       roomData = await roomModel.find({ room_id: roomID });
     }
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send(error._message);
   }
   res.send({ roomID });
 });
+
 // route to add roomDetails
 router.post("/createRoom", async (req, res) => {
   const roomInfo = req.body;
@@ -50,14 +50,84 @@ router.post("/createRoom", async (req, res) => {
   try {
     await roomData.save();
   } catch (error) {
-    return res.status(500).send(error);
+    output.status = "error";
+    output.message = error._message;
+    // output.message = error.message;
+    return res.status(500).send(output);
   }
   // If Data if fetched successfully send success status with data and message
   output.roomInfo = roomData;
   output.status = "success";
   output.message = "You have successfully created the room.";
-  // console.log(output);
   res.json(output);
+});
+
+// Check RoomID exists or NOT
+router.post("/checkRoom", async (req, res) => {
+  const { roomID } = req.body;
+  let output = {};
+  output.roomID = roomID;
+  try {
+    let dbRoomID = await roomModel.find({ room_id: roomID });
+    if (dbRoomID.length === 0) {
+      // Room does not exist
+      output.status = "error";
+      output.message = "Room server does not exist.";
+    } else {
+      // Room exists
+      output.status = "success";
+      output.message = "Room server exists.";
+    }
+  } catch (error) {
+    output.status = "error";
+    output.message = error._message;
+    return res.status(500).send(output);
+  }
+  res.send(output);
+});
+
+// Route for Joining a particular room
+router.post("/joinRoom", async (req, res) => {
+  const joinInfo = req.body;
+  const { room_id, password } = req.body;
+  let output = {};
+  // Schema defination for Validation of details recieved
+  const schema = Joi.object({
+    room_id: Joi.string().alphanum().min(4).required(),
+    password: Joi.string()
+      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .min(6)
+      .required(),
+  });
+  // Validation of details recieved for join room starts here
+  const validate = schema.validate(joinInfo);
+  const { error } = validate;
+  if (error) {
+    output.status = "error";
+    output.message = error.details[0].message;
+    return res.status(400).send(output);
+  }
+  try {
+    let dbJoinRoom = await roomModel.find({
+      room_id: room_id,
+      password: password,
+    });
+    if (dbJoinRoom.length === 0) {
+      output.status = "error";
+      output.message = "You have entered invalid credentials.";
+      return res.status(400).send(output);
+    } else {
+      output.roomInfo = dbJoinRoom[0];
+    }
+    // console.log("hello");
+  } catch (error) {
+    output.status = "error";
+    output.message = error._message;
+    return res.status(500).send(output);
+  }
+  output.status = "success";
+  output.message = "Successfully joined into the room.";
+  res.send(output);
 });
 
 // Function to create a random roomID
