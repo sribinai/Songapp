@@ -14,10 +14,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path='/'>
-          <Redirect to='/Home' />
-        </Route>
-        <Route exact path='/Home' component={HomePage} />
+        <Route exact path='/' component={HomePage} />
         <Route exact path='/createRoom' component={CreateRoom} />
         <Route exact path='/joinRoom' component={JoinRoom} />
         <Route exact path='/dashboard' component={PlayerDashboard} />

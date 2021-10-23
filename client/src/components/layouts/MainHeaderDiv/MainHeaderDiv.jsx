@@ -7,7 +7,7 @@ const MainHeaderDiv = ({ title, routeName }) => {
   return (
     <div className='main-header'>
       <div>
-        <Link to='/Home'>
+        <Link to='/'>
           <img src={logo} alt='Logo' className='logo-image' />
         </Link>
       </div>
