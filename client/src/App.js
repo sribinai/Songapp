@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import CreateRoom from "./pages/CreateRoom/CreateRoom";
 import PlayerDashboard from "./pages/PlayerDashboard/PlayerDashboard";

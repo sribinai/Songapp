@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
@@ -26,6 +27,8 @@ const CreateRoom = () => {
   const [roomRules, setRoomRules] = useState("");
 
   const refPassInput = useRef(null);
+  const [createRoomStatus, setCreateRoomStatus] = useState(false);
+  // createRoomStatus will True if room is successfully created
 
   const fetchRoomID = async () => {
     try {
@@ -108,20 +111,39 @@ const CreateRoom = () => {
         no_of_players: noOfPlayers,
         room_rules: roomRules,
       };
-      console.log(roomData);
+      // console.log(roomData);
+      // api call for creating room in Database
       const response = await axios.post(
         `${DATA_URL}/playlist/api/room/createRoom`,
         roomData
       );
-      if (response.status === 200) {
-        console.log(response);
-        console.log("success");
-      } else {
-        console.log(response);
-        console.log("error");
+      // console.log(response);
+      // if (response.status === 200) {
+      //   console.log(response);
+      // }
+      if (response.status !== 200) {
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text: "Room could not be created...",
+        });
+        return;
+      }
+      if (response.data.status && response.data.message) {
+        Swal.fire({
+          icon: response.data.status,
+          title: response.data.status === "success" ? "Success" : "Error",
+          text: response.data.message,
+        });
+        if (response.data.status === "success") setCreateRoomStatus(true);
       }
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!!",
+      });
     }
   };
 
@@ -132,140 +154,149 @@ const CreateRoom = () => {
       createRoom();
     }
   };
-  return (
-    <div className='main-container'>
-      <MainHeaderDiv title='Join Room' routeName='joinRoom' />
-      <div className='create-room-div'>
-        <Container className='pb-1' fluid>
-          <Row>
-            <Col xs={12} md={6} lg={8}>
-              <h1>Create Room</h1>
-            </Col>
-            <Col xs={12} md={6} lg={4}>
-              <div
-                className='w-full bg-primary text-light rounded py-2 px-3 d-flex align-items-center justify-content-center'
-                style={{ fontSize: "20px" }}
-              >
-                ROOM ID: <span className='px-2'>{roomID}</span>
-                <OverlayTrigger
-                  placement='top'
-                  delay={{ show: 250, hide: 400 }}
-                  overlay={<Tooltip>Copy your RoomID</Tooltip>}
+
+  // createRoomStatus is true redirect to joinRoom page
+  if (createRoomStatus) {
+    return <Redirect to='/joinRoom' />;
+  } else {
+    return (
+      <div className='main-container'>
+        <MainHeaderDiv title='Join Room' routeName='joinRoom' />
+        <div className='create-room-div'>
+          <Container className='pb-1' fluid>
+            <Row>
+              <Col xs={12} md={6} lg={8}>
+                <h1>Create Room</h1>
+              </Col>
+              <Col xs={12} md={6} lg={4}>
+                <div
+                  className='w-full bg-primary text-light rounded py-2 px-3 d-flex align-items-center justify-content-center'
+                  style={{ fontSize: "20px" }}
                 >
-                  <Button className='p-0 px-2'>
-                    <FaCopy style={{ fontSize: "20px" }} onClick={copyRoomID} />
-                  </Button>
-                </OverlayTrigger>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-        <Container fluid>
-          <Row xs={1} md={2}>
-            <Col xs={12} md={6}>
-              <Row className='py-2'>
-                <Form.Label>User Name:</Form.Label>
-                <Col xs={12} className='py-1'>
-                  <Form.Control type='text' value={userName} disabled />
-                </Col>
-              </Row>
-              <Row className='py-2'>
-                <Form.Label>Room Name:</Form.Label>
-                <Col xs={12} className='py-1'>
-                  <Form.Control
-                    type='text'
-                    onChange={(e) => setRoomName(e.target.value)}
-                    value={roomName}
-                  />
-                </Col>
-              </Row>
-              <Row className='py-2'>
-                <Form.Label> Passcode: </Form.Label>
-                <Col xs={12} md={8} className='py-1'>
-                  <Form.Control
-                    ref={refPassInput}
-                    type='text'
-                    value={passCode}
-                    onChange={(e) => setPassCode(e.target.value)}
-                  />
-                </Col>
-                <Col xs={12} md={4} className='py-1'>
+                  ROOM ID: <span className='px-2'>{roomID}</span>
                   <OverlayTrigger
                     placement='top'
                     delay={{ show: 250, hide: 400 }}
-                    overlay={<Tooltip>Copy your Passcode</Tooltip>}
+                    overlay={<Tooltip>Copy your RoomID</Tooltip>}
                   >
-                    <Button
-                      onClick={copyPassCode}
-                      style={{ fontSize: "20px", width: "100%" }}
-                    >
-                      <FaCopy />
+                    <Button className='p-0 px-2'>
+                      <FaCopy
+                        style={{ fontSize: "20px" }}
+                        onClick={copyRoomID}
+                      />
                     </Button>
                   </OverlayTrigger>
-                </Col>
-              </Row>
-              <Row className='py-2'>
-                <Col>
-                  <Button
-                    onClick={() => setPassCode(createRandomPassCode())}
-                    style={{ width: "100%" }}
-                  >
-                    GENERATE PASSCODE
-                  </Button>
-                </Col>
-              </Row>
-            </Col>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+          <Container fluid>
+            <Row xs={1} md={2}>
+              <Col xs={12} md={6}>
+                <Row className='py-2'>
+                  <Form.Label>User Name:</Form.Label>
+                  <Col xs={12} className='py-1'>
+                    <Form.Control type='text' value={userName} disabled />
+                  </Col>
+                </Row>
+                <Row className='py-2'>
+                  <Form.Label>Room Name:</Form.Label>
+                  <Col xs={12} className='py-1'>
+                    <Form.Control
+                      type='text'
+                      onChange={(e) => setRoomName(e.target.value)}
+                      value={roomName}
+                    />
+                  </Col>
+                </Row>
+                <Row className='py-2'>
+                  <Form.Label> Passcode: </Form.Label>
+                  <Col xs={12} md={8} className='py-1'>
+                    <Form.Control
+                      ref={refPassInput}
+                      type='text'
+                      value={passCode}
+                      onChange={(e) => setPassCode(e.target.value)}
+                    />
+                  </Col>
+                  <Col xs={12} md={4} className='py-1'>
+                    <OverlayTrigger
+                      placement='top'
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={<Tooltip>Copy your Passcode</Tooltip>}
+                    >
+                      <Button
+                        onClick={copyPassCode}
+                        style={{ fontSize: "20px", width: "100%" }}
+                      >
+                        <FaCopy />
+                      </Button>
+                    </OverlayTrigger>
+                  </Col>
+                </Row>
+                <Row className='py-2'>
+                  <Col>
+                    <Button
+                      onClick={() => setPassCode(createRandomPassCode())}
+                      style={{ width: "100%" }}
+                    >
+                      GENERATE PASSCODE
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
 
-            <Col xs={12} md={6}>
-              <Row className='py-2'>
-                <Form.Label>Number of Participants:</Form.Label>
-                <Col xs={12} className='py-1'>
-                  <Form.Select
-                    value={noOfPlayers}
-                    onChange={(e) => setNoOfPlayers(e.target.value)}
-                  >
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
-                    <option value='6'>6</option>
-                    <option value='7'>7</option>
-                    <option value='8'>8</option>
-                    <option value='9'>9</option>
-                    <option value='10'>10</option>
-                  </Form.Select>
-                </Col>
-              </Row>
-              <Row className='py-2'>
-                <Form.Label> Room Rules: </Form.Label>
-                <Col xs={12} className='py-1'>
-                  <Form.Control
-                    as='textarea'
-                    value={roomRules}
-                    onChange={(e) => setRoomRules(e.target.value)}
-                    style={{ height: "100px" }}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row className='d-flex justify-content-center my-1 py-4'>
-            <Col xs={12} sm={6} md={4} lg={3}>
-              <Button
-                size='lg'
-                className='mt-5'
-                style={{ width: "100%" }}
-                onClick={handleCreateRoom}
-              >
-                CREATE ROOM
-              </Button>
-            </Col>
-          </Row>
-        </Container>
+              <Col xs={12} md={6}>
+                <Row className='py-2'>
+                  <Form.Label>Number of Participants:</Form.Label>
+                  <Col xs={12} className='py-1'>
+                    <Form.Select
+                      value={noOfPlayers}
+                      onChange={(e) => setNoOfPlayers(e.target.value)}
+                    >
+                      <option value='1'>1</option>
+                      <option value='2'>2</option>
+                      <option value='3'>3</option>
+                      <option value='4'>4</option>
+                      <option value='5'>5</option>
+                      <option value='6'>6</option>
+                      <option value='7'>7</option>
+                      <option value='8'>8</option>
+                      <option value='9'>9</option>
+                      <option value='10'>10</option>
+                    </Form.Select>
+                  </Col>
+                </Row>
+                <Row className='py-2'>
+                  <Form.Label> Room Rules: </Form.Label>
+                  <Col xs={12} className='py-1'>
+                    <Form.Control
+                      as='textarea'
+                      value={roomRules}
+                      onChange={(e) => setRoomRules(e.target.value)}
+                      style={{ height: "100px" }}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row className='d-flex justify-content-center my-1 py-4'>
+              <Col xs={12} sm={6} md={4} lg={3}>
+                <Button
+                  size='lg'
+                  className='mt-5'
+                  style={{ width: "100%" }}
+                  onClick={handleCreateRoom}
+                >
+                  CREATE ROOM
+                </Button>
+              </Col>
+            </Row>
+          </Container>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default CreateRoom;

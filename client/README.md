@@ -1,6 +1,7 @@
 # Play-My-Playlist client app
 
-This uses various libraries which includes the following: <br/>
+This is the client app for play my playlist. <br/>
+It uses various libraries which includes the following: <br/>
 
 - [React JS](https://reactjs.org/)
 - [ReactBootstrap & Bootstrap](https://react-bootstrap.github.io/getting-started/introduction)

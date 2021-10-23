@@ -9,7 +9,17 @@ function CardComponent({ cardHeading }) {
     <Card className='card-container'>
       <Card.Body>
         <Card.Title className='card-heading' style={{ fontSize: "40px" }}>
-          {cardHeading}
+          <Link
+            to={`${
+              cardHeading === "Create Room"
+                ? "/createRoom"
+                : cardHeading === "Join Room"
+                ? "/joinRoom"
+                : "#"
+            }`}
+          >
+            {cardHeading}
+          </Link>
         </Card.Title>
         <Card.Text className='card-text'>
           Play along with your friends
