@@ -47,11 +47,6 @@ const CreateRoom = () => {
       }
     } catch (err) {
       console.log(err);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
-      });
     }
   };
 
@@ -72,21 +67,18 @@ const CreateRoom = () => {
   const validateCreateRoom = () => {
     let title = "",
       text = "";
-    if (!roomID) {
-      title = "Network Error";
-      text = "Something's wrong with Server!";
-    } else if (roomName.length === 0) {
+    if (roomName.length === 0) {
       title = "Room name empty";
-      text = "Room name should not be Empty";
+      text = "Room name should not be empty.";
     } else if (roomName.length < 3) {
       title = "Room Name too short";
       text = "RoomName should be atleast 3 characters long.";
     } else if (passCode.length === 0) {
       title = "Password empty";
-      text = "Password should not be Empty";
+      text = "Password should not be empty.";
     } else if (passCode.length < 6) {
       title = "Password too short";
-      text = "Set a secure Password atleast 6 characters long";
+      text = "Set a secure Password atleast 6 characters long.";
     }
     if (title.length !== 0) {
       Swal.fire({
@@ -118,24 +110,19 @@ const CreateRoom = () => {
         roomData
       );
       // console.log(response);
-      // if (response.status === 200) {
-      //   console.log(response);
-      // }
-      if (response.status !== 200) {
-        Swal.fire({
-          icon: "error",
-          title: "Failed",
-          text: "Room could not be created...",
-        });
-        return;
-      }
-      if (response.data.status && response.data.message) {
+      if (response.status === 200) {
         Swal.fire({
           icon: response.data.status,
           title: response.data.status === "success" ? "Success" : "Error",
           text: response.data.message,
         });
         if (response.data.status === "success") setCreateRoomStatus(true);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text: "Room could not be created...",
+        });
       }
     } catch (error) {
       console.log(error);
