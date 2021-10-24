@@ -1,6 +1,10 @@
 # Play-My-Playlist client app
 
 This is the client app for play my playlist. <br/>
+Be sure install the dependencies: <br/>
+```
+npm install
+```
 It uses various libraries which includes the following: <br/>
 
 - [React JS](https://reactjs.org/)
