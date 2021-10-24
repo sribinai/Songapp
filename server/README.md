@@ -1,6 +1,10 @@
 # Backend codes for Play-My-Playlist app
 
 This is the backend part for play my playlist app. <br/>
+Be sure install the dependencies: <br/>
+```
+npm install
+```
 It uses the following tools:<br/>
 
 - [NodeJS](https://nodejs.org/en/)
