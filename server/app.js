@@ -2,12 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const dbURI = require("./config/config");
+const logger = require("./middlewares/logger");
 const roomInfo = require("./routes/roomRoute");
 const userInfo = require("./routes/userRoute");
 
 const app = express();
 const port = process.env.PORT || 4000;
 
+app.use(logger);
 app.use(function (req, res, next) {
   // Headers to remove possible errors in all requests
   res.header("Access-Control-Allow-Origin", "*");
