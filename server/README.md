@@ -14,5 +14,6 @@ It uses the following tools:<br/>
 - [Joi](https://joi.dev/)
 - [Mongoose](https://mongoosejs.com/)
 - [MongoDB](https://www.mongodb.com/)
+- [dotenv](https://github.com/motdotla/dotenv)
 - [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
 - [JWT](https://github.com/auth0/node-jsonwebtoken)

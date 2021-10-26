@@ -1,15 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-const dbURI = require("./config/config");
+// Accessing dotenv variables
+dotenv.config({ path: "./config/config.env" });
+let host = process.env.HOST;
+let port = process.env.PORT;
+
 const logger = require("./middlewares/logger");
 const roomInfo = require("./routes/roomRoute");
 const userInfo = require("./routes/userRoute");
 
 const app = express();
-const port = process.env.PORT || 4000;
 
-app.use(logger);
+app.use(logger); // Middleware to log in the server console
 app.use(function (req, res, next) {
   // Headers to remove possible errors in all requests
   res.header("Access-Control-Allow-Origin", "*");
@@ -30,7 +34,7 @@ app.get("/", (req, res) => {
 });
 
 // DB connection codes
-mongoose.connect(dbURI, {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -40,4 +44,4 @@ conn.once("open", function () {
   console.log("DB Connected successfully");
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+app.listen(port, () => console.log(`App is listening on ${host}:${port}...`));
