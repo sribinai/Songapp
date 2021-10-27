@@ -16,15 +16,26 @@ const app = express();
 app.use(logger); // Middleware to log in the server console
 app.use(function (req, res, next) {
   // Headers to remove possible errors in all requests
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+  // res.header("Access-Control-Allow-Origin", "*");
+  // res.header(
+  //   "Access-Control-Allow-Headers",
+  //   "Origin, X-Requested-With, Content-Type, Accept"
+  // );
   next();
 });
-
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 app.use(express.json());
+
 app.use("/playlist/api/room", roomInfo);
 app.use("/playlist/api/user", userInfo);
 

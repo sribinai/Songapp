@@ -102,11 +102,9 @@ const loginUser = async (req, res, next) => {
     }
     message = "Successfuly fetched User info.";
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    // const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     return res
       .status(200)
       .json({ success: true, token, message, user_id: user._id });
-    // .json({ success: true, data: user, message, user_id: user._id });
   } catch (error) {
     message = error._message;
     return res.status(500).json({ success: false, message });
