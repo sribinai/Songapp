@@ -8,13 +8,14 @@ import Swal from "sweetalert2";
 
 const LoginSignUp = () => {
   const [signUpShow, setSignUpShow] = useState(true);
+  // State for redirecting to dashboard on login success
+  const [redirectHome, setRedirectHome] = useState(false);
 
   // States to save the user details
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [confirmUserPassword, setConfirmUserPassword] = useState("");
-
   // States to get login info
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -55,33 +56,55 @@ const LoginSignUp = () => {
   };
   // Function for createUser api call
   const createUser = async () => {
-    console.log("create user");
     try {
       const response = await axios.post(
-        `${DATA_URL}/playlist/api/user/createUser`,
+        `${DATA_URL}/playlist/api/user/sign-up`,
         {
           name: userName,
           email: userEmail,
           password: userPassword,
         }
       );
-      console.log(response);
       if (response.status === 200) {
-        console.log("success");
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "You have been successfully signed up.",
+        });
+        setRedirectHome(true);
+        return;
       } else {
-        console.log("error");
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
+        return;
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      if (error.response.data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
     }
   };
   // handleCreateUser to submit room data when create Room button is clicked
   const handleCreateUser = (e) => {
     e.preventDefault();
-    createUser();
-    // if (validateCreateUser()) {
-    //   createUser();
-    // }
+    // createUser();
+    if (validateCreateUser()) {
+      createUser();
+    }
   };
 
   // Validation for login details
@@ -109,16 +132,56 @@ const LoginSignUp = () => {
   };
   // function for login api call
   const getUser = async () => {
-    console.log("get User");
+    try {
+      const response = await axios.post(`${DATA_URL}/playlist/api/user/login`, {
+        email: loginEmail,
+        password: loginPassword,
+      });
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "You have successfully logged in to your account.",
+        });
+        setRedirectHome(true);
+        return;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
+    }
   };
   // handleGetUser to submit and login
   const handleGetUser = (e) => {
     e.preventDefault();
-    getUser();
-    // if (validateGetUser()) {
-    //   getUser();
-    // }
+    // getUser();
+    if (validateGetUser()) {
+      getUser();
+    }
   };
+
+  if (redirectHome) {
+    return <Redirect to='/' />;
+  }
 
   return (
     <Container fluid>
