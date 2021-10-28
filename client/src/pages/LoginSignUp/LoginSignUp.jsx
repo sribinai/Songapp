@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
+
+import "./login-signup.styles.css";
 
 const LoginSignUp = () => {
+  // State to show signup form if true
   const [signUpShow, setSignUpShow] = useState(true);
   // State for redirecting to dashboard on login success
   const [redirectHome, setRedirectHome] = useState(false);
-
   // States to save the user details
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -185,112 +186,122 @@ const LoginSignUp = () => {
 
   return (
     <Container fluid>
-      <Row md={2} xs={1}>
-        <Col className='bg-warning d-flex flex-column justify-content-center align-items-center'>
-          {signUpShow ? (
-            <div className='d-flex flex-column w-100 m-4 p-5 rounded'>
-              <h3>SignUp Form</h3>
-              <Form.Group className='mb-2'>
-                <Form.Label>Enter your Name</Form.Label>
-                <Form.Control
-                  type='text'
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className='mb-2'>
-                <Form.Label>Enter your EmailID</Form.Label>
-                <Form.Control
-                  type='email'
-                  value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className='mb-2'>
-                <Form.Label>Set up your password</Form.Label>
-                <Form.Control
-                  type='password'
-                  value={userPassword}
-                  onChange={(e) => setUserPassword(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className='mb-2'>
-                <Form.Label>Confirm your password</Form.Label>
-                <Form.Control
-                  type='password'
-                  value={confirmUserPassword}
-                  onChange={(e) => setConfirmUserPassword(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className='mb-2'>
-                <Button className='rounded-pill' onClick={handleCreateUser}>
-                  Submit Details
-                </Button>
-              </Form.Group>
-            </div>
-          ) : (
-            <div className='d-flex flex-column text-center m-4 p-5 rounded'>
-              <p>Don't have an Account?</p>
-              <Button
-                className='rounded-pill'
-                onClick={() => setSignUpShow(true)}
-              >
-                Go to SignUp
+      <Row md={2} xs={1} style={{ minHeight: "100vh" }}>
+        <Col className='bg-warning d-flex flex-column justify-content-center align-items-center form-div'>
+          <div
+            className={`${
+              signUpShow ? "d-flex" : "d-none"
+            } flex-column w-100 m-4 p-5 form-space`}
+          >
+            <h3>SignUp Form</h3>
+            <Form.Group className='mb-2'>
+              <Form.Label>Enter your Name</Form.Label>
+              <Form.Control
+                type='text'
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className='mb-2'>
+              <Form.Label>Enter your EmailID</Form.Label>
+              <Form.Control
+                type='email'
+                value={userEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className='mb-2'>
+              <Form.Label>Set up your password</Form.Label>
+              <Form.Control
+                type='password'
+                value={userPassword}
+                onChange={(e) => setUserPassword(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className='mb-2'>
+              <Form.Label>Confirm your password</Form.Label>
+              <Form.Control
+                type='password'
+                value={confirmUserPassword}
+                onChange={(e) => setConfirmUserPassword(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className='mb-2'>
+              <Button className='rounded-pill' onClick={handleCreateUser}>
+                Submit Details
               </Button>
-              <p className='mt-4'>
-                Go to{" "}
-                <Link to='/'>
-                  <span className='text-primary'>HomePage</span>
-                </Link>
-                .
-              </p>
-            </div>
-          )}
+            </Form.Group>
+          </div>
+          <div
+            className={`${
+              signUpShow ? "d-none" : "d-flex"
+            } flex-column text-center m-4 p-5 form-space`}
+          >
+            <p>Don't have an Account?</p>
+            <Button
+              className='rounded-pill'
+              onClick={() => setSignUpShow(true)}
+            >
+              Go to SignUp
+            </Button>
+            <p className='mt-4'>
+              Go to{" "}
+              <Link to='/'>
+                <span className='text-primary'>HomePage</span>
+              </Link>
+              .
+            </p>
+          </div>
         </Col>
-        <Col className='bg-light d-flex flex-column justify-content-center align-items-center'>
-          {!signUpShow ? (
-            <div className='d-flex flex-column w-100 m-4 p-5 rounded'>
-              <h3>Login Form</h3>
-              <Form.Group className='mb-2'>
-                <Form.Label>Enter your EmailID</Form.Label>
-                <Form.Control
-                  type='email'
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className='mb-2'>
-                <Form.Label>Enter your password</Form.Label>
-                <Form.Control
-                  type='password'
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className='mb-2'>
-                <Button className='rounded-pill' onClick={handleGetUser}>
-                  Login
-                </Button>
-              </Form.Group>
-            </div>
-          ) : (
-            <div className='d-flex flex-column text-center m-4 p-5 rounded'>
-              <p>Already have an Account?</p>
-              <Button
-                className='rounded-pill'
-                onClick={() => setSignUpShow(false)}
-              >
-                Go to Login
+        <Col className='bg-light d-flex flex-column justify-content-center align-items-center form-div'>
+          <div
+            className={`${
+              signUpShow ? "d-none" : "d-flex"
+            } flex-column w-100 m-4 p-5 form-space`}
+          >
+            <h3>Login Form</h3>
+            <Form.Group className='mb-2'>
+              <Form.Label>Enter your EmailID</Form.Label>
+              <Form.Control
+                type='email'
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className='mb-2'>
+              <Form.Label>Enter your password</Form.Label>
+              <Form.Control
+                type='password'
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className='mb-2'>
+              <Button className='rounded-pill' onClick={handleGetUser}>
+                Login
               </Button>
-              <p className='mt-4'>
-                Go to{" "}
-                <Link to='/'>
-                  <span className='text-primary'>HomePage</span>
-                </Link>
-                .
-              </p>
-            </div>
-          )}
+            </Form.Group>
+          </div>
+          <div
+            className={`${
+              signUpShow ? "d-flex" : "d-none"
+            } flex-column text-center m-4 p-5 form-space`}
+          >
+            <p>Already have an Account?</p>
+            <Button
+              className='rounded-pill'
+              onClick={() => setSignUpShow(false)}
+            >
+              Go to Login
+            </Button>
+            <p className='mt-4'>
+              Go to{" "}
+              <Link to='/'>
+                <span className='text-primary'>HomePage</span>
+              </Link>
+              .
+            </p>
+          </div>
         </Col>
       </Row>
     </Container>

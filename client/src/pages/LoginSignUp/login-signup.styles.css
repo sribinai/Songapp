@@ -1,0 +1,16 @@
+.form-div {
+  min-height: 200px;
+  background: linear-gradient(
+      rgba(245, 46, 179, 0.45),
+      rgba(124, 30, 133, 0.45)
+    ),
+    url("../../images/backgrounds/abstract.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.form-space {
+  border-radius: 20px;
+  background-color: rgba(188, 210, 223, 0.8);
+}
