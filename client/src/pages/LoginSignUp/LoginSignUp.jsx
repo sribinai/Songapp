@@ -66,6 +66,7 @@ const LoginSignUp = () => {
           password: userPassword,
         }
       );
+      console.log(response);
       if (response.status === 200) {
         Swal.fire({
           icon: "success",
@@ -138,6 +139,7 @@ const LoginSignUp = () => {
         email: loginEmail,
         password: loginPassword,
       });
+      console.log(response);
       if (response.status === 200) {
         Swal.fire({
           icon: "success",
