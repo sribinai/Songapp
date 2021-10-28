@@ -57,7 +57,7 @@ const createUser = async (req, res, next) => {
     try {
       // Data is being stored in DB
       const data = await userModel.create(userInfo);
-      message = "Your account has been created successfully.";
+      message = "User account has been created successfully.";
       return res.status(200).json({ success: true, data, message });
     } catch (error) {
       message = error._message;
@@ -67,7 +67,7 @@ const createUser = async (req, res, next) => {
 };
 
 // Controller to login User
-const getUser = async (req, res, next) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   let message = "";
   // Schema defination for Validation of details recieved
@@ -85,30 +85,30 @@ const getUser = async (req, res, next) => {
     message = error.details[0].message;
     return res.status(400).json({ success: false, message });
   }
-  // Fetch user details if exists
+
+  // Testing STARTS here
   try {
-    let userData = await userModel.find({
-      email,
-      password,
-    });
-    if (userData.length === 0) {
-      // user does exists
-      message = "You have entered invalid credentials.";
-      return res.status(400).json({ success: false, message });
-    } else {
-      // Fetch data from Database
-      jwt.sign({ user_id: userData._id }, "playlistKey", (err, token) => {
-        res.json({
-          token,
-        });
-      });
-      message = "Successfuly fetched User info.";
-      return res.status(200).json({ success: true, data: userData, message });
+    const user = await userModel.findOne({ email }).select("+password");
+    // If user does not exist
+    if (!user) {
+      message = "Account does not exist with this emailID.";
+      return res.status(401).json({ success: false, message });
     }
+    // Check if password matches
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) {
+      message = "You have entered wrong password.";
+      return res.status(401).json({ success: false, message });
+    }
+    message = "Successfuly fetched User info.";
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    return res
+      .status(200)
+      .json({ success: true, token, message, user_id: user._id });
   } catch (error) {
     message = error._message;
     return res.status(500).json({ success: false, message });
   }
 };
 
-module.exports = { checkUserExists, createUser, getUser };
+module.exports = { checkUserExists, createUser, loginUser };
