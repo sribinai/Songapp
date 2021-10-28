@@ -1,11 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-
 // Accessing dotenv variables
 dotenv.config({ path: "./config/config.env" });
-let host = process.env.HOST;
-let port = process.env.PORT;
 
 const logger = require("./middlewares/logger");
 const roomInfo = require("./routes/roomRoute");
@@ -22,11 +19,6 @@ app.use(function (req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  // res.header("Access-Control-Allow-Origin", "*");
-  // res.header(
-  //   "Access-Control-Allow-Headers",
-  //   "Origin, X-Requested-With, Content-Type, Accept"
-  // );
   next();
 });
 app.use(
@@ -41,7 +33,6 @@ app.use("/playlist/api/user", userInfo);
 
 app.get("/", (req, res) => {
   res.send("Welcome to play-my-playlist REST api");
-  // res.send('{ "Node JS", "/playlist/api" }');
 });
 
 // DB connection codes
@@ -55,4 +46,6 @@ conn.once("open", function () {
   console.log("DB Connected successfully");
 });
 
+let host = process.env.HOST;
+let port = process.env.PORT;
 app.listen(port, () => console.log(`App is listening on ${host}:${port}...`));
