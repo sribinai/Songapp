@@ -9,65 +9,126 @@ import "./player-dashboard.styles.css";
 const PlayerDashboard = () => {
   return (
     <div className='main-container'>
-      <MainHeaderDiv title='Exit Room' routeName='Home' />
+      <MainHeaderDiv
+        title='Exit Room'
+        routeName='Home'
+        redirectPromt={true}
+        promptMessage='Do you want to leave the room?'
+      />
       <div className='px-5 py-3 d-flex flex-column align-items-center'>
-        <div
-          className='d-flex justify-content-between align-items-center'
-          style={{ width: "100%" }}
-        >
-          <div>
-            <AvatarIcon imageUrl='https://robohash.org/9?set=set2' />
-          </div>
-          <div>
-            <Button size='lg' style={{ height: "50px", width: "180px" }}>
-              HOW TO PLAY
-            </Button>
-          </div>
-        </div>
+        <Container fluid>
+          <Row
+            className='mb-3 p-2 rounded'
+            style={{ backgroundColor: "rgb(200, 200, 200, 0.5)" }}
+          >
+            <Col lg={9} md={8} sm={7} xs={12} className='d-flex'>
+              <AvatarIcon imageUrl='https://robohash.org/36?set=set8' />
+              <div className='d-flex flex-column justify-content-center m-2'>
+                <h4>Host Name</h4>
+                <span>Raj</span>
+                {/* <span>Username</span> */}
+              </div>
+            </Col>
+            <Col
+              lg={3}
+              md={4}
+              sm={5}
+              xs={12}
+              className='d-flex justify-content-center align-items-center'
+            >
+              <Button
+                size='lg'
+                style={{ height: "60px", width: "100%", borderRadius: "10px" }}
+              >
+                HOW TO PLAY
+              </Button>
+            </Col>
+          </Row>
+        </Container>
         <Container
-          className='p-4'
+          className='px-4 py-2'
           style={{
             backgroundColor: "rgb(255, 210, 210)",
             minHeight: "200px",
             borderRadius: "5px",
           }}
         >
+          <div className='w-full text-center mb-3'>
+            <h3>Waiting Lobby...</h3>
+          </div>
           <div className='profile-icons-div'>
-            <AvatarIcon
-              imageUrl='https://robohash.org/10?set=set2'
-              statusDetails={true}
-              showStatus={true}
-            />
-            <AvatarIcon
-              imageUrl='https://robohash.org/11?set=set2'
-              statusDetails={false}
-              showStatus={true}
-            />
-            <AvatarIcon
-              imageUrl='https://robohash.org/12?set=set2'
-              statusDetails={true}
-              showStatus={true}
-            />
-            <AvatarIcon
-              imageUrl='https://robohash.org/13?set=set2'
-              statusDetails={false}
-              showStatus={true}
-            />
-            <AvatarIcon
-              imageUrl='https://robohash.org/14?set=set2'
-              statusDetails={false}
-              showStatus={true}
-            />
-            <AvatarIcon
-              imageUrl='https://robohash.org/15?set=set2'
-              statusDetails={true}
-              showStatus={true}
-            />
-            <AvatarIcon
-              imageUrl='https://robohash.org/16?set=set2'
-              statusDetails={true}
-              showStatus={true}
-            />
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/36?set=set8'
+                statusDetails={true}
+                showStatus={true}
+              />
+              <span>Raj</span>
+              <span>10 songs added</span>
+            </div>
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/46?set=set4'
+                statusDetails={false}
+                showStatus={true}
+              />
+              <span>John</span>
+              <span>No songs added</span>
+            </div>
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/10?set=set5'
+                statusDetails={true}
+                showStatus={true}
+              />
+              <span>Rahul</span>
+              <span>10 songs added</span>
+            </div>
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/14?set=set5'
+                statusDetails={true}
+                showStatus={true}
+              />
+              <span>Harry</span>
+              <span>2 songs added</span>
+            </div>
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/13?set=set24'
+                statusDetails={false}
+                showStatus={true}
+              />
+              <span>Yash</span>
+              <span>No songs added</span>
+            </div>
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/30?set=set3'
+                statusDetails={true}
+                showStatus={true}
+              />
+              <span>Raj</span>
+              <span>1 songs added</span>
+            </div>
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/11?set=set4'
+                statusDetails={true}
+                showStatus={true}
+              />
+              <span>Raj</span>
+              <span>10 songs added</span>
+            </div>
+            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+              <AvatarIcon
+                imageUrl='https://robohash.org/25?set=set4'
+                statusDetails={true}
+                showStatus={true}
+              />
+              <span>Raj</span>
+              <span>10 songs added</span>
+            </div>
           </div>
         </Container>
       </div>

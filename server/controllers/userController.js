@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
-const userModel = require("../model/userModel");
+const UserModel = require("../model/userModel");
 
 // check user exists controller
 const checkUserExists = async (req, res, next) => {
@@ -8,7 +8,7 @@ const checkUserExists = async (req, res, next) => {
   let message = "";
   // fetch data from Model and check if email exists
   try {
-    let userData = await userModel.find({ email });
+    let userData = await UserModel.find({ email });
     console.log(`arrayLength: ${userData.length}`);
     if (userData.length === 0) {
       // user does not exist
@@ -48,7 +48,7 @@ const createUser = async (req, res, next) => {
     return res.status(400).json({ success: false, message });
   }
   // Add data to database if does not exist already
-  let userData = await userModel.find({ email });
+  let userData = await UserModel.find({ email });
   if (userData.length !== 0) {
     // user does exists
     message = "User already exists";
@@ -56,7 +56,7 @@ const createUser = async (req, res, next) => {
   } else {
     try {
       // Data is being stored in DB
-      const data = await userModel.create(userInfo);
+      const data = await UserModel.create(userInfo);
       message = "User account has been created successfully.";
       return res.status(200).json({ success: true, data, message });
     } catch (error) {
@@ -88,7 +88,7 @@ const loginUser = async (req, res, next) => {
 
   // Testing STARTS here
   try {
-    const user = await userModel.findOne({ email }).select("+password");
+    const user = await UserModel.findOne({ email }).select("+password");
     // If user does not exist
     if (!user) {
       message = "Account does not exist with this emailID.";
@@ -101,10 +101,20 @@ const loginUser = async (req, res, next) => {
       return res.status(401).json({ success: false, message });
     }
     message = "Successfuly fetched User info.";
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    return res
-      .status(200)
-      .json({ success: true, token, message, user_id: user._id });
+    const expiration = process.env.DB_ENV === "testing" ? 100 : 604800000;
+    const token = jwt.sign(
+      { id: user._id, user_name: user.name },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: process.env.JWT_EXPIRE,
+      }
+    );
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + expiration),
+      secure: false, // set to true if your using https
+      httpOnly: true,
+    });
+    return res.status(200).json({ success: true, token, message });
   } catch (error) {
     message = error._message;
     return res.status(500).json({ success: false, message });
