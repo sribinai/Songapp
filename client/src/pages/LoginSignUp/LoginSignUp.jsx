@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { useCookies } from "react-cookie";
 
 import "./login-signup.styles.css";
 
 const LoginSignUp = () => {
+  const history = useHistory();
+  const [cookies, setCookie] = useCookies(["playlist_token"]);
   // State to show signup form if true
   const [signUpShow, setSignUpShow] = useState(true);
-  // State for redirecting to dashboard on login success
-  const [redirectHome, setRedirectHome] = useState(false);
   // States to save the user details
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -73,7 +74,7 @@ const LoginSignUp = () => {
           title: "Success",
           text: "You have been successfully signed up.",
         });
-        setRedirectHome(true);
+        history.push("/");
         return;
       } else {
         Swal.fire({
@@ -146,7 +147,11 @@ const LoginSignUp = () => {
           title: "Success",
           text: "You have successfully logged in to your account.",
         });
-        setRedirectHome(true);
+        setCookie("playlist_token", response.data.token);
+        console.log(cookies);
+        console.log(cookies.playlist_token);
+        // console.log(cookies.ivshr);
+        history.push("/");
         return;
       } else {
         Swal.fire({
@@ -181,10 +186,6 @@ const LoginSignUp = () => {
       getUser();
     }
   };
-
-  if (redirectHome) {
-    return <Redirect to='/' />;
-  }
 
   return (
     <Container fluid>

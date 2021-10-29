@@ -6,9 +6,8 @@ const RoomSchema = new mongoose.Schema({
     min: 4,
     required: true,
   },
-  host_name: {
+  host_id: {
     type: String,
-    min: 3,
     required: true,
   },
   room_name: {
