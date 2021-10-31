@@ -109,6 +109,7 @@ const joinRoom = async (req, res) => {
       room_id: room_id,
       password: password,
     });
+    // const players = await roomModel.find({ room_id })  // for adding players id in players for roomModel
     if (dbJoinRoom.length === 0) {
       output.status = "error";
       output.message = "You have entered invalid credentials.";

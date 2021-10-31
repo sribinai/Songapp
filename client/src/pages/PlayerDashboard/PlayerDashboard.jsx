@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
@@ -7,6 +7,9 @@ import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
 import "./player-dashboard.styles.css";
 
 const PlayerDashboard = () => {
+  const [userID, setUserID] = useState("617d339f9e6c76398283e20d"); // Hardcoded userID for now, will change once login is fixed
+  const [roomID, setRoomID] = useState("BPTQXQ"); // Hardcoded roomID for now, will change once login is fixed
+  const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
   return (
     <div className='main-container'>
       <MainHeaderDiv
@@ -24,9 +27,9 @@ const PlayerDashboard = () => {
             <Col lg={9} md={8} sm={7} xs={12} className='d-flex'>
               <AvatarIcon imageUrl='https://robohash.org/36?set=set8' />
               <div className='d-flex flex-column justify-content-center m-2'>
-                <h4>Host Name</h4>
-                <span>Raj</span>
-                {/* <span>Username</span> */}
+                {/* <h4>Host Name</h4> */}
+                <span>RoomID: {roomID}</span>
+                <span>Host Name: {guestName}</span>
               </div>
             </Col>
             <Col
@@ -40,7 +43,7 @@ const PlayerDashboard = () => {
                 size='lg'
                 style={{ height: "60px", width: "100%", borderRadius: "10px" }}
               >
-                HOW TO PLAY
+                Room Rules
               </Button>
             </Col>
           </Row>
@@ -63,7 +66,7 @@ const PlayerDashboard = () => {
                 statusDetails={true}
                 showStatus={true}
               />
-              <span>Raj</span>
+              <span>{guestName}</span>
               <span>10 songs added</span>
             </div>
             <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>

@@ -6,8 +6,9 @@ const cookieParser = require("cookie-parser");
 dotenv.config({ path: "./config/config.env" });
 
 const logger = require("./middlewares/logger");
-const roomInfo = require("./routes/roomRoute");
 const userInfo = require("./routes/userRoute");
+const roomInfo = require("./routes/roomRoute");
+const gameInfo = require("./routes/gameRoute");
 const app = express();
 
 app.use(logger); // Middleware to log in the server console
@@ -30,8 +31,9 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/playlist/api/room", roomInfo);
 app.use("/playlist/api/user", userInfo);
+app.use("/playlist/api/room", roomInfo);
+app.use("/playlist/api/game", gameInfo);
 
 app.get("/", (req, res) => {
   res.send("Welcome to play-my-playlist REST api");
