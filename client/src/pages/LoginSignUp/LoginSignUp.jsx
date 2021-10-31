@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { DATA_URL } from "../../index";
@@ -8,11 +8,12 @@ import { useCookies } from "react-cookie";
 
 import "./login-signup.styles.css";
 
-const LoginSignUp = () => {
+const LoginSignUp = (props) => {
   const history = useHistory();
   const [cookies, setCookie] = useCookies(["playlist_token"]);
   // State to show signup form if true
-  const [signUpShow, setSignUpShow] = useState(true);
+  // console.log(props.location.state.signUp);
+  const [signUpShow, setSignUpShow] = useState(null);
   // States to save the user details
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -21,6 +22,19 @@ const LoginSignUp = () => {
   // States to get login info
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+
+  // Load SignUp or Login page on mounting
+  useEffect(() => {
+    if (
+      props.location.state.signUp === undefined ||
+      props.location.state.signUp === true
+    ) {
+      setSignUpShow(true);
+    } else {
+      setSignUpShow(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Function for Validation for create user data
   const validateCreateUser = () => {
@@ -151,7 +165,14 @@ const LoginSignUp = () => {
         console.log(cookies);
         console.log(cookies.playlist_token);
         // console.log(cookies.ivshr);
-        history.push("/");
+        history.push({
+          pathname: "/",
+          search: "?login=success",
+          state: {
+            message: "You have successfully logged in to your account.",
+          },
+        });
+        // history.push("/");
         return;
       } else {
         Swal.fire({
@@ -205,6 +226,14 @@ const LoginSignUp = () => {
                 onChange={(e) => setUserName(e.target.value)}
               />
             </Form.Group>
+            {/* <Form.Group className='mb-2'>
+              <Form.Label>Choose a your Username</Form.Label>
+              <Form.Control
+                type='text'
+                // value={userName}
+                // onChange={(e) => setUserName(e.target.value)}
+              />
+            </Form.Group> */}
             <Form.Group className='mb-2'>
               <Form.Label>Enter your EmailID</Form.Label>
               <Form.Control

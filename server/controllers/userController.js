@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../model/userModel");
+// const mailgun = require("mailgun-js");
 
 // check user exists controller
 const checkUserExists = async (req, res, next) => {
@@ -29,7 +30,6 @@ const checkUserExists = async (req, res, next) => {
 const createUser = async (req, res, next) => {
   const userInfo = req.body;
   const { email } = req.body;
-
   let message = "";
   // Schema defination for Validation of details recieved
   const schema = Joi.object({
@@ -57,10 +57,44 @@ const createUser = async (req, res, next) => {
     try {
       // Data is being stored in DB
       const data = await UserModel.create(userInfo);
+      // Mailgun code starts to verify email address
+      // const mg = mailgun({
+      //   apiKey: process.env.MAILGUN_APIKEY,
+      //   domain: process.env.MAILGUN_DOMAIN,
+      // });
+      // let activate_token = jwt.sign(userInfo, process.env.JWT_ACC_ACTIVATE, {
+      //   expiresIn: "20m",
+      // });
+      // const emailData = {
+      //   from: "postmaster@sandboxfb72a17b4db84eb0bc70e636d3710af3.mailgun.org",
+      //   // from: "godsy6462@gmail.com",
+      //   // from: "Excited User <me@samples.mailgun.org>",
+      //   to: `godsonemmanuel07@gmail.com`,
+      //   subject: "Hello",
+      //   // text: "Testing some Mailgun awesomeness!",
+      //   html: `
+      //       <h2>Please click on given link to activate your account</h2>
+      //       <p>${process.env.CLIENT_URL}/authentication/activate/${activate_token}</p>`,
+      // };
+      // mg.messages().send(emailData, (error, body) => {
+      //   if (error) {
+      //     return res.json({
+      //       message: error.message,
+      //     });
+      //   }
+      //   // message = "User account has been created successfully.";
+      //   return res.status(200).json({
+      //     success: true,
+      //     emailData,
+      //     data,
+      //     message: "Activation Email has been sent",
+      //   });
+      // });
+      // return res.status(200).json({ success: true, data, message });
       message = "User account has been created successfully.";
       return res.status(200).json({ success: true, data, message });
     } catch (error) {
-      message = error._message;
+      message = error.message;
       return res.status(500).json({ success: false, message });
     }
   }
@@ -101,7 +135,6 @@ const loginUser = async (req, res, next) => {
       return res.status(401).json({ success: false, message });
     }
     message = "Successfuly fetched User info.";
-    const expiration = process.env.DB_ENV === "testing" ? 100 : 604800000;
     const token = jwt.sign(
       { id: user._id, user_name: user.name },
       process.env.JWT_SECRET_KEY,
@@ -109,11 +142,6 @@ const loginUser = async (req, res, next) => {
         expiresIn: process.env.JWT_EXPIRE,
       }
     );
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + expiration),
-      secure: false, // set to true if your using https
-      httpOnly: true,
-    });
     return res.status(200).json({ success: true, token, message });
   } catch (error) {
     message = error._message;

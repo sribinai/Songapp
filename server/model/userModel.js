@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
+    activation: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       min: [6, "Please choose more secure password atleast 6 characters."],
