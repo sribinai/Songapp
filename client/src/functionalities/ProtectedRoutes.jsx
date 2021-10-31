@@ -8,7 +8,8 @@ import { useCookies } from "react-cookie";
 function ProtectedRoute({ component: Component, ...restOfProps }) {
   const history = useHistory();
   const [cookies, setCookie] = useCookies(["playlist_token"]);
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  const isAuthenticated =
+    localStorage.getItem("isAuthenticated") === "true" ? true : false;
 
   // On mount check if the token data exists in DB
   // useEffect(() => {
