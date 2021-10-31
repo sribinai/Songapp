@@ -99,17 +99,25 @@ const JoinRoom = () => {
         });
       }
     } catch (err) {
-      // console.log(err.message);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: err.message,
-      });
+      // console.log(err.response.data.message);
+      if (err.response.data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err.message,
+        });
+      }
     }
   };
   const handleJoinRoom = (e) => {
     e.preventDefault();
-    if (validateJoinRoom) {
+    if (validateJoinRoom()) {
       joinRoom();
     }
   };
