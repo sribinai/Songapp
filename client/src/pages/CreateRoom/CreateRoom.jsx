@@ -21,9 +21,11 @@ import "./create-room.styles.css";
 
 const CreateRoom = () => {
   const [cookies, setCookie] = useCookies([""]);
+  const [userID, setUserID] = useState("617d339f9e6c76398283e20d"); // Hardcoded userID for now, will change once login is fixed
+  const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
   // console.log(`token: ${cookies.playlist_token}`);
-  const [userID, setUserID] = useState(null);
-  const [guestName, setGuestName] = useState("");
+  // const [userID, setUserID] = useState(null);
+  // const [guestName, setGuestName] = useState("");
   const [roomID, setRoomID] = useState("");
   const [roomName, setRoomName] = useState("");
   const [passCode, setPassCode] = useState("");
