@@ -3,10 +3,11 @@ const UserModel = require("../model/userModel");
 
 const getData = async (req, res) => {
   // console.log(tokenData);
+  // console.log(res.req.rawHeaders);
   res.json({
-    success: true,
+    auth: true,
     data: req.tokenData,
-    message: "Successfelly fetched User data.",
+    message: "Successfully fetched User data.",
   });
 };
 
@@ -17,7 +18,7 @@ const getUserData = async (req, res) => {
     return res.json({
       success: true,
       userInfo,
-      message: "Successfelly fetched User data.",
+      message: "Successfully fetched User data.",
     });
   } catch (error) {
     return res

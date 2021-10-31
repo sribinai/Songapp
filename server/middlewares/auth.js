@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const authenticateToken = (req, res, next) => {
   let token;
+  console.log(req.cookies.playlist_token);
+  // console.log(req.headers);
   console.log("in authenticate token");
   if (
     req.headers.authorization &&

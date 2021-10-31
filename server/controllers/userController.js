@@ -4,7 +4,7 @@ const UserModel = require("../model/userModel");
 // const mailgun = require("mailgun-js");
 
 // check user exists controller
-const checkUserExists = async (req, res, next) => {
+const checkUserExists = async (req, res) => {
   const { email } = req.body;
   let message = "";
   // fetch data from Model and check if email exists
@@ -142,6 +142,8 @@ const loginUser = async (req, res, next) => {
         expiresIn: process.env.JWT_EXPIRE,
       }
     );
+    res.cookie(`playlist_token`, token);
+    console.log(token);
     return res.status(200).json({ success: true, token, message });
   } catch (error) {
     message = error._message;

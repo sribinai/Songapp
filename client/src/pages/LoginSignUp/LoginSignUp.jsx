@@ -4,13 +4,13 @@ import axios from "axios";
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 
 import "./login-signup.styles.css";
 
 const LoginSignUp = (props) => {
   const history = useHistory();
-  const [cookies, setCookie] = useCookies(["playlist_token"]);
+  // const [cookies, setCookie] = useCookies(["playlist_token"]);
   // State to show signup form if true
   // console.log(props.location.state.signUp);
   const [signUpShow, setSignUpShow] = useState(null);
@@ -161,9 +161,9 @@ const LoginSignUp = (props) => {
           title: "Success",
           text: "You have successfully logged in to your account.",
         });
-        setCookie("playlist_token", response.data.token);
-        console.log(cookies);
-        console.log(cookies.playlist_token);
+        // setCookie("playlist_token", response.data.token);
+        // console.log(cookies);
+        // console.log(cookies.playlist_token);
         // console.log(cookies.ivshr);
         history.push({
           pathname: "/",
