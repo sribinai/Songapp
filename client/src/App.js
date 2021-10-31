@@ -6,6 +6,7 @@ import CreateRoom from "./pages/CreateRoom/CreateRoom";
 import PlayerDashboard from "./pages/PlayerDashboard/PlayerDashboard";
 import JoinRoom from "./pages/JoinRoom/JoinRoom";
 import NotFoundPage from "./pages/NotFoundPage";
+import ProtectedRoute from "./functionalities/ProtectedRoutes";
 
 function App() {
   return (
@@ -13,9 +14,10 @@ function App() {
       <Switch>
         <Route exact path='/' component={HomePage} />
         <Route exact path='/login-signup' component={LoginSignUp} />
-        <Route exact path='/createRoom' component={CreateRoom} />
-        <Route exact path='/joinRoom' component={JoinRoom} />
-        <Route exact path='/dashboard' component={PlayerDashboard} />
+        <ProtectedRoute exact path='/createRoom' component={CreateRoom} />
+        <ProtectedRoute exact path='/joinRoom' component={JoinRoom} />
+        <ProtectedRoute exact path='/dashboard' component={PlayerDashboard} />
+        {/* <Route exact path='/dashboard' component={PlayerDashboard} /> */}
         <Route exact path='*' component={NotFoundPage} />
       </Switch>
     </Router>

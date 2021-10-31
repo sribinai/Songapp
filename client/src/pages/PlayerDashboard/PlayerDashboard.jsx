@@ -13,7 +13,7 @@ const PlayerDashboard = () => {
         title='Exit Room'
         routeName='Home'
         redirectPromt={true}
-        promptMessage='Do you want to leave the room?'
+        promptMessage='Are you sure, you want to leave the room?'
       />
       <div className='px-5 py-3 d-flex flex-column align-items-center'>
         <Container fluid>

@@ -14,12 +14,16 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { FaCopy } from "react-icons/fa";
+import { useCookies } from "react-cookie";
 
 import { createRandomPassCode } from "../../functionalities/createPage.function";
 import "./create-room.styles.css";
 
 const CreateRoom = () => {
-  const userName = "Godson";
+  const [cookies, setCookie] = useCookies([""]);
+  // console.log(`token: ${cookies.playlist_token}`);
+  const [userID, setUserID] = useState(null);
+  const [guestName, setGuestName] = useState("");
   const [roomID, setRoomID] = useState("");
   const [roomName, setRoomName] = useState("");
   const [passCode, setPassCode] = useState("");
@@ -29,6 +33,12 @@ const CreateRoom = () => {
   const refPassInput = useRef(null);
   const [createRoomStatus, setCreateRoomStatus] = useState(false);
   // createRoomStatus will True if room is successfully created
+  // Component Mount actions
+  useEffect(() => {
+    // Room Code set during mount
+    console.log(`token: ${cookies.playlist_token}`);
+    fetchRoomID();
+  }, []);
 
   const fetchRoomID = async () => {
     try {
@@ -49,11 +59,6 @@ const CreateRoom = () => {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    // Room Code set during mount
-    fetchRoomID();
-  }, []);
 
   // Functions to copy text for roomID and room passcode to clipboard
   const copyPassCode = () => {
@@ -97,7 +102,7 @@ const CreateRoom = () => {
     try {
       const roomData = {
         room_id: roomID,
-        host_name: userName,
+        host_id: userID,
         room_name: roomName,
         password: passCode,
         no_of_players: noOfPlayers,
@@ -183,7 +188,7 @@ const CreateRoom = () => {
                 <Row className='py-2'>
                   <Form.Label>User Name:</Form.Label>
                   <Col xs={12} className='py-1'>
-                    <Form.Control type='text' value={userName} disabled />
+                    <Form.Control type='text' value={guestName} disabled />
                   </Col>
                 </Row>
                 <Row className='py-2'>
