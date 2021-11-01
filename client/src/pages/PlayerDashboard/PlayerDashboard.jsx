@@ -14,15 +14,52 @@ const PlayerDashboard = () => {
   const [roomID, setRoomID] = useState("BPTQXQ"); // Hardcoded roomID for now, will change once login is fixed
   const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
   const [songLink, setSongLink] = useState("");
+  const [songsList, setSongsList] = useState([]);
+
+  // Function to fetch songs of the user
+  const fetchSongs = async () => {
+    try {
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/game/get-songs`,
+        {
+          room_id: roomID,
+          player_id: userID,
+        }
+      );
+      // console.log(response);
+      if (response.status === 200) {
+        console.log(response.data.songs);
+        // Reset song input data to empty
+        setSongsList(response.data.songs);
+        // setSongsList("");
+        return;
+      }
+    } catch (error) {
+      // console.log(error);
+      if (error.response.data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
+    }
+  };
 
   useEffect(() => {
-    console.log("dashboard mounted");
-  });
+    fetchSongs();
+  }, []);
 
   // Function to add songs to the list
   const addSongs = async (e) => {
     e.preventDefault();
-    console.log("add songs function");
+    // console.log("add songs function");
     try {
       const response = await axios.post(
         `${DATA_URL}/playlist/api/game/add-song`,
@@ -224,8 +261,8 @@ const PlayerDashboard = () => {
               </Button>
             </Col>
           </Row>
-
-          <Row className='mb-2 px-4'>
+          {/* {songsList && songsList.map((item, index) => ())} */}
+          {/* <Row className='mb-2 px-4'>
             <Col xs={12} md={10}>
               <InputGroup style={{ position: "relative" }}>
                 <span
@@ -266,7 +303,54 @@ const PlayerDashboard = () => {
                 REMOVE
               </Button>
             </Col>
-          </Row>
+          </Row> */}
+          {songsList.map((song, index) => (
+            <Row className='mb-2 px-4'>
+              <Col xs={12} md={10}>
+                <InputGroup style={{ position: "relative" }}>
+                  <span
+                    style={{
+                      position: "absolute",
+                      zIndex: "4",
+                      left: "3px",
+                      top: "3px",
+                      height: "33px",
+                      width: "35px",
+                      overflow: "hidden",
+                      backgroundColor: "rgb(250, 100, 100)",
+                      boxShadow:
+                        "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
+                      border: "2px solid #fff",
+                      borderRadius: "50%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      color: "#fff",
+                    }}
+                  >
+                    <FaMusic />
+                  </span>
+                  <Form.Control
+                    type='url'
+                    value={song}
+                    style={{
+                      paddingLeft: "50px",
+                      borderRadius: "50px 0 0 50px",
+                    }}
+                    disabled
+                  />
+                  <InputGroup.Text className='px-1'>
+                    <FaPlay style={{ fontSize: "24px", width: "50px" }} />
+                  </InputGroup.Text>
+                </InputGroup>
+              </Col>
+              <Col xs={12} md={2}>
+                <Button variant='light' style={{ width: "100%" }}>
+                  REMOVE
+                </Button>
+              </Col>
+            </Row>
+          ))}
         </Container>
         <button className='start-game-button'>START GAME</button>
       </div>

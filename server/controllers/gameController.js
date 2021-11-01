@@ -32,9 +32,28 @@ const addSong = async (req, res) => {
 
 const getSongs = async (req, res) => {
   const { room_id, player_id } = req.body;
-  console.log(room_id);
-  console.log(player_id);
-  res.send({ get: "songs saved" });
+  try {
+    const gameData = await gameModel
+      .findOne({ room_id, player_id })
+      .select("+songs");
+    if (gameData.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No data exits." });
+    }
+    return res
+      .status(200)
+      .json({
+        success: true,
+        songs: gameData.songs,
+        message: "Successfully fetched songs.",
+      });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Some error occurred in server." });
+  }
+  // res.send({ get: "songs saved" });
 };
 
 module.exports = { addSong, getSongs };
