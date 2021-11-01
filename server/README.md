@@ -1,11 +1,27 @@
 # Backend codes for Play-My-Playlist app
 
 This is the backend part for play my playlist app. <br/>
+After you change to this directory;
+<br/>
 Be sure install the dependencies: <br/>
 
 ```
 npm install
 ```
+
+To run the code:
+
+```
+npm start
+```
+
+or
+
+```
+nodemon app
+```
+
+**_Note:_** _Be sure to add config variables within config folder for the project to run._ <br/>
 
 It uses the following tools:<br/>
 
