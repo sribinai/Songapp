@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
+import axios from "axios";
+import { DATA_URL } from "../../index";
+import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
 import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
@@ -10,6 +13,61 @@ const PlayerDashboard = () => {
   const [userID, setUserID] = useState("617d339f9e6c76398283e20d"); // Hardcoded userID for now, will change once login is fixed
   const [roomID, setRoomID] = useState("BPTQXQ"); // Hardcoded roomID for now, will change once login is fixed
   const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
+  const [songLink, setSongLink] = useState("");
+
+  useEffect(() => {
+    console.log("dashboard mounted");
+  });
+
+  // Function to add songs to the list
+  const addSongs = async (e) => {
+    e.preventDefault();
+    console.log("add songs function");
+    try {
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/game/add-song`,
+        {
+          room_id: roomID,
+          player_id: userID,
+          song: songLink,
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: response.data.message,
+        });
+        // Reset song input data to empty
+        setSongLink("");
+        return;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
+        return;
+      }
+    } catch (error) {
+      // console.log(error);
+      if (error.response.data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
+    }
+  };
+
   return (
     <div className='main-container'>
       <MainHeaderDiv
@@ -143,7 +201,12 @@ const PlayerDashboard = () => {
           <Row xs={1} md={2} className='mb-2 px-4'>
             <Col xs={12} md={10}>
               <InputGroup>
-                <Form.Control type='url' placeholder='Place link here' />
+                <Form.Control
+                  type='url'
+                  value={songLink}
+                  onChange={(e) => setSongLink(e.target.value)}
+                  placeholder='Place link here'
+                />
                 <InputGroup.Text className='px-1'>
                   <FaCloudUploadAlt
                     style={{ fontSize: "24px", width: "50px" }}
@@ -152,7 +215,11 @@ const PlayerDashboard = () => {
               </InputGroup>
             </Col>
             <Col xs={12} md={2}>
-              <Button className='btn-light' style={{ width: "100%" }}>
+              <Button
+                variant='light'
+                onClick={addSongs}
+                style={{ width: "100%" }}
+              >
                 ADD
               </Button>
             </Col>
@@ -195,7 +262,7 @@ const PlayerDashboard = () => {
               </InputGroup>
             </Col>
             <Col xs={12} md={2}>
-              <Button className='btn-light' style={{ width: "100%" }}>
+              <Button variant='light' style={{ width: "100%" }}>
                 REMOVE
               </Button>
             </Col>
