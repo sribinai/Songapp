@@ -12,4 +12,17 @@ Go to the directory:
 cd play-my-playlist
 ```
 
-Then, install the dependencies for client and server.
+Then, install the dependencies for client and server, after changing to that directory;
+<br/>
+<br/>
+For client folder:
+
+```
+cd client
+```
+
+For server folder:
+
+```
+cd server
+```
