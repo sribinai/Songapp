@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import "./card.styles.css";
 
-function CardComponent({ cardHeading }) {
+function CardComponent({ cardHeading, textContent }) {
   return (
     <Card className='card-container'>
       <Card.Body>
@@ -21,9 +21,7 @@ function CardComponent({ cardHeading }) {
             {cardHeading}
           </Link>
         </Card.Title>
-        <Card.Text className='card-text'>
-          Play along with your friends
-        </Card.Text>
+        <Card.Text className='card-text'>{textContent}</Card.Text>
         <p>
           Click below to{" "}
           <span

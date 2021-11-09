@@ -67,10 +67,16 @@ const HomePage = () => {
         </Row>
         <Row xs={1} lg={2}>
           <Col className='d-flex justify-content-center'>
-            <CardComponent cardHeading='Create Room' />
+            <CardComponent
+              cardHeading='Create Room'
+              textContent='Play along with your friends'
+            />
           </Col>
           <Col className='d-flex justify-content-center'>
-            <CardComponent cardHeading='Join Room' />
+            <CardComponent
+              cardHeading='Join Room'
+              textContent='Play along with your friends'
+            />
           </Col>
         </Row>
       </Container>
