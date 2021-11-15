@@ -15,7 +15,9 @@ const authenticateToken = (req, res, next) => {
   // Make sure the token exists
   if (!token) {
     return next(
-      res.status(401).json({ message: "Not authorized to access this route" })
+      res
+        .status(401)
+        .json({ auth: false, message: "Not authorized to access this route" })
     );
     // return next(new Error("Not authorized to access this route", 401));
   }
@@ -30,9 +32,11 @@ const authenticateToken = (req, res, next) => {
     return next(
       res
         .status(401)
-        .json({ message: "Oops...!! Not authorized to access this route" })
+        .json({
+          auth: false,
+          message: "Oops...!! Not authorized to access this route",
+        })
     );
-    // return next(new Error("Not authorized to access this route", 401));
   }
 };
 

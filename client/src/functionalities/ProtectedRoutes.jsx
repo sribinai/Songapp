@@ -26,7 +26,7 @@ function ProtectedRoute({ component: Component, ...restOfProps }) {
           withCredentials: true,
         }
       );
-      console.log(response);
+      // console.log(response);
       setUserInfo(response.data);
       setIsLoaded(true);
     } catch (err) {
@@ -54,7 +54,7 @@ function ProtectedRoute({ component: Component, ...restOfProps }) {
     return (
       <Route
         {...restOfProps}
-        render={(props) => <Component {...props} {...userInfo} />}
+        render={(props) => <Component {...props} userInfo={userInfo} />}
       />
     );
   }
