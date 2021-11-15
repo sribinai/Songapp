@@ -14,18 +14,13 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { FaCopy } from "react-icons/fa";
-import { useCookies } from "react-cookie";
 
 import { createRandomPassCode } from "../../functionalities/createPage.function";
 import "./create-room.styles.css";
 
-const CreateRoom = () => {
-  const [cookies, setCookie] = useCookies([""]);
-  const [userID, setUserID] = useState("617d339f9e6c76398283e20d"); // Hardcoded userID for now, will change once login is fixed
-  const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
-  // console.log(`token: ${cookies.playlist_token}`);
-  // const [userID, setUserID] = useState(null);
-  // const [guestName, setGuestName] = useState("");
+const CreateRoom = ({ userInfo }) => {
+  const [userID, setUserID] = useState(null); // Hardcoded userID for now, will change once login is fixed
+  const [guestName, setGuestName] = useState(""); // Hardcoded guestName for now, will change once login is fixed
   const [roomID, setRoomID] = useState("");
   const [roomName, setRoomName] = useState("");
   const [passCode, setPassCode] = useState("");
@@ -35,11 +30,14 @@ const CreateRoom = () => {
   const refPassInput = useRef(null);
   const [createRoomStatus, setCreateRoomStatus] = useState(false);
   // createRoomStatus will True if room is successfully created
-  // Component Mount actions
+
+  // Room Code set during mount
   useEffect(() => {
-    // Room Code set during mount
-    console.log(`token: ${cookies.playlist_token}`);
+    // console.log(userInfo.data);
+    setUserID(userInfo.data.id);
+    setGuestName(userInfo.data.user_name);
     fetchRoomID();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchRoomID = async () => {

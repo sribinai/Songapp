@@ -11,7 +11,7 @@ import "./login-signup.styles.css";
 
 const LoginSignUp = (props) => {
   const history = useHistory();
-  const [cookies, setCookie] = useCookies(["playlist_token"]);
+  const [setCookie] = useCookies(["playlist_token"]);
   // State to show signup form if true
   // console.log(props.location.state.signUp);
   const [signUpShow, setSignUpShow] = useState(null);
@@ -26,6 +26,7 @@ const LoginSignUp = (props) => {
 
   // Load SignUp or Login page on mounting
   useEffect(() => {
+    checkValidToken();
     if (
       props.location.state.signUp === undefined ||
       props.location.state.signUp === true
@@ -36,6 +37,33 @@ const LoginSignUp = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Check if the token is valid, redirect to HomePage
+  const checkValidToken = async () => {
+    try {
+      const response = await axios.get(
+        `${DATA_URL}/playlist/api/user/get-data`,
+        {
+          withCredentials: true,
+        }
+      );
+      // console.log(response);
+      if (response.status === 200) {
+        if (response.data.auth === true) {
+          // Redirect to Homepage
+          history.push({
+            pathname: "/",
+            search: "?user=authorized",
+          });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      if (err.response) {
+        console.log(err.response);
+      }
+    }
+  };
 
   // Function for Validation for create user data
   const validateCreateUser = () => {
@@ -155,7 +183,7 @@ const LoginSignUp = (props) => {
         email: loginEmail,
         password: loginPassword,
       });
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         Swal.fire({
           icon: "success",
