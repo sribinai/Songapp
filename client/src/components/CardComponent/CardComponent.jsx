@@ -6,7 +6,7 @@ import "./card.styles.css";
 
 function CardComponent({ cardHeading, textContent }) {
   return (
-    <Card className='card-container'>
+    <Card className='card-container text-light my-2'>
       <Card.Body>
         <Card.Title className='card-heading' style={{ fontSize: "40px" }}>
           <Link
@@ -43,7 +43,7 @@ function CardComponent({ cardHeading, textContent }) {
               : "#"
           }`}
         >
-          <Card.Text className='card-arrow-symbol'>&#129046;</Card.Text>
+          <Card.Text className='card-arrow-symbol mb-2'>&#129046;</Card.Text>
         </Link>
       </Card.Body>
     </Card>

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
@@ -9,20 +10,20 @@ const logger = require("./middlewares/logger");
 const userInfo = require("./routes/userRoute");
 const roomInfo = require("./routes/roomRoute");
 const gameInfo = require("./routes/gameRoute");
+
 const app = express();
 
+let corsOptions = {
+  origin: true,
+  methods: ["GET", "PUT", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  preflightContinue: true,
+  optionsSuccessStatus: 200,
+};
+
 app.use(logger); // Middleware to log in the server console
-app.use(function (req, res, next) {
-  // Headers to remove possible errors in all requests
-  res.setHeader("Content-Type", "application/json");
-  res.header("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.use(cors(corsOptions));
 app.use(
   express.urlencoded({
     extended: true,
@@ -52,4 +53,6 @@ conn.once("open", function () {
 
 let host = process.env.HOST;
 let port = process.env.PORT;
-app.listen(port, () => console.log(`App is listening on ${host}:${port}...`));
+app.listen(port, () =>
+  console.log(`App is listening on http://${host}:${port}...`)
+);

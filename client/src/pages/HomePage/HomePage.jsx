@@ -7,6 +7,8 @@ import CardComponent from "../../components/CardComponent/CardComponent";
 import FloatingDiv from "../../components/FloatingDiv/FloatingDiv";
 
 import "./homepage.styles.css";
+import axios from "axios";
+import { DATA_URL } from "../..";
 
 const HomePage = () => {
   let history = useHistory();
@@ -59,6 +61,21 @@ const HomePage = () => {
       <Container>
         <Row>
           <Col>
+            {/* Just for testing the working of authenticate middleware in backend */}
+            {/* <button
+              onClick={async (e) => {
+                e.preventDefault();
+                const res = await axios.get(
+                  `${DATA_URL}/playlist/api/user/get-data`,
+                  {
+                    withCredentials: true,
+                  }
+                );
+                console.log(res);
+              }}
+            >
+              Click Me
+            </button> */}
             <HeaderDiv
               headerText='A multiplayer Social Game to play along with your friends in a private
           room.'

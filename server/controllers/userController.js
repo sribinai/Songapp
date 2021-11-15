@@ -10,14 +10,18 @@ const checkUserExists = async (req, res) => {
   // fetch data from Model and check if email exists
   try {
     let userData = await UserModel.find({ email });
-    console.log(`arrayLength: ${userData.length}`);
+    // console.log(`arrayLength: ${userData.length}`);
     if (userData.length === 0) {
       // user does not exist
       message = "User does not exist.";
-      return res.status(400).json({ success: false, message });
+      return res
+        .status(400)
+        .json({ success: false, message, test: req.cookies });
     } else {
       message = "User already exists.";
-      return res.status(200).json({ success: true, message });
+      return res
+        .status(200)
+        .json({ success: true, message, test: req.cookies });
       //   return res.status(200).json({ success: true, data: userData, message });
     }
   } catch (error) {
@@ -137,13 +141,10 @@ const loginUser = async (req, res, next) => {
     message = "Successfuly fetched User info.";
     const token = jwt.sign(
       { id: user._id, user_name: user.name },
-      process.env.JWT_SECRET_KEY,
-      {
-        expiresIn: process.env.JWT_EXPIRE,
-      }
+      process.env.JWT_SECRET_KEY
     );
-    res.cookie(`playlist_token`, token);
-    console.log(token);
+    // res.cookies(`playlist_token`, token, { httpOnly: true });
+    // console.log(token);
     return res.status(200).json({ success: true, token, message });
   } catch (error) {
     message = error._message;

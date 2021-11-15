@@ -1,13 +1,5 @@
 .card-container {
-  min-height: 250px;
-  color: white;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-  padding-bottom: 50px;
-  /* background-color: #29539b; */
   background: linear-gradient(315deg, #29539b 0%, #1e3b70 74%);
-  position: relative;
-  box-shadow: 8px 10px 8px skyblue;
 }
 
 .card-heading {
@@ -20,9 +12,9 @@
   font-size: 26px;
 }
 .card-arrow-symbol {
-  position: absolute;
-  bottom: 60px;
   line-height: 0;
   font-size: 100px;
-  color: white;
+}
+.card-arrow-symbol:hover {
+  color: rgb(250, 200, 200);
 }

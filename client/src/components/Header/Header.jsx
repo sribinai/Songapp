@@ -15,7 +15,7 @@ function HeaderDiv({ headerText }) {
         />
       </Row>
       <Row className='hr-line' />
-      <Row className='heading-content mb-2'>
+      <Row className='heading-content'>
         <Col>{headerText}</Col>
       </Row>
     </Container>
