@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+import ReactCSSTransitionGroup from "react-transition-group";
 import axios from "axios";
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-// import { useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 import "./login-signup.styles.css";
 
 const LoginSignUp = (props) => {
   const history = useHistory();
-  // const [cookies, setCookie] = useCookies(["playlist_token"]);
+  const [cookies, setCookie] = useCookies(["playlist_token"]);
   // State to show signup form if true
   // console.log(props.location.state.signUp);
   const [signUpShow, setSignUpShow] = useState(null);
@@ -125,7 +126,7 @@ const LoginSignUp = (props) => {
   };
 
   // Validation for login details
-  const validateGetUser = () => {
+  const validateLoginUser = () => {
     let title = "",
       text = "";
     // validate data given by user to login
@@ -148,7 +149,7 @@ const LoginSignUp = (props) => {
     }
   };
   // function for login api call
-  const getUser = async () => {
+  const loginUser = async () => {
     try {
       const response = await axios.post(`${DATA_URL}/playlist/api/user/login`, {
         email: loginEmail,
@@ -161,10 +162,8 @@ const LoginSignUp = (props) => {
           title: "Success",
           text: "You have successfully logged in to your account.",
         });
-        // setCookie("playlist_token", response.data.token);
-        // console.log(cookies);
+        setCookie("playlist_token", response.data.token);
         // console.log(cookies.playlist_token);
-        // console.log(cookies.ivshr);
         history.push({
           pathname: "/",
           search: "?login=success",
@@ -184,7 +183,8 @@ const LoginSignUp = (props) => {
       }
     } catch (error) {
       console.log(error);
-      if (error.response.data.message) {
+      if (error.response) {
+        console.log(error.response);
         Swal.fire({
           icon: "error",
           title: "Oops..",
@@ -200,11 +200,11 @@ const LoginSignUp = (props) => {
     }
   };
   // handleGetUser to submit and login
-  const handleGetUser = (e) => {
+  const handleLoginUser = (e) => {
     e.preventDefault();
     // getUser();
-    if (validateGetUser()) {
-      getUser();
+    if (validateLoginUser()) {
+      loginUser();
     }
   };
 
@@ -309,7 +309,7 @@ const LoginSignUp = (props) => {
               />
             </Form.Group>
             <Form.Group className='mb-2'>
-              <Button className='rounded-pill' onClick={handleGetUser}>
+              <Button className='rounded-pill' onClick={handleLoginUser}>
                 Login
               </Button>
             </Form.Group>
