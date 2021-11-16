@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import HeaderDiv from "../../components/Header/Header";
@@ -7,14 +7,43 @@ import CardComponent from "../../components/CardComponent/CardComponent";
 import FloatingDiv from "../../components/FloatingDiv/FloatingDiv";
 
 import "./homepage.styles.css";
-import axios from "axios";
 import { DATA_URL } from "../..";
+import axios from "axios";
 
 const HomePage = () => {
   let history = useHistory();
   const positionValue = [0, 16]; // postion left and top, in vw and vh respectively
   const paddingValue = [10, 5, 10, 5]; // top, right, bottom, left in pixels
   const borderRadiusValue = [0, 20, 20, 0]; // left top, right top, right bottom, left bottom in pixels
+
+  // states for useInfo
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      checkValidToken();
+    }
+  }, [isLoaded]);
+
+  const checkValidToken = async () => {
+    try {
+      const response = await axios.get(
+        `${DATA_URL}/playlist/api/user/get-data`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+      setUserInfo(response.data);
+    } catch (err) {
+      console.log(err);
+      if (err.response) {
+        console.log(err.response);
+      }
+    }
+  };
+
   return (
     <div className='main-container'>
       <FloatingDiv
@@ -25,38 +54,57 @@ const HomePage = () => {
         textDivColor='red'
         textColor='black'
         color='white'
-        title='It seems you are not signed in.'
+        title={`${
+          !userInfo ? "It seems you are not signed in." : "You are logged In"
+        }`}
       >
-        <div className='d-flex justify-content-around w-100'>
+        {!userInfo ? (
+          <div className='d-flex justify-content-around w-100'>
+            <Button
+              variant='warning'
+              className='rounded-pill border-1 border-dark'
+              onClick={() =>
+                history.push({
+                  pathname: "/login-signup",
+                  state: {
+                    signUp: false,
+                  },
+                })
+              }
+            >
+              Log In
+            </Button>
+            <Button
+              variant='info'
+              className='rounded-pill border-1 border-dark'
+              onClick={() =>
+                history.push({
+                  pathname: "/login-signup",
+                  state: {
+                    signUp: true,
+                  },
+                })
+              }
+            >
+              Sign Up
+            </Button>
+          </div>
+        ) : (
           <Button
             variant='warning'
-            className='rounded-pill border-1 border-dark'
-            onClick={() =>
-              history.push({
-                pathname: "/login-signup",
-                state: {
-                  signUp: false,
-                },
-              })
-            }
+            className='rounded-pill border-1 border-dark mt-2'
+            // onClick={() =>
+            //   history.push({
+            //     pathname: "/login-signup",
+            //     state: {
+            //       signUp: true,
+            //     },
+            //   })
+            // }
           >
-            Log In
+            Log Out
           </Button>
-          <Button
-            variant='info'
-            className='rounded-pill border-1 border-dark'
-            onClick={() =>
-              history.push({
-                pathname: "/login-signup",
-                state: {
-                  signUp: true,
-                },
-              })
-            }
-          >
-            Sign Up
-          </Button>
-        </div>
+        )}
       </FloatingDiv>
       <Container>
         <Row>
