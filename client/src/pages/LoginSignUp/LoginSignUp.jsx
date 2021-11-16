@@ -11,7 +11,7 @@ import "./login-signup.styles.css";
 
 const LoginSignUp = (props) => {
   const history = useHistory();
-  const [setCookie] = useCookies(["playlist_token"]);
+  const [cookie, setCookie] = useCookies(["playlist_token"]);
   // State to show signup form if true
   // console.log(props.location.state.signUp);
   const [signUpShow, setSignUpShow] = useState(null);
@@ -58,9 +58,10 @@ const LoginSignUp = (props) => {
         }
       }
     } catch (err) {
-      console.log(err);
       if (err.response) {
         console.log(err.response);
+      } else {
+        console.log(err);
       }
     }
   };
