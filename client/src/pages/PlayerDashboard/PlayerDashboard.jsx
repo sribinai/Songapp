@@ -8,13 +8,18 @@ import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv"
 import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
 
 import "./player-dashboard.styles.css";
+import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
 
-const PlayerDashboard = () => {
-  const [userID, setUserID] = useState("617d339f9e6c76398283e20d"); // Hardcoded userID for now, will change once login is fixed
-  const [roomID, setRoomID] = useState("BPTQXQ"); // Hardcoded roomID for now, will change once login is fixed
-  const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
+const PlayerDashboard = (props) => {
+  // const [userID, setUserID] = useState("619266e10695619266e10695e8b6fcf2c035e8b6fcf2c035"); // Hardcoded userID for now, will change once login is fixed
+  // const [roomID, setRoomID] = useState("XKITGS"); // Hardcoded roomID for now, will change once login is fixed
+  // const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
+  const [userID, setUserID] = useState(""); // Hardcoded userID for now, will change once login is fixed
+  const [roomID, setRoomID] = useState(""); // Hardcoded roomID for now, will change once login is fixed
+  const [guestName, setGuestName] = useState(""); // Hardcoded guestName for now, will change once login is fixed
   const [songLink, setSongLink] = useState("");
   const [songsList, setSongsList] = useState([]);
+  const [showRules, setShowRules] = useState(false);
 
   // Function to fetch songs of the user
   const fetchSongs = async () => {
@@ -26,23 +31,24 @@ const PlayerDashboard = () => {
           player_id: userID,
         }
       );
-      // console.log(response);
+      console.log(response);
       if (response.status === 200) {
-        console.log(response.data.songs);
+        // console.log(response.data.songsData);
         // Reset song input data to empty
-        setSongsList(response.data.songs);
+        setSongsList(response.data.songsData);
         // setSongsList("");
         return;
       }
     } catch (error) {
-      // console.log(error);
-      if (error.response.data.message) {
+      if (error.response) {
+        console.log(error.response);
         Swal.fire({
           icon: "error",
           title: "Oops..",
           text: error.response.data.message,
         });
       } else {
+        console.log(error);
         Swal.fire({
           icon: "error",
           title: "Oops..",
@@ -53,7 +59,18 @@ const PlayerDashboard = () => {
   };
 
   useEffect(() => {
-    fetchSongs();
+    // console.log(props);
+    setUserID(props.userInfo.data.id);
+    setGuestName(props.userInfo.data.user_name);
+    setRoomID(props.userInfo.data.room_id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userID, roomID]);
+
+  useEffect(() => {
+    if (userID.length !== 0 && roomID.length !== 0) {
+      fetchSongs();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Function to add songs to the list
@@ -71,6 +88,7 @@ const PlayerDashboard = () => {
       );
       console.log(response);
       if (response.status === 200) {
+        fetchSongs();
         Swal.fire({
           icon: "success",
           title: "Success",
@@ -137,11 +155,18 @@ const PlayerDashboard = () => {
               <Button
                 size='lg'
                 style={{ height: "60px", width: "100%", borderRadius: "10px" }}
+                onClick={() => setShowRules(true)}
               >
                 Room Rules
               </Button>
             </Col>
           </Row>
+          <PlayInstructionsModal
+            show={showRules}
+            onHide={() => setShowRules(false)}
+          >
+            Game rules set by the Host.
+          </PlayInstructionsModal>
         </Container>
         <Container
           className='px-4 py-2'
@@ -304,53 +329,54 @@ const PlayerDashboard = () => {
               </Button>
             </Col>
           </Row> */}
-          {songsList.map((song, index) => (
-            <Row className='mb-2 px-4'>
-              <Col xs={12} md={10}>
-                <InputGroup style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      zIndex: "4",
-                      left: "3px",
-                      top: "3px",
-                      height: "33px",
-                      width: "35px",
-                      overflow: "hidden",
-                      backgroundColor: "rgb(250, 100, 100)",
-                      boxShadow:
-                        "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
-                      border: "2px solid #fff",
-                      borderRadius: "50%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "#fff",
-                    }}
-                  >
-                    <FaMusic />
-                  </span>
-                  <Form.Control
-                    type='url'
-                    value={song}
-                    style={{
-                      paddingLeft: "50px",
-                      borderRadius: "50px 0 0 50px",
-                    }}
-                    disabled
-                  />
-                  <InputGroup.Text className='px-1'>
-                    <FaPlay style={{ fontSize: "24px", width: "50px" }} />
-                  </InputGroup.Text>
-                </InputGroup>
-              </Col>
-              <Col xs={12} md={2}>
-                <Button variant='light' style={{ width: "100%" }}>
-                  REMOVE
-                </Button>
-              </Col>
-            </Row>
-          ))}
+          {songsList.length !== 0 &&
+            songsList.map((song, index) => (
+              <Row key={index} className='mb-2 px-4'>
+                <Col xs={12} md={10}>
+                  <InputGroup style={{ position: "relative" }}>
+                    <span
+                      style={{
+                        position: "absolute",
+                        zIndex: "4",
+                        left: "3px",
+                        top: "3px",
+                        height: "33px",
+                        width: "35px",
+                        overflow: "hidden",
+                        backgroundColor: "rgb(250, 100, 100)",
+                        boxShadow:
+                          "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
+                        border: "2px solid #fff",
+                        borderRadius: "50%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "#fff",
+                      }}
+                    >
+                      <FaMusic />
+                    </span>
+                    <Form.Control
+                      type='url'
+                      value={song}
+                      style={{
+                        paddingLeft: "50px",
+                        borderRadius: "50px 0 0 50px",
+                      }}
+                      disabled
+                    />
+                    <InputGroup.Text className='px-1'>
+                      <FaPlay style={{ fontSize: "24px", width: "50px" }} />
+                    </InputGroup.Text>
+                  </InputGroup>
+                </Col>
+                <Col xs={12} md={2}>
+                  <Button variant='light' style={{ width: "100%" }}>
+                    REMOVE
+                  </Button>
+                </Col>
+              </Row>
+            ))}
         </Container>
         <button className='start-game-button'>START GAME</button>
       </div>

@@ -8,7 +8,8 @@ import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv"
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { IoMdEye, IoIosEyeOff } from "react-icons/io";
 
-const JoinRoom = () => {
+const JoinRoom = (props) => {
+  // console.log(props);
   const [roomID, setRoomID] = useState("");
   const [password, setPassword] = useState("");
   const [viewPassword, setViewPassword] = useState(false);
@@ -77,14 +78,19 @@ const JoinRoom = () => {
   // Function to check submit room details
   const joinRoom = async () => {
     try {
-      let joinData = { room_id: roomID, password: password };
-      console.log(joinData);
+      let joinData = {
+        room_id: roomID,
+        password: password,
+        player_id: props.userInfo.data.id,
+      };
+      // console.log(joinData);
       const response = await axios.post(
         `${DATA_URL}/playlist/api/room/joinRoom`,
         joinData
       );
       // console.log(response);
       if (response.status === 200) {
+        props.userInfo.data.room_id = roomID;
         Swal.fire({
           icon: "success",
           title: "Success",

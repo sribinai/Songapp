@@ -12,7 +12,7 @@ const GameSchema = new mongoose.Schema({
   },
   songs: {
     type: [String],
-    required: true,
+    required: false,
   },
 });
 

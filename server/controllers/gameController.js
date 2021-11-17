@@ -36,18 +36,17 @@ const getSongs = async (req, res) => {
     const gameData = await gameModel
       .findOne({ room_id, player_id })
       .select("+songs");
+    // console.log(gameData);
     if (gameData.length === 0) {
       return res
         .status(400)
         .json({ success: false, message: "No data exits." });
     }
-    return res
-      .status(200)
-      .json({
-        success: true,
-        songs: gameData.songs,
-        message: "Successfully fetched songs.",
-      });
+    return res.status(200).json({
+      success: true,
+      songsData: gameData.songs,
+      message: "Successfully fetched songs data.",
+    });
   } catch (error) {
     return res
       .status(500)

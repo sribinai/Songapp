@@ -2,6 +2,7 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 
 function PlayInstructionsModal(props) {
+  const { children } = props;
   return (
     <Modal
       {...props}
@@ -15,6 +16,9 @@ function PlayInstructionsModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {children}
+        <hr />
+        <h6>General Rules</h6>
         <ol>
           <i>The rules for the games are as follows:</i>
           <li>Login to your create account.</li>
@@ -23,7 +27,7 @@ function PlayInstructionsModal(props) {
             After the room is created, Join the room using the credentials.
           </li>
           <li>
-            After joining, each player must choose a few songe from their side.
+            After joining, each player must choose a few songs from their side.
           </li>
         </ol>
       </Modal.Body>
