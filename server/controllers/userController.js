@@ -31,7 +31,7 @@ const checkUserExists = async (req, res) => {
 };
 
 // Create user controller
-const createUser = async (req, res, next) => {
+const createUser = async (req, res) => {
   const userInfo = req.body;
   const { email } = req.body;
   let message = "";
@@ -105,8 +105,8 @@ const createUser = async (req, res, next) => {
 };
 
 // Controller to login User
-const loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
+const loginUser = async (req, res) => {
+  const { email, password, rememberMe } = req.body;
   let message = "";
   // Schema defination for Validation of details recieved
   const schema = Joi.object({
@@ -117,7 +117,7 @@ const loginUser = async (req, res, next) => {
       .required(),
   });
   // Validation of details recieved starts here
-  const validate = schema.validate(req.body);
+  const validate = schema.validate({ email, password });
   const { error } = validate;
   if (error) {
     message = error.details[0].message;
@@ -139,9 +139,16 @@ const loginUser = async (req, res, next) => {
       return res.status(401).json({ success: false, message });
     }
     message = "Successfuly fetched User info.";
+    let expireTime;
+    if (rememberMe) {
+      expireTime = process.env.JWT_SECRET_KEY;
+    } else {
+      expireTime = "10h";
+    }
     const token = jwt.sign(
       { id: user._id, user_name: user.name },
-      process.env.JWT_SECRET_KEY
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: expireTime }
     );
     // res.cookies(`playlist_token`, token, { httpOnly: true });
     // console.log(token);
@@ -152,4 +159,8 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { checkUserExists, createUser, loginUser };
+const logoutUser = async (req, res) => {
+  return res.status(200).json({ status: true, data: "Success logout" });
+};
+
+module.exports = { checkUserExists, createUser, loginUser, logoutUser };

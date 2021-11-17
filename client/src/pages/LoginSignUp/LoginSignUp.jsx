@@ -23,6 +23,7 @@ const LoginSignUp = (props) => {
   // States to get login info
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   // Load SignUp or Login page on mounting
   useEffect(() => {
@@ -183,6 +184,7 @@ const LoginSignUp = (props) => {
       const response = await axios.post(`${DATA_URL}/playlist/api/user/login`, {
         email: loginEmail,
         password: loginPassword,
+        rememberMe: rememberMe,
       });
       // console.log(response);
       if (response.status === 200) {
@@ -336,6 +338,17 @@ const LoginSignUp = (props) => {
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
               />
+            </Form.Group>
+            <Form.Group className='mb-2 d-flex'>
+              <Form.Check
+                type='checkbox'
+                value={rememberMe}
+                onChange={(e) => {
+                  setRememberMe(!rememberMe);
+                  console.log(rememberMe);
+                }}
+              />
+              <Form.Label className='ms-2'>Remember Me</Form.Label>
             </Form.Group>
             <Form.Group className='mb-2'>
               <Button className='rounded-pill' onClick={handleLoginUser}>

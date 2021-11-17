@@ -29,6 +29,7 @@ const FloatingDiv = ({
     backgroundColor: textDivColor,
     padding: `${padding[0]}px ${padding[1]}px ${padding[2]}px ${padding[3]}px`,
     height: "100%",
+    maxWidth: showTextDiv ? "100%" : "0px",
     display: showTextDiv ? "flex" : "none",
     flexDirection: "column",
     justifyContent: "center",
