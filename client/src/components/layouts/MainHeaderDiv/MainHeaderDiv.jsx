@@ -44,10 +44,13 @@ const MainHeaderDiv = ({ title, routeName, redirectPromt, promptMessage }) => {
           src={logo}
           alt='Logo'
           className='logo-image'
+          style={{ cursor: "pointer" }}
           onClick={redirectHome}
         />
       </div>
-      <span onClick={redirectPage}>{title}</span>
+      <span onClick={redirectPage} style={{ cursor: "pointer" }}>
+        {title}
+      </span>
     </div>
   );
 };

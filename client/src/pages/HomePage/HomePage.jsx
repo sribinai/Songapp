@@ -5,6 +5,7 @@ import HeaderDiv from "../../components/Header/Header";
 import FooterComponent from "../../components/Footer/FooterComponent";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import FloatingDiv from "../../components/FloatingDiv/FloatingDiv";
+import LoadingSpinner from "../../components/layouts/LoadingSpinner/LoadingSpinner";
 
 import "./homepage.styles.css";
 import { DATA_URL } from "../..";
@@ -36,81 +37,102 @@ const HomePage = () => {
       );
       console.log(response);
       setUserInfo(response.data);
+      setIsLoaded(true);
     } catch (err) {
       console.log(err);
       if (err.response) {
         console.log(err.response);
       }
+      setIsLoaded(true);
     }
   };
 
-  return (
-    <div className='main-container'>
-      <FloatingDiv
-        position={positionValue}
-        padding={paddingValue}
-        borderRadius={borderRadiusValue}
-        bgColor='orange'
-        textDivColor='red'
-        textColor='black'
-        color='white'
-        title={`${
-          !userInfo ? "It seems you are not signed in." : "You are logged In"
-        }`}
-      >
-        {!userInfo ? (
-          <div className='d-flex justify-content-around w-100'>
+  // logout user api call
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${DATA_URL}/playlist/api/user/logout`);
+      if (response.status === 200) {
+        console.log(response);
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      } else {
+        console.log(error.message);
+      }
+    }
+  };
+
+  if (!isLoaded) {
+    return (
+      <div className='main-container d-flex justify-content-center'>
+        <LoadingSpinner />
+      </div>
+    );
+  } else {
+    return (
+      <div className='main-container'>
+        <FloatingDiv
+          position={positionValue}
+          padding={paddingValue}
+          borderRadius={borderRadiusValue}
+          bgColor='orange'
+          textDivColor='red'
+          textColor='black'
+          color='white'
+          title={`${
+            !userInfo ? "It seems you are not signed in." : "You are logged In"
+          }`}
+        >
+          {!userInfo ? (
+            <div className='d-flex justify-content-around w-100'>
+              <Button
+                variant='warning'
+                className='rounded-pill border-1 border-dark'
+                onClick={() =>
+                  history.push({
+                    pathname: "/login-signup",
+                    state: {
+                      signUp: false,
+                    },
+                  })
+                }
+              >
+                Log In
+              </Button>
+              <Button
+                variant='info'
+                className='rounded-pill border-1 border-dark'
+                onClick={() =>
+                  history.push({
+                    pathname: "/login-signup",
+                    state: {
+                      signUp: true,
+                    },
+                  })
+                }
+              >
+                Sign Up
+              </Button>
+            </div>
+          ) : (
             <Button
               variant='warning'
-              className='rounded-pill border-1 border-dark'
-              onClick={() =>
-                history.push({
-                  pathname: "/login-signup",
-                  state: {
-                    signUp: false,
-                  },
-                })
-              }
+              className='rounded-pill border-1 border-dark mt-2'
+              onClick={handleLogout}
             >
-              Log In
+              Log Out
             </Button>
-            <Button
-              variant='info'
-              className='rounded-pill border-1 border-dark'
-              onClick={() =>
-                history.push({
-                  pathname: "/login-signup",
-                  state: {
-                    signUp: true,
-                  },
-                })
-              }
-            >
-              Sign Up
-            </Button>
-          </div>
-        ) : (
-          <Button
-            variant='warning'
-            className='rounded-pill border-1 border-dark mt-2'
-            // onClick={() =>
-            //   history.push({
-            //     pathname: "/login-signup",
-            //     state: {
-            //       signUp: true,
-            //     },
-            //   })
-            // }
-          >
-            Log Out
-          </Button>
-        )}
-      </FloatingDiv>
-      <Container>
-        <Row>
-          <Col>
-            {/* Just for testing the working of authenticate middleware in backend */}
-            {/* <button
+          )}
+        </FloatingDiv>
+        <Container>
+          <Row>
+            <Col>
+              {/* Just for testing the working of authenticate middleware in backend */}
+              {/* <button
               onClick={async (e) => {
                 e.preventDefault();
                 const res = await axios.get(
@@ -124,30 +146,31 @@ const HomePage = () => {
             >
               Click Me
             </button> */}
-            <HeaderDiv
-              headerText='A multiplayer Social Game to play along with your friends in a private
+              <HeaderDiv
+                headerText='A multiplayer Social Game to play along with your friends in a private
           room.'
-            />
-          </Col>
-        </Row>
-        <Row xs={1} lg={2}>
-          <Col className='d-flex justify-content-center'>
-            <CardComponent
-              cardHeading='Create Room'
-              textContent='Play along with your friends'
-            />
-          </Col>
-          <Col className='d-flex justify-content-center'>
-            <CardComponent
-              cardHeading='Join Room'
-              textContent='Play along with your friends'
-            />
-          </Col>
-        </Row>
-      </Container>
-      <FooterComponent />
-    </div>
-  );
+              />
+            </Col>
+          </Row>
+          <Row xs={1} lg={2}>
+            <Col className='d-flex justify-content-center'>
+              <CardComponent
+                cardHeading='Create Room'
+                textContent='Play along with your friends'
+              />
+            </Col>
+            <Col className='d-flex justify-content-center'>
+              <CardComponent
+                cardHeading='Join Room'
+                textContent='Play along with your friends'
+              />
+            </Col>
+          </Row>
+        </Container>
+        <FooterComponent />
+      </div>
+    );
+  }
 };
 
 export default HomePage;
