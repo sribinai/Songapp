@@ -120,8 +120,11 @@ const joinRoom = async (req, res) => {
     // const players = await roomModel.find({ room_id }); // for adding players id in players for roomModel
     // console.log(players);
     output.roomInfo = dbJoinRoom;
-    // when join room is successful add document the games collection
-    const data = await gameModel.create({ room_id, player_id });
+    // when join room is successful add document the games collection if not created already
+    const players = await gameModel.find({ room_id });
+    if (players.length === 0) {
+      const data = await gameModel.create({ room_id, player_id });
+    }
     // console.log(data);
     // console.log("hello");
   } catch (error) {

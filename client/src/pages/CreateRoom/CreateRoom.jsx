@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
@@ -19,6 +19,7 @@ import { createRandomPassCode } from "../../functionalities/createPage.function"
 import "./create-room.styles.css";
 
 const CreateRoom = ({ userInfo }) => {
+  let history = useHistory();
   const [userID, setUserID] = useState(null); // Hardcoded userID for now, will change once login is fixed
   const [guestName, setGuestName] = useState(""); // Hardcoded guestName for now, will change once login is fixed
   const [roomID, setRoomID] = useState("");
@@ -28,8 +29,6 @@ const CreateRoom = ({ userInfo }) => {
   const [roomRules, setRoomRules] = useState("");
 
   const refPassInput = useRef(null);
-  const [createRoomStatus, setCreateRoomStatus] = useState(false);
-  // createRoomStatus will True if room is successfully created
 
   // Room Code set during mount
   useEffect(() => {
@@ -121,7 +120,7 @@ const CreateRoom = ({ userInfo }) => {
           title: response.data.status === "success" ? "Success" : "Error",
           text: response.data.message,
         });
-        if (response.data.status === "success") setCreateRoomStatus(true);
+        if (response.data.status === "success") history.push("/joinRoom");
       } else {
         Swal.fire({
           icon: "error",
@@ -147,148 +146,140 @@ const CreateRoom = ({ userInfo }) => {
     }
   };
 
-  // createRoomStatus is true redirect to joinRoom page
-  if (createRoomStatus) {
-    return <Redirect to='/joinRoom' />;
-  } else {
-    return (
-      <div className='main-container'>
-        <MainHeaderDiv title='Join Room' routeName='joinRoom' />
-        <div className='create-room-div'>
-          <Container className='pb-1' fluid>
-            <Row>
-              <Col xs={12} md={6} lg={8}>
-                <h1>Create Room</h1>
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <div
-                  className='w-full bg-primary text-light rounded py-2 px-3 d-flex align-items-center justify-content-center'
-                  style={{ fontSize: "20px" }}
+  return (
+    <div className='main-container'>
+      <MainHeaderDiv title='Join Room' routeName='joinRoom' />
+      <div className='create-room-div'>
+        <Container className='pb-1' fluid>
+          <Row>
+            <Col xs={12} md={6} lg={8}>
+              <h1>Create Room</h1>
+            </Col>
+            <Col xs={12} md={6} lg={4}>
+              <div
+                className='w-full bg-primary text-light rounded py-2 px-3 d-flex align-items-center justify-content-center'
+                style={{ fontSize: "20px" }}
+              >
+                ROOM ID: <span className='px-2'>{roomID}</span>
+                <OverlayTrigger
+                  placement='top'
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={<Tooltip>Copy your RoomID</Tooltip>}
                 >
-                  ROOM ID: <span className='px-2'>{roomID}</span>
+                  <Button className='p-0 px-2'>
+                    <FaCopy style={{ fontSize: "20px" }} onClick={copyRoomID} />
+                  </Button>
+                </OverlayTrigger>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+        <Container fluid>
+          <Row xs={1} md={2}>
+            <Col xs={12} md={6}>
+              <Row className='py-2'>
+                <Form.Label>User Name:</Form.Label>
+                <Col xs={12} className='py-1'>
+                  <Form.Control type='text' value={guestName} disabled />
+                </Col>
+              </Row>
+              <Row className='py-2'>
+                <Form.Label>Room Name:</Form.Label>
+                <Col xs={12} className='py-1'>
+                  <Form.Control
+                    type='text'
+                    onChange={(e) => setRoomName(e.target.value)}
+                    value={roomName}
+                  />
+                </Col>
+              </Row>
+              <Row className='py-2'>
+                <Form.Label> Passcode: </Form.Label>
+                <Col xs={12} md={8} className='py-1'>
+                  <Form.Control
+                    ref={refPassInput}
+                    type='text'
+                    value={passCode}
+                    onChange={(e) => setPassCode(e.target.value)}
+                  />
+                </Col>
+                <Col xs={12} md={4} className='py-1'>
                   <OverlayTrigger
                     placement='top'
                     delay={{ show: 250, hide: 400 }}
-                    overlay={<Tooltip>Copy your RoomID</Tooltip>}
+                    overlay={<Tooltip>Copy your Passcode</Tooltip>}
                   >
-                    <Button className='p-0 px-2'>
-                      <FaCopy
-                        style={{ fontSize: "20px" }}
-                        onClick={copyRoomID}
-                      />
+                    <Button
+                      onClick={copyPassCode}
+                      style={{ fontSize: "20px", width: "100%" }}
+                    >
+                      <FaCopy />
                     </Button>
                   </OverlayTrigger>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-          <Container fluid>
-            <Row xs={1} md={2}>
-              <Col xs={12} md={6}>
-                <Row className='py-2'>
-                  <Form.Label>User Name:</Form.Label>
-                  <Col xs={12} className='py-1'>
-                    <Form.Control type='text' value={guestName} disabled />
-                  </Col>
-                </Row>
-                <Row className='py-2'>
-                  <Form.Label>Room Name:</Form.Label>
-                  <Col xs={12} className='py-1'>
-                    <Form.Control
-                      type='text'
-                      onChange={(e) => setRoomName(e.target.value)}
-                      value={roomName}
-                    />
-                  </Col>
-                </Row>
-                <Row className='py-2'>
-                  <Form.Label> Passcode: </Form.Label>
-                  <Col xs={12} md={8} className='py-1'>
-                    <Form.Control
-                      ref={refPassInput}
-                      type='text'
-                      value={passCode}
-                      onChange={(e) => setPassCode(e.target.value)}
-                    />
-                  </Col>
-                  <Col xs={12} md={4} className='py-1'>
-                    <OverlayTrigger
-                      placement='top'
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={<Tooltip>Copy your Passcode</Tooltip>}
-                    >
-                      <Button
-                        onClick={copyPassCode}
-                        style={{ fontSize: "20px", width: "100%" }}
-                      >
-                        <FaCopy />
-                      </Button>
-                    </OverlayTrigger>
-                  </Col>
-                </Row>
-                <Row className='py-2'>
-                  <Col>
-                    <Button
-                      onClick={() => setPassCode(createRandomPassCode())}
-                      style={{ width: "100%" }}
-                    >
-                      GENERATE PASSCODE
-                    </Button>
-                  </Col>
-                </Row>
-              </Col>
+                </Col>
+              </Row>
+              <Row className='py-2'>
+                <Col>
+                  <Button
+                    onClick={() => setPassCode(createRandomPassCode())}
+                    style={{ width: "100%" }}
+                  >
+                    GENERATE PASSCODE
+                  </Button>
+                </Col>
+              </Row>
+            </Col>
 
-              <Col xs={12} md={6}>
-                <Row className='py-2'>
-                  <Form.Label>Number of Participants:</Form.Label>
-                  <Col xs={12} className='py-1'>
-                    <Form.Select
-                      value={noOfPlayers}
-                      onChange={(e) => setNoOfPlayers(e.target.value)}
-                    >
-                      <option value='1'>1</option>
-                      <option value='2'>2</option>
-                      <option value='3'>3</option>
-                      <option value='4'>4</option>
-                      <option value='5'>5</option>
-                      <option value='6'>6</option>
-                      <option value='7'>7</option>
-                      <option value='8'>8</option>
-                      <option value='9'>9</option>
-                      <option value='10'>10</option>
-                    </Form.Select>
-                  </Col>
-                </Row>
-                <Row className='py-2'>
-                  <Form.Label> Room Rules: </Form.Label>
-                  <Col xs={12} className='py-1'>
-                    <Form.Control
-                      as='textarea'
-                      value={roomRules}
-                      onChange={(e) => setRoomRules(e.target.value)}
-                      style={{ height: "100px" }}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row className='d-flex justify-content-center my-1 py-4'>
-              <Col xs={12} sm={6} md={4} lg={3}>
-                <Button
-                  size='lg'
-                  className='mt-5'
-                  style={{ width: "100%" }}
-                  onClick={handleCreateRoom}
-                >
-                  CREATE ROOM
-                </Button>
-              </Col>
-            </Row>
-          </Container>
-        </div>
+            <Col xs={12} md={6}>
+              <Row className='py-2'>
+                <Form.Label>Number of Participants:</Form.Label>
+                <Col xs={12} className='py-1'>
+                  <Form.Select
+                    value={noOfPlayers}
+                    onChange={(e) => setNoOfPlayers(e.target.value)}
+                  >
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                    <option value='6'>6</option>
+                    <option value='7'>7</option>
+                    <option value='8'>8</option>
+                    <option value='9'>9</option>
+                    <option value='10'>10</option>
+                  </Form.Select>
+                </Col>
+              </Row>
+              <Row className='py-2'>
+                <Form.Label> Room Rules: </Form.Label>
+                <Col xs={12} className='py-1'>
+                  <Form.Control
+                    as='textarea'
+                    value={roomRules}
+                    onChange={(e) => setRoomRules(e.target.value)}
+                    style={{ height: "100px" }}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row className='d-flex justify-content-center my-1 py-4'>
+            <Col xs={12} sm={6} md={4} lg={3}>
+              <Button
+                size='lg'
+                className='mt-5'
+                style={{ width: "100%" }}
+                onClick={handleCreateRoom}
+              >
+                CREATE ROOM
+              </Button>
+            </Col>
+          </Row>
+        </Container>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default CreateRoom;
