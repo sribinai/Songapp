@@ -1,4 +1,5 @@
 const roomModel = require("../model/roomModel");
+const gameModel = require("../model/gameModel");
 const Joi = require("joi");
 
 // Generate random roomID
@@ -85,8 +86,7 @@ const checkRoom = async (req, res) => {
 
 // Route for Joining a particular room
 const joinRoom = async (req, res) => {
-  const joinInfo = req.body;
-  const { room_id, password } = req.body;
+  const { room_id, password, player_id } = req.body;
   let output = {};
   // Schema defination for Validation of details recieved
   const schema = Joi.object({
@@ -97,7 +97,7 @@ const joinRoom = async (req, res) => {
       .required(),
   });
   // Validation of details recieved for join room starts here
-  const validate = schema.validate(joinInfo);
+  const validate = schema.validate({ room_id, password });
   const { error } = validate;
   if (error) {
     output.status = "error";
@@ -105,18 +105,27 @@ const joinRoom = async (req, res) => {
     return res.status(400).send(output);
   }
   try {
-    let dbJoinRoom = await roomModel.find({
-      room_id: room_id,
-      password: password,
-    });
-    // const players = await roomModel.find({ room_id })  // for adding players id in players for roomModel
-    if (dbJoinRoom.length === 0) {
-      output.status = "error";
-      output.message = "You have entered invalid credentials.";
-      return res.status(400).send(output);
-    } else {
-      output.roomInfo = dbJoinRoom[0];
+    let dbJoinRoom = await roomModel.findOne({ room_id }).select("+password");
+
+    if (!dbJoinRoom) {
+      message = "Room does not exist with this roomID.";
+      return res.status(401).json({ success: false, message });
     }
+    // Check if password matches
+    const isMatch = await dbJoinRoom.matchPassword(password);
+    if (!isMatch) {
+      message = "You have entered wrong password.";
+      return res.status(401).json({ success: false, message });
+    }
+    // const players = await roomModel.find({ room_id }); // for adding players id in players for roomModel
+    // console.log(players);
+    output.roomInfo = dbJoinRoom;
+    // when join room is successful add document the games collection if not created already
+    const players = await gameModel.find({ room_id });
+    if (players.length === 0) {
+      const data = await gameModel.create({ room_id, player_id });
+    }
+    // console.log(data);
     // console.log("hello");
   } catch (error) {
     output.status = "error";
