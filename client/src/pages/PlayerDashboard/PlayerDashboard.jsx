@@ -11,16 +11,100 @@ import "./player-dashboard.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
 
 const PlayerDashboard = (props) => {
-  // const [userID, setUserID] = useState("619266e10695619266e10695e8b6fcf2c035e8b6fcf2c035"); // Hardcoded userID for now, will change once login is fixed
-  // const [roomID, setRoomID] = useState("XKITGS"); // Hardcoded roomID for now, will change once login is fixed
-  // const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
-  const [userID, setUserID] = useState(""); // Hardcoded userID for now, will change once login is fixed
-  const [roomID, setRoomID] = useState(""); // Hardcoded roomID for now, will change once login is fixed
-  const [guestName, setGuestName] = useState(""); // Hardcoded guestName for now, will change once login is fixed
+  const [userID, setUserID] = useState("");
+  const [roomID, setRoomID] = useState("");
+  const [guestName, setGuestName] = useState("");
+  const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
+
   const [songLink, setSongLink] = useState("");
   const [songsList, setSongsList] = useState([]);
   const [showRules, setShowRules] = useState(false);
 
+  // Function to set user Details
+  const setUserDetails = () => {
+    // Set userID, UserName/GuestName, RoomID
+    const room_id = props.location.search.split("=")[1];
+    setUserID(props.userInfo.data.id);
+    setGuestName(props.userInfo.data.user_name);
+    setRoomID(room_id);
+  };
+
+  // Function to fetch room Details
+  const fetchRoomDetails = async () => {
+    try {
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/room/get-room-details`,
+        {
+          room_id: roomID,
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        setRoomDetails(response.data.roomDetails);
+      } else {
+        console.log(response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
+    }
+  };
+  // Function to fetch players Details
+  const fetchPlayersDetails = async () => {
+    try {
+      console.log("fetch user details to view");
+      // const response = await axios.post(
+      //   `${DATA_URL}/playlist/api/room/get-room-details`,
+      //   {
+      //     room_id: roomID,
+      //   }
+      // );
+      // // console.log(response);
+      // if (response.status === 200) {
+      //   console.log(response.data);
+      // } else {
+      //   Swal.fire({
+      //     icon: "error",
+      //     title: "Oops..",
+      //     text: response.data.message,
+      //   });
+      // }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
+    }
+  };
   // Function to fetch songs of the user
   const fetchSongs = async () => {
     try {
@@ -33,15 +117,20 @@ const PlayerDashboard = (props) => {
       );
       console.log(response);
       if (response.status === 200) {
-        // console.log(response.data.songsData);
         // Reset song input data to empty
         setSongsList(response.data.songsData);
-        // setSongsList("");
         return;
+      } else {
+        console.log(response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
+        console.log(error.response.data.message);
         Swal.fire({
           icon: "error",
           title: "Oops..",
@@ -59,19 +148,15 @@ const PlayerDashboard = (props) => {
   };
 
   useEffect(() => {
-    // console.log(props);
-    setUserID(props.userInfo.data.id);
-    setGuestName(props.userInfo.data.user_name);
-    setRoomID(props.userInfo.data.room_id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID, roomID]);
-
-  useEffect(() => {
-    if (userID.length !== 0 && roomID.length !== 0) {
+    setUserDetails();
+    if (roomID.length !== 0 && userID.length !== 0) {
+      // Fetch all the details for this page
+      fetchRoomDetails();
+      fetchPlayersDetails();
       fetchSongs();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [roomID, userID]);
 
   // Function to add songs to the list
   const addSongs = async (e) => {
@@ -86,7 +171,7 @@ const PlayerDashboard = (props) => {
           song: songLink,
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         fetchSongs();
         Swal.fire({
@@ -139,11 +224,15 @@ const PlayerDashboard = (props) => {
           >
             <Col lg={9} md={8} sm={7} xs={12} className='d-flex'>
               <AvatarIcon imageUrl='https://robohash.org/36?set=set8' />
-              <div className='d-flex flex-column justify-content-center m-2'>
-                {/* <h4>Host Name</h4> */}
-                <span>RoomID: {roomID}</span>
-                <span>Host Name: {guestName}</span>
-              </div>
+              {roomDetails && (
+                <div className='d-flex flex-column justify-content-center m-2'>
+                  <span>RoomID: {roomID}</span>
+                  <span>RoomName: {roomDetails.room_name}</span>
+                  <span>Host Name: Godson</span>
+                  {/* <span>Host Name: {roomDetails.host_id}</span> */}
+                  <span>Player Limit: {roomDetails.no_of_players}</span>
+                </div>
+              )}
             </Col>
             <Col
               lg={3}
@@ -186,7 +275,7 @@ const PlayerDashboard = (props) => {
                 statusDetails={true}
                 showStatus={true}
               />
-              <span>{guestName}</span>
+              <span>Godson</span>
               <span>10 songs added</span>
             </div>
             <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
