@@ -154,6 +154,24 @@ const joinRoom = async (req, res) => {
   res.send(output);
 };
 
+// Get room Details
+const getRoomDetails = async (req, res) => {
+  const { room_id } = req.body;
+  let output;
+  try {
+    let roomDetails = await roomModel.findOne({ room_id }).select("-password");
+    console.log(roomDetails);
+  } catch (error) {
+    output.status = "error";
+    output.message = error._message;
+    return res.status(500).send(output);
+  }
+  output.roomDetails = roomDetails;
+  output.status = "success";
+  output.message = "Successfully joined into the room.";
+  res.send(output);
+};
+
 // Function to create a random roomID
 function createRoomId() {
   let characters = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
@@ -166,4 +184,10 @@ function createRoomId() {
   return newCode;
 }
 
-module.exports = { createRoomID, createRoom, checkRoom, joinRoom };
+module.exports = {
+  createRoomID,
+  createRoom,
+  checkRoom,
+  joinRoom,
+  getRoomDetails,
+};

@@ -10,6 +10,7 @@ router.get("/get-user-data", authenticateToken, authController.getUserData);
 router.post("/check-user-exists", UserController.checkUserExists);
 router.post("/sign-up", UserController.createUser);
 router.post("/login", UserController.loginUser);
-router.post("/logout", UserController.logoutUser);
+router.post("/logout", UserController.getUserDetails); // To be done
+router.post("/get-user-details", UserController.logoutUser); // To be done
 
 module.exports = router;

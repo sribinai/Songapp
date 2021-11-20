@@ -158,8 +158,19 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUserDetails = async (req, res) => {
+  const { user_id } = req.body;
+  return res.status(200).json({ status: true, data: "get userDetails block" });
+};
+
 const logoutUser = async (req, res) => {
   return res.status(200).json({ status: true, data: "Success logout" });
 };
 
-module.exports = { checkUserExists, createUser, loginUser, logoutUser };
+module.exports = {
+  checkUserExists,
+  createUser,
+  loginUser,
+  logoutUser,
+  getUserDetails,
+};
