@@ -20,13 +20,18 @@ import "./create-room.styles.css";
 
 const CreateRoom = ({ userInfo }) => {
   let history = useHistory();
-  const [userID, setUserID] = useState(null); // Hardcoded userID for now, will change once login is fixed
-  const [guestName, setGuestName] = useState(""); // Hardcoded guestName for now, will change once login is fixed
+  const [userID, setUserID] = useState(null);
+  const [guestName, setGuestName] = useState("");
   const [roomID, setRoomID] = useState("");
   const [roomName, setRoomName] = useState("");
   const [passCode, setPassCode] = useState("");
   const [noOfPlayers, setNoOfPlayers] = useState(1);
   const [roomRules, setRoomRules] = useState("");
+
+  // States for copy texts
+  const [copyRoomIDText, setCopyRoomIDText] = useState("Copy your RoomID");
+  const [copyPasscodeText, setCopyPasscodeText] =
+    useState("Copy your Passcode");
 
   const refPassInput = useRef(null);
 
@@ -63,9 +68,13 @@ const CreateRoom = ({ userInfo }) => {
   const copyPassCode = () => {
     refPassInput.current.select();
     navigator.clipboard.writeText(refPassInput.current.defaultValue);
+    setCopyPasscodeText("Copied");
+    setCopyRoomIDText("Copy your RoomID"); // If copied earlier reset its value
   };
   const copyRoomID = () => {
     navigator.clipboard.writeText(roomID);
+    setCopyRoomIDText("Copied");
+    setCopyPasscodeText("Copy your Passcode"); // If copied earlier reset its value
   };
   // Function for Validation for create room data
   const validateCreateRoom = () => {
@@ -161,7 +170,7 @@ const CreateRoom = ({ userInfo }) => {
                 <OverlayTrigger
                   placement='top'
                   delay={{ show: 250, hide: 400 }}
-                  overlay={<Tooltip>Copy your RoomID</Tooltip>}
+                  overlay={<Tooltip>{copyRoomIDText}</Tooltip>}
                 >
                   <Button className='p-0 px-2'>
                     <FaCopy style={{ fontSize: "20px" }} onClick={copyRoomID} />
@@ -204,7 +213,7 @@ const CreateRoom = ({ userInfo }) => {
                   <OverlayTrigger
                     placement='top'
                     delay={{ show: 250, hide: 400 }}
-                    overlay={<Tooltip>Copy your Passcode</Tooltip>}
+                    overlay={<Tooltip>{copyPasscodeText}</Tooltip>}
                   >
                     <Button
                       onClick={copyPassCode}

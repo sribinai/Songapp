@@ -43,10 +43,22 @@ const createRoom = async (req, res) => {
     output.message = error.details[0].message;
     return res.status(400).send(output);
   }
-  // Data is being stored in DB
-  const roomData = new roomModel(req.body);
   try {
-    await roomData.save();
+    // Check if the room exists return error
+    let roomData = await roomModel.find({ room_id: roomInfo.room_id });
+    if (roomData.length !== 0) {
+      message = "Room already exists";
+      return res.status(400).json({ success: false, message });
+    } else {
+      // Data is being stored in DB
+      let roomDetails = await roomModel.create({
+        ...roomInfo,
+        players: [roomInfo.host_id],
+      });
+      // const roomData = new roomModel({ ...roomInfo, players: [host_id] });
+      // await roomData.save();
+      output.roomInfo = roomDetails;
+    }
   } catch (error) {
     output.status = "error";
     output.message = error._message;
@@ -54,7 +66,6 @@ const createRoom = async (req, res) => {
     return res.status(500).send(output);
   }
   // If Data if fetched successfully send success status with data and message
-  output.roomInfo = roomData;
   output.status = "success";
   output.message = "You have successfully created the room.";
   res.json(output);
@@ -128,8 +139,9 @@ const joinRoom = async (req, res) => {
       });
       // If player Id does not already exist in array push it in players array and save it in document
       if (!exist) {
-        if (dbJoinRoom.no_of_players > players.length) {
-          message = "Player limit exeeded.";
+        // Check if the limit of number of players is exceeded if new player is added
+        if (dbJoinRoom.no_of_players < players.length + 1) {
+          message = "Request the Host to extend the players limit.";
           return res.status(501).json({ success: false, message });
         }
         players.push(player_id);
@@ -138,12 +150,12 @@ const joinRoom = async (req, res) => {
       }
     }
 
-    output.roomInfo = dbJoinRoom;
     // when join room is successful add document the games collection if not created already
-    const playersData = await gameModel.find({ room_id });
+    const playersData = await gameModel.find({ room_id, player_id });
     if (playersData.length === 0) {
       await gameModel.create({ room_id, player_id });
     }
+    output.roomInfo = dbJoinRoom;
   } catch (error) {
     output.status = "error";
     output.message = error._message;
@@ -168,7 +180,7 @@ const getRoomDetails = async (req, res) => {
   }
   output.roomDetails = roomDetails;
   output.status = "success";
-  output.message = "Successfully joined into the room.";
+  output.message = "Successfully fetched room Details.";
   res.send(output);
 };
 
