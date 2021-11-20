@@ -97,7 +97,6 @@ const CreateRoom = ({ userInfo }) => {
   };
   // Function for createRoom api call
   const createRoom = async () => {
-    // console.log("create room function called");
     try {
       const roomData = {
         room_id: roomID,
@@ -107,13 +106,11 @@ const CreateRoom = ({ userInfo }) => {
         no_of_players: noOfPlayers,
         room_rules: roomRules,
       };
-      // console.log(roomData);
       // api call for creating room in Database
       const response = await axios.post(
         `${DATA_URL}/playlist/api/room/createRoom`,
         roomData
       );
-      // console.log(response);
       if (response.status === 200) {
         Swal.fire({
           icon: response.data.status,

@@ -4,6 +4,7 @@ import axios from "axios";
 import { DATA_URL } from "../index";
 import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
+import LoadingSpinner from "../components/layouts/LoadingSpinner/LoadingSpinner";
 
 function ProtectedRoute({ component: Component, ...restOfProps }) {
   const history = useHistory();
@@ -39,7 +40,11 @@ function ProtectedRoute({ component: Component, ...restOfProps }) {
   };
 
   if (!isLoaded) {
-    return <p>Loading....</p>;
+    return (
+      <div className='main-container mt-5 d-flex justify-content-center'>
+        <LoadingSpinner />
+      </div>
+    );
   } else if (isLoaded === true && userInfo === null) {
     return (
       <Redirect

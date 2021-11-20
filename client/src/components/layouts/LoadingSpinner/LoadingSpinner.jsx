@@ -4,13 +4,25 @@ import "./loading-spinner.styles.css";
 
 const LoadingSpinner = () => {
   return (
-    <div>
-      <h2>Loading....</h2>
+    <div
+      style={{
+        height: "100px",
+        width: "100px",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <span>Loading....</span>
       <div
+        className='loading-spinner'
         style={{
-          height: "80px",
-          width: "80px",
-          border: "4px solid rgb(190, 190, 190, 0.8)",
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+          border: "3px solid rgb(190, 190, 190, 0.8)",
+          borderTop: "4px solid #fff",
           borderRadius: "50%",
         }}
       ></div>

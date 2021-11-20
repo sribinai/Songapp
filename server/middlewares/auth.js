@@ -30,12 +30,10 @@ const authenticateToken = (req, res, next) => {
     next();
   } catch (error) {
     return next(
-      res
-        .status(401)
-        .json({
-          auth: false,
-          message: "Oops...!! Not authorized to access this route",
-        })
+      res.status(401).json({
+        auth: false,
+        message: "Oops...!! Not authorized to access this route",
+      })
     );
   }
 };

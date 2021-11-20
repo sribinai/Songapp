@@ -17,7 +17,15 @@ const JoinRoom = (props) => {
   // Function to check if server exists
   const handleCheckServer = async (e) => {
     e.preventDefault();
-    // console.log("check server");
+    // if roomID not entered return error
+    if (roomID.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "No RoomID",
+        text: "You have not entered the room ID.",
+      });
+      return;
+    }
     try {
       const response = await axios.post(
         `${DATA_URL}/playlist/api/room/checkRoom`,

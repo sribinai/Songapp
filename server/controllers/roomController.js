@@ -106,6 +106,7 @@ const joinRoom = async (req, res) => {
   }
   try {
     let dbJoinRoom = await roomModel.findOne({ room_id }).select("+password");
+    // console.log(dbJoinRoom);
 
     if (!dbJoinRoom) {
       message = "Room does not exist with this roomID.";
@@ -117,16 +118,32 @@ const joinRoom = async (req, res) => {
       message = "You have entered wrong password.";
       return res.status(401).json({ success: false, message });
     }
-    // const players = await roomModel.find({ room_id }); // for adding players id in players for roomModel
-    // console.log(players);
+    // Adding new players joining room in
+    let players = [...dbJoinRoom.players];
+    if (players.length !== 0) {
+      let exist = false;
+      // Check for each item if the id already there in document
+      players.forEach((item) => {
+        if (item === player_id) exist = true;
+      });
+      // If player Id does not already exist in array push it in players array and save it in document
+      if (!exist) {
+        if (dbJoinRoom.no_of_players > players.length) {
+          message = "Player limit exeeded.";
+          return res.status(501).json({ success: false, message });
+        }
+        players.push(player_id);
+        dbJoinRoom.players = players;
+        await dbJoinRoom.save();
+      }
+    }
+
     output.roomInfo = dbJoinRoom;
     // when join room is successful add document the games collection if not created already
-    const players = await gameModel.find({ room_id });
-    if (players.length === 0) {
-      const data = await gameModel.create({ room_id, player_id });
+    const playersData = await gameModel.find({ room_id });
+    if (playersData.length === 0) {
+      await gameModel.create({ room_id, player_id });
     }
-    // console.log(data);
-    // console.log("hello");
   } catch (error) {
     output.status = "error";
     output.message = error._message;
