@@ -343,10 +343,7 @@ const LoginSignUp = (props) => {
               <Form.Check
                 type='checkbox'
                 value={rememberMe}
-                onChange={(e) => {
-                  setRememberMe(!rememberMe);
-                  console.log(rememberMe);
-                }}
+                onChange={(e) => setRememberMe(!rememberMe)}
               />
               <Form.Label className='ms-2'>Remember Me</Form.Label>
             </Form.Group>

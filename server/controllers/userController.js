@@ -140,8 +140,9 @@ const loginUser = async (req, res) => {
     }
     message = "Successfuly fetched User info.";
     let expireTime;
+    // set Expire time 10 days if remember me is checked else 10 hours
     if (rememberMe) {
-      expireTime = process.env.JWT_SECRET_KEY;
+      expireTime = process.env.JWT_EXPIRE;
     } else {
       expireTime = "10h";
     }
@@ -150,8 +151,6 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: expireTime }
     );
-    // res.cookies(`playlist_token`, token, { httpOnly: true });
-    // console.log(token);
     return res.status(200).json({ success: true, token, message });
   } catch (error) {
     message = error._message;
@@ -159,8 +158,19 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUserDetails = async (req, res) => {
+  const { user_id } = req.body;
+  return res.status(200).json({ status: true, data: "get userDetails block" });
+};
+
 const logoutUser = async (req, res) => {
   return res.status(200).json({ status: true, data: "Success logout" });
 };
 
-module.exports = { checkUserExists, createUser, loginUser, logoutUser };
+module.exports = {
+  checkUserExists,
+  createUser,
+  loginUser,
+  logoutUser,
+  getUserDetails,
+};

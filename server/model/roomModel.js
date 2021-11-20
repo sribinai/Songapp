@@ -17,8 +17,8 @@ const RoomSchema = new mongoose.Schema({
     required: true,
   },
   players: {
-    type: [Object],
-    required: false,
+    type: [String],
+    required: true,
   },
   password: {
     type: String,

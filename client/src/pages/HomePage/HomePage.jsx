@@ -68,7 +68,7 @@ const HomePage = () => {
 
   if (!isLoaded) {
     return (
-      <div className='main-container d-flex justify-content-center'>
+      <div className='main-container mt-5 d-flex justify-content-center'>
         <LoadingSpinner />
       </div>
     );
