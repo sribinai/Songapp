@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import HeaderDiv from "../../components/Header/Header";
 import FooterComponent from "../../components/Footer/FooterComponent";
@@ -13,6 +14,7 @@ import axios from "axios";
 
 const HomePage = () => {
   let history = useHistory();
+  const [cookie] = useCookies(["playlist_token"]);
   const positionValue = [0, 16]; // postion left and top, in vw and vh respectively
   const paddingValue = [10, 5, 10, 5]; // top, right, bottom, left in pixels
   const borderRadiusValue = [0, 20, 20, 0]; // left top, right top, right bottom, left bottom in pixels
@@ -39,9 +41,10 @@ const HomePage = () => {
       setUserInfo(response.data);
       setIsLoaded(true);
     } catch (err) {
-      console.log(err);
       if (err.response) {
         console.log(err.response);
+      } else {
+        console.log(err);
       }
       setIsLoaded(true);
     }
@@ -51,9 +54,13 @@ const HomePage = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${DATA_URL}/playlist/api/user/logout`);
+      console.log(cookie);
+      const response = await axios.get(`${DATA_URL}/playlist/api/user/logout`, {
+        withCredentials: true,
+      });
       if (response.status === 200) {
         console.log(response);
+        console.log(cookie);
       } else {
         console.log("error");
       }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 import axios from "axios";
+import io from "socket.io-client";
+
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
@@ -10,9 +12,12 @@ import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
 import "./player-dashboard.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
 
+const socket = io.connect(`http://localhost:4000`);
+
 const PlayerDashboard = (props) => {
   const [userID, setUserID] = useState("");
   const [roomID, setRoomID] = useState("");
+  const [hostName, setHostName] = useState("");
   const [guestName, setGuestName] = useState("");
   const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
 
@@ -41,6 +46,7 @@ const PlayerDashboard = (props) => {
       console.log(response);
       if (response.status === 200) {
         setRoomDetails(response.data.roomDetails);
+        setHostName(response.data.host_name);
       } else {
         console.log(response.data.message);
         Swal.fire({
@@ -71,22 +77,22 @@ const PlayerDashboard = (props) => {
   const fetchPlayersDetails = async () => {
     try {
       console.log("fetch user details to view");
-      // const response = await axios.post(
-      //   `${DATA_URL}/playlist/api/room/get-room-details`,
-      //   {
-      //     room_id: roomID,
-      //   }
-      // );
-      // // console.log(response);
-      // if (response.status === 200) {
-      //   console.log(response.data);
-      // } else {
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "Oops..",
-      //     text: response.data.message,
-      //   });
-      // }
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/user/get-user-details`,
+        {
+          user_id: userID,
+        }
+      );
+      // console.log(response);
+      if (response.status === 200) {
+        console.log(response.data);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
+      }
     } catch (error) {
       if (error.response) {
         console.log(error.response.data.message);
@@ -150,10 +156,17 @@ const PlayerDashboard = (props) => {
   useEffect(() => {
     setUserDetails();
     if (roomID.length !== 0 && userID.length !== 0) {
+      // socket = io(DATA_URL);
       // Fetch all the details for this page
       fetchRoomDetails();
-      fetchPlayersDetails();
+      // fetchPlayersDetails(); // Check if required later
       fetchSongs();
+      // console.log(socket);
+      socket.emit("join_room", {
+        user_id: userID,
+        room_id: roomID,
+        name: guestName,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomID, userID]);
@@ -228,7 +241,7 @@ const PlayerDashboard = (props) => {
                 <div className='d-flex flex-column justify-content-center m-2'>
                   <span>RoomID: {roomID}</span>
                   <span>RoomName: {roomDetails.room_name}</span>
-                  <span>Host Name: Godson</span>
+                  <span>Host Name: {hostName}</span>
                   {/* <span>Host Name: {roomDetails.host_id}</span> */}
                   <span>Player Limit: {roomDetails.no_of_players}</span>
                 </div>

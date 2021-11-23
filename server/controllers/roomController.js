@@ -1,5 +1,6 @@
 const roomModel = require("../model/roomModel");
 const gameModel = require("../model/gameModel");
+const UserModel = require("../model/userModel");
 const Joi = require("joi");
 
 // Generate random roomID
@@ -174,7 +175,12 @@ const getRoomDetails = async (req, res) => {
     let roomDetails = await roomModel
       .findOne({ room_id })
       .select("-password -_id"); // Fetching all details of room except password and _id
+    // fetch Hostname
+    let user = await UserModel.findOne({ user_id: roomDetails.host_id }).select(
+      "-password"
+    );
     output.roomDetails = roomDetails;
+    output.host_name = user.name;
   } catch (error) {
     output.status = "error";
     output.message = error._message;
