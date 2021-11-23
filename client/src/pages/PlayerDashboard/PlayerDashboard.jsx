@@ -111,6 +111,7 @@ const PlayerDashboard = (props) => {
       }
     }
   };
+
   // Function to fetch songs of the user
   const fetchSongs = async () => {
     try {
@@ -156,7 +157,6 @@ const PlayerDashboard = (props) => {
   useEffect(() => {
     setUserDetails();
     if (roomID.length !== 0 && userID.length !== 0) {
-      // socket = io(DATA_URL);
       // Fetch all the details for this page
       fetchRoomDetails();
       // fetchPlayersDetails(); // Check if required later
@@ -284,75 +284,12 @@ const PlayerDashboard = (props) => {
           <div className='profile-icons-div'>
             <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
               <AvatarIcon
-                imageUrl='https://robohash.org/36?set=set8'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Godson</span>
-              <span>10 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
                 imageUrl='https://robohash.org/46?set=set4'
                 statusDetails={false}
                 showStatus={true}
               />
-              <span>John</span>
+              <span>{guestName}</span>
               <span>No songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/10?set=set5'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Rahul</span>
-              <span>10 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/14?set=set5'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Harry</span>
-              <span>2 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/13?set=set24'
-                statusDetails={false}
-                showStatus={true}
-              />
-              <span>Yash</span>
-              <span>No songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/30?set=set3'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Raj</span>
-              <span>1 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/11?set=set4'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Raj</span>
-              <span>10 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/25?set=set4'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Raj</span>
-              <span>10 songs added</span>
             </div>
           </div>
         </Container>

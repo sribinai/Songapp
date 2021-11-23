@@ -6,15 +6,20 @@ import { BiWifiOff } from "react-icons/bi";
 
 import "./avatar-icon.styles.css";
 
-const AvatarIcon = ({ imageUrl, showStatus, statusDetails }) => {
+const AvatarIcon = ({
+  AvatarWidth = 100,
+  imageUrl,
+  showStatus,
+  statusDetails,
+}) => {
   return (
     <Figure
-      // style={{ height: "100px", width: "100px" }}
+      style={{ height: `${AvatarWidth}px`, width: `${AvatarWidth}px` }}
       className='avatar-icon-shape'
     >
       <Figure.Image
-        height='100px'
-        width='100px'
+        height={`${AvatarWidth}px`}
+        width={`${AvatarWidth}px`}
         alt='profile-image'
         src={imageUrl}
         className='avatar-icon'
