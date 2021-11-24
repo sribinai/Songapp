@@ -3,6 +3,8 @@ import logo from "../../../images/PMPL-LOGO.png";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./main-header.styles.css";
+import { Dropdown,DropdownButton } from "react-bootstrap";
+import AvatarIcon from "../../../components/AvatarIcon/AvatarIcon"
 
 const MainHeaderDiv = ({ title, routeName, redirectPromt, promptMessage }) => {
   const history = useHistory();
@@ -48,10 +50,30 @@ const MainHeaderDiv = ({ title, routeName, redirectPromt, promptMessage }) => {
           onClick={redirectHome}
         />
       </div>
-      <span onClick={redirectPage} style={{ cursor: "pointer" }}>
+
+      <div className="username">
+      
+         
+              <AvatarIcon imageUrl='https://robohash.org/34?set=set2' AvatarWidth= '30' />
+         
+                
+       <Dropdown className="d-inline mx-2">
+    <Dropdown.Toggle as= "span"id="dropdown-autoclose-true">
+      Godson
+    </Dropdown.Toggle>
+
+    <Dropdown.Menu>
+      
+      <Dropdown.Item href="#">User Settings</Dropdown.Item>
+      <Dropdown.Item href="#">Logout</Dropdown.Item>
+    </Dropdown.Menu>
+  </Dropdown>  
+       
+       <span onClick={redirectPage} style={{ cursor: "pointer" }}>
         {title}
       </span>
     </div>
+  </div>
   );
 };
 
