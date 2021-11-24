@@ -12,15 +12,19 @@ import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
 import "./player-dashboard.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
 
-const socket = io.connect(`http://localhost:4000`);
+let socket;
+// const socket = io.connect(`http://localhost:4000`);
 
 const PlayerDashboard = (props) => {
+  const ENDPOINT = DATA_URL;
   const [userID, setUserID] = useState("");
   const [roomID, setRoomID] = useState("");
   const [hostName, setHostName] = useState("");
   const [guestName, setGuestName] = useState("");
   const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
+  const [messages, setMessages] = useState([]);
 
+  const [songCount, setSongCount] = useState(0);
   const [songLink, setSongLink] = useState("");
   const [songsList, setSongsList] = useState([]);
   const [showRules, setShowRules] = useState(false);
@@ -126,6 +130,7 @@ const PlayerDashboard = (props) => {
       if (response.status === 200) {
         // Reset song input data to empty
         setSongsList(response.data.songsData);
+        setSongCount(response.data.songsData.length);
         return;
       } else {
         console.log(response.data.message);
@@ -157,6 +162,7 @@ const PlayerDashboard = (props) => {
   useEffect(() => {
     setUserDetails();
     if (roomID.length !== 0 && userID.length !== 0) {
+      socket = io(ENDPOINT);
       // Fetch all the details for this page
       fetchRoomDetails();
       // fetchPlayersDetails(); // Check if required later
@@ -166,15 +172,38 @@ const PlayerDashboard = (props) => {
         user_id: userID,
         room_id: roomID,
         name: guestName,
+        song_count: songCount,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomID, userID]);
+  }, [ENDPOINT, roomID, userID]);
+
+  useEffect(() => {
+    // Cleanup function to be run on Unmounting the component
+    return () => {
+      socket.emit("disconnect");
+
+      socket.off();
+    };
+  }, [ENDPOINT]);
+
+  // useEffect(() => {
+  //   socket.on("message", (message) => {
+  //     setMessages([...messages, message])
+  //   })
+  // }, [])
 
   // Function to add songs to the list
   const addSongs = async (e) => {
     e.preventDefault();
     // console.log("add songs function");
+    if (songLink === "") {
+      Swal.fire({
+        icon: "warning",
+        title: "Song Link Empty",
+        text: "Song Link cannot be empty.",
+      });
+    }
     try {
       const response = await axios.post(
         `${DATA_URL}/playlist/api/game/add-song`,

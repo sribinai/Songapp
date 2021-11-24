@@ -64,12 +64,11 @@ conn.once("open", function () {
 
 // Run socket with client connects
 io.on("connection", (socket) => {
-  console.log(`New Sockt.IO connection : ${socket.id}`);
-
+  // console.log(`New Sockt.IO connection : ${socket.id}`);
   socket.on("join_room", (data) => {
     socket.join(data);
     console.log(
-      `User with ID: ${socket.id} joined room. User Name: ${data.name}`
+      `User with ID: ${socket.id} joined room. User Name: ${data.name}, Songs: ${data.song_count}`
     );
   });
 
