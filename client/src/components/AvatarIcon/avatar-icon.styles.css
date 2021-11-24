@@ -3,8 +3,8 @@
   position: relative;
   background-color: rgb(200, 0, 200);
   border-radius: 50%;
-  height: 100px !important;
-  width: 100px !important;
+  /* height: 100px !important;
+  width: 100px !important; */
   /* box-shadow: 2px 2px 2px black; */
 }
 .avatar-icon {

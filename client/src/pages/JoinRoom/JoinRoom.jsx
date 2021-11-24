@@ -28,7 +28,7 @@ const JoinRoom = (props) => {
     }
     try {
       const response = await axios.post(
-        `${DATA_URL}/playlist/api/room/checkRoom`,
+        `${DATA_URL}/playlist/api/room/check-room`,
         { roomID }
       );
       // console.log(response);
@@ -91,18 +91,17 @@ const JoinRoom = (props) => {
       };
       // console.log(joinData);
       const response = await axios.post(
-        `${DATA_URL}/playlist/api/room/joinRoom`,
+        `${DATA_URL}/playlist/api/room/join-room`,
         joinData
       );
       // console.log(response);
       if (response.status === 200) {
-        props.userInfo.data.room_id = roomID;
         Swal.fire({
           icon: "success",
           title: "Success",
           text: response.data.message,
         });
-        history.push("/dashboard");
+        history.push({ pathname: "/dashboard", search: `?room_id=${roomID}` });
       } else {
         Swal.fire({
           icon: "error",

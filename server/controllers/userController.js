@@ -151,6 +151,7 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: expireTime }
     );
+    // res.cookie("playlist_token", token);
     return res.status(200).json({ success: true, token, message });
   } catch (error) {
     message = error._message;
@@ -158,13 +159,27 @@ const loginUser = async (req, res) => {
   }
 };
 
-const getUserDetails = async (req, res) => {
+const getUserDetailsByID = async (req, res) => {
   const { user_id } = req.body;
-  return res.status(200).json({ status: true, data: "get userDetails block" });
+  let message;
+  try {
+    const userInfo = await UserModel.findOne({ user_id }).select("-password");
+    // console.log(userInfo);
+    return res.status(200).json({
+      success: true,
+      userInfo,
+      message: "Successfully fetched userInfo.",
+    });
+  } catch (error) {
+    message = error._message;
+    return res.status(500).json({ success: false, message });
+  }
 };
 
 const logoutUser = async (req, res) => {
-  return res.status(200).json({ status: true, data: "Success logout" });
+  return res
+    .status(200)
+    .json({ status: true, data: "Successfully logged out of your account." });
 };
 
 module.exports = {
@@ -172,5 +187,5 @@ module.exports = {
   createUser,
   loginUser,
   logoutUser,
-  getUserDetails,
+  getUserDetailsByID,
 };

@@ -47,7 +47,7 @@ const CreateRoom = ({ userInfo }) => {
   const fetchRoomID = async () => {
     try {
       const response = await axios.get(
-        `${DATA_URL}/playlist/api/room/createRoomID`
+        `${DATA_URL}/playlist/api/room/create-roomID`
       );
       if (response.status === 200) {
         setRoomID(response.data.roomID);
@@ -117,7 +117,7 @@ const CreateRoom = ({ userInfo }) => {
       };
       // api call for creating room in Database
       const response = await axios.post(
-        `${DATA_URL}/playlist/api/room/createRoom`,
+        `${DATA_URL}/playlist/api/room/create-room`,
         roomData
       );
       if (response.status === 200) {

@@ -1,0 +1,30 @@
+/* .show-hide-button {
+  width: 20px;
+  position: relative;
+  min-height: 50px;
+  background-color: red;
+  border-radius: 0 20px 20px 0;
+  color: textColor;
+  text-align: center;
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  letter-spacing: -4px;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+} */
+
+.show-hide-button-enter {
+  opacity: 0;
+}
+.show-hide-button-enter-active {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+.show-hide-button-exit {
+  opacity: 1;
+}
+.show-hide-button-exit-active {
+  opacity: 0;
+  transition: opacity 200ms;
+}

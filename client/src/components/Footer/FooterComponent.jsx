@@ -12,7 +12,10 @@ const FooterComponent = () => {
     <Container className='footer-div' fluid>
       <Row>
         <Col className='footer-content' onClick={() => setModalShow(true)}>
-          <div className='d-flex align-items-center justify-content-center'>
+          <div
+            className='d-flex align-items-center justify-content-center'
+            style={{ cursor: "pointer" }}
+          >
             How to Play
             <span className='arrow-symbol'>&#129046;</span>
           </div>

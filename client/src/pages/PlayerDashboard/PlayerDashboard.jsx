@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 import axios from "axios";
+import io from "socket.io-client";
+
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
@@ -10,16 +12,109 @@ import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
 import "./player-dashboard.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
 
+let socket;
+// const socket = io.connect(`http://localhost:4000`);
+
 const PlayerDashboard = (props) => {
-  // const [userID, setUserID] = useState("619266e10695619266e10695e8b6fcf2c035e8b6fcf2c035"); // Hardcoded userID for now, will change once login is fixed
-  // const [roomID, setRoomID] = useState("XKITGS"); // Hardcoded roomID for now, will change once login is fixed
-  // const [guestName, setGuestName] = useState("Godson"); // Hardcoded guestName for now, will change once login is fixed
-  const [userID, setUserID] = useState(""); // Hardcoded userID for now, will change once login is fixed
-  const [roomID, setRoomID] = useState(""); // Hardcoded roomID for now, will change once login is fixed
-  const [guestName, setGuestName] = useState(""); // Hardcoded guestName for now, will change once login is fixed
+  const ENDPOINT = DATA_URL;
+  const [userID, setUserID] = useState("");
+  const [roomID, setRoomID] = useState("");
+  const [hostName, setHostName] = useState("");
+  const [guestName, setGuestName] = useState("");
+  const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
+  const [messages, setMessages] = useState([]);
+
+  const [songCount, setSongCount] = useState(0);
   const [songLink, setSongLink] = useState("");
   const [songsList, setSongsList] = useState([]);
   const [showRules, setShowRules] = useState(false);
+
+  // Function to set user Details
+  const setUserDetails = () => {
+    // Set userID, UserName/GuestName, RoomID
+    const room_id = props.location.search.split("=")[1];
+    setUserID(props.userInfo.data.id);
+    setGuestName(props.userInfo.data.user_name);
+    setRoomID(room_id);
+  };
+
+  // Function to fetch room Details
+  const fetchRoomDetails = async () => {
+    try {
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/room/get-room-details`,
+        {
+          room_id: roomID,
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        setRoomDetails(response.data.roomDetails);
+        setHostName(response.data.host_name);
+      } else {
+        console.log(response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
+    }
+  };
+  // Function to fetch players Details
+  const fetchPlayersDetails = async () => {
+    try {
+      console.log("fetch user details to view");
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/user/get-user-details`,
+        {
+          user_id: userID,
+        }
+      );
+      // console.log(response);
+      if (response.status === 200) {
+        console.log(response.data);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: error.response.data.message,
+        });
+      } else {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: "Something went wrong.",
+        });
+      }
+    }
+  };
 
   // Function to fetch songs of the user
   const fetchSongs = async () => {
@@ -33,15 +128,21 @@ const PlayerDashboard = (props) => {
       );
       console.log(response);
       if (response.status === 200) {
-        // console.log(response.data.songsData);
         // Reset song input data to empty
         setSongsList(response.data.songsData);
-        // setSongsList("");
+        setSongCount(response.data.songsData.length);
         return;
+      } else {
+        console.log(response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..",
+          text: response.data.message,
+        });
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
+        console.log(error.response.data.message);
         Swal.fire({
           icon: "error",
           title: "Oops..",
@@ -59,24 +160,50 @@ const PlayerDashboard = (props) => {
   };
 
   useEffect(() => {
-    // console.log(props);
-    setUserID(props.userInfo.data.id);
-    setGuestName(props.userInfo.data.user_name);
-    setRoomID(props.userInfo.data.room_id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID, roomID]);
-
-  useEffect(() => {
-    if (userID.length !== 0 && roomID.length !== 0) {
+    setUserDetails();
+    if (roomID.length !== 0 && userID.length !== 0) {
+      socket = io(ENDPOINT);
+      // Fetch all the details for this page
+      fetchRoomDetails();
+      // fetchPlayersDetails(); // Check if required later
       fetchSongs();
+      // console.log(socket);
+      socket.emit("join_room", {
+        user_id: userID,
+        room_id: roomID,
+        name: guestName,
+        song_count: songCount,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ENDPOINT, roomID, userID]);
+
+  useEffect(() => {
+    // Cleanup function to be run on Unmounting the component
+    return () => {
+      socket.emit("disconnect");
+
+      socket.off();
+    };
+  }, [ENDPOINT]);
+
+  // useEffect(() => {
+  //   socket.on("message", (message) => {
+  //     setMessages([...messages, message])
+  //   })
+  // }, [])
 
   // Function to add songs to the list
   const addSongs = async (e) => {
     e.preventDefault();
     // console.log("add songs function");
+    if (songLink === "") {
+      Swal.fire({
+        icon: "warning",
+        title: "Song Link Empty",
+        text: "Song Link cannot be empty.",
+      });
+    }
     try {
       const response = await axios.post(
         `${DATA_URL}/playlist/api/game/add-song`,
@@ -86,7 +213,7 @@ const PlayerDashboard = (props) => {
           song: songLink,
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         fetchSongs();
         Swal.fire({
@@ -139,11 +266,15 @@ const PlayerDashboard = (props) => {
           >
             <Col lg={9} md={8} sm={7} xs={12} className='d-flex'>
               <AvatarIcon imageUrl='https://robohash.org/36?set=set8' />
-              <div className='d-flex flex-column justify-content-center m-2'>
-                {/* <h4>Host Name</h4> */}
-                <span>RoomID: {roomID}</span>
-                <span>Host Name: {guestName}</span>
-              </div>
+              {roomDetails && (
+                <div className='d-flex flex-column justify-content-center m-2'>
+                  <span>RoomID: {roomID}</span>
+                  <span>RoomName: {roomDetails.room_name}</span>
+                  <span>Host Name: {hostName}</span>
+                  {/* <span>Host Name: {roomDetails.host_id}</span> */}
+                  <span>Player Limit: {roomDetails.no_of_players}</span>
+                </div>
+              )}
             </Col>
             <Col
               lg={3}
@@ -182,75 +313,12 @@ const PlayerDashboard = (props) => {
           <div className='profile-icons-div'>
             <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
               <AvatarIcon
-                imageUrl='https://robohash.org/36?set=set8'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>{guestName}</span>
-              <span>10 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
                 imageUrl='https://robohash.org/46?set=set4'
                 statusDetails={false}
                 showStatus={true}
               />
-              <span>John</span>
+              <span>{guestName}</span>
               <span>No songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/10?set=set5'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Rahul</span>
-              <span>10 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/14?set=set5'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Harry</span>
-              <span>2 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/13?set=set24'
-                statusDetails={false}
-                showStatus={true}
-              />
-              <span>Yash</span>
-              <span>No songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/30?set=set3'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Raj</span>
-              <span>1 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/11?set=set4'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Raj</span>
-              <span>10 songs added</span>
-            </div>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/25?set=set4'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>Raj</span>
-              <span>10 songs added</span>
             </div>
           </div>
         </Container>
