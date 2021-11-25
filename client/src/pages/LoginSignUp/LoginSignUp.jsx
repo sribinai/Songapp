@@ -350,6 +350,13 @@ const LoginSignUp = (props) => {
               <Button className='rounded-pill' onClick={handleLoginUser}>
                 Login
               </Button>
+              <p className='mt-4'>
+              
+              <Link to='/forgot-password'>
+                <span className='text-primary'>Forgot Password?</span>
+              </Link>
+              .
+            </p>
             </Form.Group>
           </div>
           <div
