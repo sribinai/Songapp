@@ -11,6 +11,7 @@ import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
 
 import "./player-dashboard.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
+import FloatingTextBlock from "../../components/layouts/FloatingTextBlock/FloatingTextBlock";
 
 let socket;
 // const socket = io.connect(`http://localhost:4000`);
@@ -19,12 +20,15 @@ const PlayerDashboard = (props) => {
   const ENDPOINT = DATA_URL;
   const [userID, setUserID] = useState("");
   const [roomID, setRoomID] = useState("");
+  const [roomPlayers, setRoomPlayers] = useState([]);
   const [hostName, setHostName] = useState("");
   const [guestName, setGuestName] = useState("");
   const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
+  // const [chatMessages, setChatMessages] = useState({});
+  const [chatBoxData, setChatBoxData] = useState([]);
 
-  const [songCount, setSongCount] = useState(0);
+  const [songCount, setSongCount] = useState(null);
   const [songLink, setSongLink] = useState("");
   const [songsList, setSongsList] = useState([]);
   const [showRules, setShowRules] = useState(false);
@@ -165,32 +169,41 @@ const PlayerDashboard = (props) => {
       socket = io(ENDPOINT);
       // Fetch all the details for this page
       fetchRoomDetails();
-      // fetchPlayersDetails(); // Check if required later
-      fetchSongs();
-      // console.log(socket);
-      socket.emit("join_room", {
-        user_id: userID,
-        room_id: roomID,
-        name: guestName,
-        songs_list: songsList,
-        song_count: songCount,
-      });
-
+      if (songCount === null) {
+        // fetchPlayersDetails(); // Check if required later
+        fetchSongs();
+      } else {
+        // console.log(socket);
+        socket.emit("join_room", {
+          user_id: userID,
+          room_id: roomID,
+          name: guestName,
+          songs_list: songsList,
+          song_count: songCount,
+        });
+      }
       socket.on("message", (message) => {
         console.log(message);
+        setChatBoxData([...chatBoxData, message]);
+        // setChatMessages(message);
+      });
+
+      socket.on("roomUsers", ({ users }) => {
+        // console.log(room_id);
+        console.log(users);
+        setRoomPlayers(users);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ENDPOINT, roomID, userID]);
+  }, [ENDPOINT, roomID, userID, songCount]);
 
   useEffect(() => {
     // Cleanup function to be run on Unmounting the component
     return () => {
-      socket.emit("disconnect");
-
-      socket.off();
+      // socket.close();
+      socket.disconnect();
     };
-  }, [ENDPOINT]);
+  }, []);
 
   // useEffect(() => {
   //   socket.on("message", (message) => {
@@ -208,6 +221,7 @@ const PlayerDashboard = (props) => {
         title: "Song Link Empty",
         text: "Song Link cannot be empty.",
       });
+      return;
     }
     try {
       const response = await axios.post(
@@ -262,6 +276,7 @@ const PlayerDashboard = (props) => {
         routeName='Home'
         redirectPromt={true}
         promptMessage='Are you sure, you want to leave the room?'
+        userInfo={props.userInfo.data}
       />
       <div className='px-5 py-3 d-flex flex-column align-items-center'>
         <Container fluid>
@@ -316,15 +331,32 @@ const PlayerDashboard = (props) => {
             <h3>Waiting Lobby...</h3>
           </div>
           <div className='profile-icons-div'>
-            <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
+            {roomPlayers.length !== 0 &&
+              roomPlayers.map((item, index) => (
+                <div
+                  key={index}
+                  className='d-flex flex-column justify-content-center align-items-center p-2 m-1'
+                >
+                  <AvatarIcon
+                    imageUrl='https://robohash.org/46?set=set4'
+                    statusDetails={true}
+                    showStatus={true}
+                  />
+                  <span>{item.name}</span>
+                  <span>
+                    {item.song_count ? item.song_count : "No"} songs added
+                  </span>
+                </div>
+              ))}
+            {/* <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
               <AvatarIcon
                 imageUrl='https://robohash.org/46?set=set4'
-                statusDetails={false}
+                statusDetails={true}
                 showStatus={true}
               />
               <span>{guestName}</span>
               <span>No songs added</span>
-            </div>
+            </div> */}
           </div>
         </Container>
       </div>
@@ -453,6 +485,14 @@ const PlayerDashboard = (props) => {
         </Container>
         <button className='start-game-button'>START GAME</button>
       </div>
+      <FloatingTextBlock
+        textMessages={chatBoxData}
+        message={message}
+        setMessage={(e) => setMessage(e.target.value)}
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      />
     </div>
   );
 };

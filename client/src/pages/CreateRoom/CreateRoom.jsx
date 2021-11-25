@@ -154,7 +154,11 @@ const CreateRoom = ({ userInfo }) => {
 
   return (
     <div className='main-container'>
-      <MainHeaderDiv title='Join Room' routeName='joinRoom' />
+      <MainHeaderDiv
+        title='Join Room'
+        routeName='joinRoom'
+        userInfo={userInfo.data}
+      />
       <div className='create-room-div'>
         <Container className='pb-1' fluid>
           <Row>

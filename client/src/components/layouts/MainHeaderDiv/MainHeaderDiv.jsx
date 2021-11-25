@@ -3,10 +3,16 @@ import logo from "../../../images/PMPL-LOGO.png";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./main-header.styles.css";
-import { Dropdown,DropdownButton } from "react-bootstrap";
-import AvatarIcon from "../../../components/AvatarIcon/AvatarIcon"
+import { Dropdown, DropdownButton } from "react-bootstrap";
+import AvatarIcon from "../../../components/AvatarIcon/AvatarIcon";
 
-const MainHeaderDiv = ({ title, routeName, redirectPromt, promptMessage }) => {
+const MainHeaderDiv = ({
+  title,
+  routeName,
+  redirectPromt,
+  promptMessage,
+  userInfo,
+}) => {
   const history = useHistory();
   const promptCall = (path) => {
     Swal.fire({
@@ -51,29 +57,38 @@ const MainHeaderDiv = ({ title, routeName, redirectPromt, promptMessage }) => {
         />
       </div>
 
-      <div className="username">
-      
-         
-              <AvatarIcon imageUrl='https://robohash.org/34?set=set2' AvatarWidth= '30' />
-         
-                
-       <Dropdown className="d-inline mx-2">
-    <Dropdown.Toggle as= "span"id="dropdown-autoclose-true">
-      Godson
-    </Dropdown.Toggle>
+      <div className='username'>
+        {userInfo && (
+          <>
+            <AvatarIcon
+              imageUrl='https://robohash.org/34?set=set2'
+              AvatarWidth='30'
+            />
 
-    <Dropdown.Menu>
-      
-      <Dropdown.Item href="#">User Settings</Dropdown.Item>
-      <Dropdown.Item href="#">Logout</Dropdown.Item>
-    </Dropdown.Menu>
-  </Dropdown>  
-       
-       <span onClick={redirectPage} style={{ cursor: "pointer" }}>
-        {title}
-      </span>
+            <Dropdown className='d-inline mx-2'>
+              <Dropdown.Toggle
+                className='text-dark'
+                as='span'
+                id='dropdown-autoclose-true'
+              >
+                <em>
+                  <i>{userInfo.user_name}</i>
+                </em>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item href='#'>User Settings</Dropdown.Item>
+                <Dropdown.Item href='#'>Logout</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </>
+        )}
+
+        <span onClick={redirectPage} style={{ cursor: "pointer" }}>
+          {title}
+        </span>
+      </div>
     </div>
-  </div>
   );
 };
 
