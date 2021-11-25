@@ -1,0 +1,26 @@
+.floating-main-div {
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  background-color: rgb(150, 150, 200);
+  width: 300px;
+  border-radius: 20px 20px 0 0;
+  border: 1px solid black;
+}
+
+.floating-div-heading {
+  font-weight: 500;
+  padding: 0 15px;
+}
+.floating-heading-caret {
+  cursor: pointer;
+}
+
+.floating-content-div {
+  font-size: 12px;
+  max-height: 400px;
+  min-height: 100px;
+  overflow-y: scroll;
+  position: relative;
+  background-color: rgb(100, 230, 230);
+}

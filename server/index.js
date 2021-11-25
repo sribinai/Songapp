@@ -87,30 +87,31 @@ io.on("connection", (socket) => {
         song_count,
       });
       // console.log(user);
-      // Welcome current user
-      socket.join(user.room_id);
-      socket.emit(
-        "message",
-        formatMessages(
-          botName,
-          `Welcome to this PlayMyPlayList room, ${user.name}.`
-        )
-      );
-      // Broadcast when any user connects
-      socket.broadcast
-        .to(user.room_id)
-        .emit(
+      if (user) {
+        // Welcome current user
+        socket.join(user.room_id);
+        socket.emit(
           "message",
           formatMessages(
             botName,
-            `${user.name} joined the PlayMyPlayList room.`
+            `Welcome to this PlayMyPlayList room, ${user.name}.`
           )
         );
-      // Send users and room Info
-      io.to(user.room_id).emit("roomUsers", {
-        room: user.room,
-        user: getUsersInRoom(user.room_id),
-      });
+        // Broadcast when any user connects
+        socket.broadcast
+          .to(user.room_id)
+          .emit(
+            "message",
+            formatMessages(
+              botName,
+              `${user.name} joined the PlayMyPlayList room.`
+            )
+          );
+        // Send users and room Info
+        io.to(user.room_id).emit("roomUsers", {
+          users: getUsersInRoom(user.room_id),
+        });
+      }
     }
   );
 
@@ -118,17 +119,17 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     // console.log(`User Disconnected: ${socket.id}`);
     const user = removeUser(socket.id);
-    // Send users and room Info
-    io.to(user.room_id).emit("roomUsers", {
-      room: user.room,
-      user: getUsersInRoom(user.room_id),
-    });
-    // send message to all that user is disconnected
     if (user) {
+      // send message to all that user is disconnected
       io.emit(
         "message",
         formatMessages(botName, `${user.name} has left the room.`)
       );
+      // Send users and room Info
+      io.to(user.room_id).emit("roomUsers", {
+        room_id: user.room_id,
+        users: getUsersInRoom(user.room_id),
+      });
     }
   });
 });
