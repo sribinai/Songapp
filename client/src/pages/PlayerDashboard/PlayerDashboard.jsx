@@ -166,7 +166,7 @@ const PlayerDashboard = (props) => {
   useEffect(() => {
     setUserDetails();
     if (roomID.length !== 0 && userID.length !== 0) {
-      socket = io(ENDPOINT, { transports: ["websocket"] });
+      socket = io(ENDPOINT);
       // Fetch all the details for this page
       fetchRoomDetails();
       if (songCount === null) {
@@ -193,12 +193,6 @@ const PlayerDashboard = (props) => {
         console.log(users);
         setRoomPlayers(users);
       });
-
-      // return () => {
-      //   socket.emit("disconnect");
-
-      //   socket.off();
-      // };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ENDPOINT, roomID, userID, songCount]);
@@ -206,9 +200,10 @@ const PlayerDashboard = (props) => {
   useEffect(() => {
     // Cleanup function to be run on Unmounting the component
     return () => {
-      socket.emit("disconnect");
+      // socket.close();
+      socket.disconnect();
     };
-  }, [ENDPOINT]);
+  }, []);
 
   // useEffect(() => {
   //   socket.on("message", (message) => {
