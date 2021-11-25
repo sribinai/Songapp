@@ -47,7 +47,7 @@ const PlayerDashboard = (props) => {
           room_id: roomID,
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         setRoomDetails(response.data.roomDetails);
         setHostName(response.data.host_name);
@@ -89,7 +89,7 @@ const PlayerDashboard = (props) => {
       );
       // console.log(response);
       if (response.status === 200) {
-        console.log(response.data);
+        // console.log(response.data);
       } else {
         Swal.fire({
           icon: "error",
@@ -126,7 +126,7 @@ const PlayerDashboard = (props) => {
           player_id: userID,
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         // Reset song input data to empty
         setSongsList(response.data.songsData);
@@ -172,7 +172,12 @@ const PlayerDashboard = (props) => {
         user_id: userID,
         room_id: roomID,
         name: guestName,
+        songs_list: songsList,
         song_count: songCount,
+      });
+
+      socket.on("message", (message) => {
+        console.log(message);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
