@@ -4,8 +4,14 @@ import { FaCaretDown, FaCaretUp, FaPaperPlane } from "react-icons/fa";
 
 import "./floating-text-div.styles.css";
 
-const FloatingTextBlock = ({ message, setMessage, onClick, textMessages }) => {
-  const [showDiv, setShowDiv] = useState(true);
+const FloatingTextBlock = ({
+  message,
+  setMessage,
+  onClick,
+  textMessages,
+  userID,
+}) => {
+  const [showDiv, setShowDiv] = useState(false);
   return (
     <div className='floating-main-div'>
       <div className='text-dark d-flex justify-content-between floating-div-heading'>
@@ -17,32 +23,38 @@ const FloatingTextBlock = ({ message, setMessage, onClick, textMessages }) => {
           {showDiv ? <FaCaretDown /> : <FaCaretUp />}
         </span>
       </div>
-      <div className={`${showDiv ? "d-block" : "d-none"} floating-content-div`}>
-        {textMessages.length !== 0 &&
-          textMessages.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                padding: "4px 8px",
-              }}
-              className='d-flex flex-column'
-            >
-              <span style={{ fontStyle: "italic" }}>
-                {item.username}
-                <span>{item.time}</span>
-              </span>
-              <span
-                className='bg-light'
-                style={{ borderRadius: "5px", padding: "4px 5px" }}
+      <div className={`${showDiv ? "d-block" : "d-none"}`}>
+        <div className='floating-content-div'>
+          {textMessages.length !== 0 &&
+            textMessages.map((item, index) => (
+              <div
+                key={index}
+                style={{
+                  padding: "4px 8px",
+                }}
+                className='d-flex flex-column'
               >
-                {item.text}
-              </span>
-            </div>
-          ))}
+                <span style={{ fontStyle: "italic" }}>
+                  <strong>
+                    {userID && userID === item.user_id ? "You," : item.username}
+                  </strong>
+                  {/* <strong>{item.username},</strong> */}
+                  <span className='ms-1'>{item.time}</span>
+                </span>
+                <span
+                  className='bg-light'
+                  style={{ borderRadius: "5px", padding: "4px 5px" }}
+                >
+                  {item.text}
+                </span>
+              </div>
+            ))}
+        </div>
         <InputGroup
           style={{
             width: "100%",
-            position: "absolute",
+            // position: "absolute",
+            // bottom: "0",
             padding: "2px",
           }}
         >

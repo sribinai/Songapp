@@ -94,6 +94,7 @@ io.on("connection", (socket) => {
           "message",
           formatMessages(
             botName,
+            null,
             `Welcome to this PlayMyPlayList room, ${user.name}.`
           )
         );
@@ -104,6 +105,7 @@ io.on("connection", (socket) => {
             "message",
             formatMessages(
               botName,
+              null,
               `${user.name} joined the PlayMyPlayList room.`
             )
           );
@@ -115,16 +117,28 @@ io.on("connection", (socket) => {
     }
   );
 
+  // Recieve Chat messages
+  socket.on("chat_message", ({ user_id, room_id, name, message }) => {
+    const user = getUser(socket.id);
+    if (user) {
+      io.to(user.room_id).emit(
+        "message",
+        formatMessages(name, user_id, message)
+      );
+    }
+  });
   // Disconnect event
   socket.on("disconnect", () => {
     // console.log(`User Disconnected: ${socket.id}`);
     const user = removeUser(socket.id);
     if (user) {
       // send message to all that user is disconnected
-      io.emit(
-        "message",
-        formatMessages(botName, `${user.name} has left the room.`)
-      );
+      socket.broadcast
+        .to(user.room_id)
+        .emit(
+          "message",
+          formatMessages(botName, null, `${user.name} has left the room.`)
+        );
       // Send users and room Info
       io.to(user.room_id).emit("roomUsers", {
         room_id: user.room_id,
