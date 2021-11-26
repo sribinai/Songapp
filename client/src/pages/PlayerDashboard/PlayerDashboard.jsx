@@ -182,10 +182,10 @@ const PlayerDashboard = (props) => {
           song_count: songCount,
         });
       }
+
       socket.on("message", (message) => {
         console.log(message);
-        setChatBoxData([...chatBoxData, message]);
-        // setChatMessages(message);
+        setChatBoxData((chatBoxData) => [...chatBoxData, message]);
       });
 
       socket.on("roomUsers", ({ users }) => {
@@ -205,11 +205,15 @@ const PlayerDashboard = (props) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   socket.on("message", (message) => {
-  //     setMessages([...messages, message])
-  //   })
-  // }, [])
+  // Function to emit Chat messages to Socket IO
+  const emitChatMessages = () => {
+    socket.emit("chat_message", {
+      user_id: userID,
+      room_id: roomID,
+      name: guestName,
+      message: message,
+    });
+  };
 
   // Function to add songs to the list
   const addSongs = async (e) => {
@@ -488,9 +492,12 @@ const PlayerDashboard = (props) => {
       <FloatingTextBlock
         textMessages={chatBoxData}
         message={message}
+        userID={userID}
         setMessage={(e) => setMessage(e.target.value)}
         onClick={(e) => {
           e.preventDefault();
+          emitChatMessages();
+          setMessage("");
         }}
       />
     </div>
