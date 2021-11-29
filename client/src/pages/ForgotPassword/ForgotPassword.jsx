@@ -26,6 +26,12 @@ const ForgotPassword = (props) => {
     } else if (confirmForgotPassword.length === 0) {
       title = "Password empty";
       text = "Password should not be empty.";
+    }else if (newForgotPassword.length < 6) {
+      title = "Password too short";
+      text = "Set a secure Password atleast 6 characters long.";
+    } else if (newForgotPassword !== confirmForgotPassword) {
+      title = "Password Mismatch";
+      text = "Both passwords do not match.";
     }
     if (title.length !== 0) {
       Swal.fire({
