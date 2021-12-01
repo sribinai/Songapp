@@ -11,6 +11,7 @@ const {
   removeUser,
   getUser,
   getUsersInRoom,
+  addUserSong,
 } = require("./utils/users");
 const { removePlayer } = require("./utils/dbOperations");
 
@@ -78,37 +79,40 @@ io.on("connection", (socket) => {
   socket.on(
     "join_room",
     ({ user_id, room_id, name, songs_list, song_count }) => {
-      const user = addUser({
-        id: socket.id,
-        user_id,
-        room_id,
-        name,
-        songs_list,
-        song_count,
-      });
-      // console.log(user);
-      if (user) {
-        // Welcome current user
-        socket.join(user.room_id);
-        socket.emit(
-          "message",
-          formatMessages(
-            botName,
-            null,
-            `Welcome to this PlayMyPlayList room, ${user.name}.`
-          )
-        );
-        // Broadcast when any user connects
-        socket.broadcast
-          .to(user.room_id)
-          .emit(
+      const userExists = getUser(socket.id);
+      if (!userExists) {
+        const user = addUser({
+          id: socket.id,
+          user_id,
+          room_id,
+          name,
+          songs_list,
+          song_count,
+        });
+        // console.log(user);
+        if (user) {
+          // Welcome current user
+          socket.join(user.room_id);
+          socket.emit(
             "message",
             formatMessages(
               botName,
               null,
-              `${user.name} joined the PlayMyPlayList room.`
+              `Welcome to this PlayMyPlayList room, ${user.name}.`
             )
           );
+          // Broadcast when any user connects
+          socket.broadcast
+            .to(user.room_id)
+            .emit(
+              "message",
+              formatMessages(
+                botName,
+                null,
+                `${user.name} joined the PlayMyPlayList room.`
+              )
+            );
+        }
         // Send users and room Info
         io.to(user.room_id).emit("roomUsers", {
           users: getUsersInRoom(user.room_id),
@@ -127,6 +131,25 @@ io.on("connection", (socket) => {
       );
     }
   });
+
+  //Listen to add songs event
+  socket.on("add_songs", ({ name, new_song }) => {
+    console.log("Adding Songs");
+    const user = getUser(socket.id);
+    if (user) {
+      // Update user songs list and count function call
+      addUserSong(socket.id, new_song);
+      io.to(user.room_id).emit(
+        "message",
+        formatMessages(botName, null, `${name} added new song.`)
+      );
+      io.to(user.room_id).emit("roomUsers", {
+        room_id: user.room_id,
+        users: getUsersInRoom(user.room_id),
+      });
+    }
+  });
+
   // Disconnect event
   socket.on("disconnect", () => {
     // console.log(`User Disconnected: ${socket.id}`);

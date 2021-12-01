@@ -29,6 +29,22 @@ const getUser = (id) => {
   return users.find((user) => user.id === id);
 };
 
+const addUserSong = (id, new_song) => {
+  let userIndex;
+  users.forEach((user, index) => {
+    if (user.id === id) {
+      console.log(user);
+      userIndex = index;
+    }
+  });
+  // Add songs and soncount using the user index number
+  users[userIndex].songs_list.push(new_song);
+  users[userIndex].song_count = users[userIndex].song_count + 1;
+  // console.log(users[userIndex]);
+
+  return { user: users[userIndex] };
+};
+
 const getUsersInRoom = (room_id) => {
   return users.filter((user) => user.room_id === room_id);
 };
@@ -38,4 +54,5 @@ module.exports = {
   removeUser,
   getUser,
   getUsersInRoom,
+  addUserSong,
 };
