@@ -18,6 +18,7 @@ let socket;
 
 const PlayerDashboard = (props) => {
   const ENDPOINT = DATA_URL;
+  const [joinRoomStatus, setJoinRoomStatus] = useState(false);
   const [userID, setUserID] = useState("");
   const [roomID, setRoomID] = useState("");
   const [roomPlayers, setRoomPlayers] = useState([]);
@@ -25,7 +26,6 @@ const PlayerDashboard = (props) => {
   const [guestName, setGuestName] = useState("");
   const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
   const [message, setMessage] = useState("");
-  // const [chatMessages, setChatMessages] = useState({});
   const [chatBoxData, setChatBoxData] = useState([]);
 
   const [songCount, setSongCount] = useState(null);
@@ -57,44 +57,6 @@ const PlayerDashboard = (props) => {
         setHostName(response.data.host_name);
       } else {
         console.log(response.data.message);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: response.data.message,
-        });
-      }
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data.message);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: error.response.data.message,
-        });
-      } else {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: "Something went wrong.",
-        });
-      }
-    }
-  };
-  // Function to fetch players Details
-  const fetchPlayersDetails = async () => {
-    try {
-      console.log("fetch user details to view");
-      const response = await axios.post(
-        `${DATA_URL}/playlist/api/user/get-user-details`,
-        {
-          user_id: userID,
-        }
-      );
-      // console.log(response);
-      if (response.status === 200) {
-        // console.log(response.data);
-      } else {
         Swal.fire({
           icon: "error",
           title: "Oops..",
@@ -164,23 +126,25 @@ const PlayerDashboard = (props) => {
   };
 
   useEffect(() => {
+    socket = io(ENDPOINT);
     setUserDetails();
     if (roomID.length !== 0 && userID.length !== 0) {
-      socket = io(ENDPOINT);
       // Fetch all the details for this page
       fetchRoomDetails();
       if (songCount === null) {
         // fetchPlayersDetails(); // Check if required later
         fetchSongs();
       } else {
-        // console.log(socket);
-        socket.emit("join_room", {
-          user_id: userID,
-          room_id: roomID,
-          name: guestName,
-          songs_list: songsList,
-          song_count: songCount,
-        });
+        if (!joinRoomStatus) {
+          socket.emit("join_room", {
+            user_id: userID,
+            room_id: roomID,
+            name: guestName,
+            songs_list: songsList,
+            song_count: songCount,
+          });
+          setJoinRoomStatus(true);
+        }
       }
 
       socket.on("message", (message) => {
@@ -238,6 +202,10 @@ const PlayerDashboard = (props) => {
       );
       // console.log(response);
       if (response.status === 200) {
+        socket.emit("add_songs", {
+          name: guestName,
+          new_song: songLink,
+        });
         fetchSongs();
         Swal.fire({
           icon: "success",
@@ -352,15 +320,6 @@ const PlayerDashboard = (props) => {
                   </span>
                 </div>
               ))}
-            {/* <div className='d-flex flex-column justify-content-center align-items-center p-2 m-1'>
-              <AvatarIcon
-                imageUrl='https://robohash.org/46?set=set4'
-                statusDetails={true}
-                showStatus={true}
-              />
-              <span>{guestName}</span>
-              <span>No songs added</span>
-            </div> */}
           </div>
         </Container>
       </div>
@@ -395,49 +354,6 @@ const PlayerDashboard = (props) => {
               </Button>
             </Col>
           </Row>
-          {/* {songsList && songsList.map((item, index) => ())} */}
-          {/* <Row className='mb-2 px-4'>
-            <Col xs={12} md={10}>
-              <InputGroup style={{ position: "relative" }}>
-                <span
-                  style={{
-                    position: "absolute",
-                    zIndex: "4",
-                    left: "3px",
-                    top: "3px",
-                    height: "33px",
-                    width: "35px",
-                    overflow: "hidden",
-                    backgroundColor: "rgb(250, 100, 100)",
-                    boxShadow:
-                      "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
-                    border: "2px solid #fff",
-                    borderRadius: "50%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "#fff",
-                  }}
-                >
-                  <FaMusic />
-                </span>
-                <Form.Control
-                  type='url'
-                  value='Songs Title'
-                  style={{ paddingLeft: "50px", borderRadius: "50px 0 0 50px" }}
-                  disabled
-                />
-                <InputGroup.Text className='px-1'>
-                  <FaPlay style={{ fontSize: "24px", width: "50px" }} />
-                </InputGroup.Text>
-              </InputGroup>
-            </Col>
-            <Col xs={12} md={2}>
-              <Button variant='light' style={{ width: "100%" }}>
-                REMOVE
-              </Button>
-            </Col>
-          </Row> */}
           {songsList.length !== 0 &&
             songsList.map((song, index) => (
               <Row key={index} className='mb-2 px-4'>
