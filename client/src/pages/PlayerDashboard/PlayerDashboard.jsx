@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
 import axios from "axios";
 import io from "socket.io-client";
@@ -17,6 +18,7 @@ let socket;
 // const socket = io.connect(`http://localhost:4000`);
 
 const PlayerDashboard = (props) => {
+  let history = useHistory();
   const ENDPOINT = DATA_URL;
   const [joinRoomStatus, setJoinRoomStatus] = useState(false);
   const [userID, setUserID] = useState("");
@@ -153,8 +155,7 @@ const PlayerDashboard = (props) => {
       });
 
       socket.on("roomUsers", ({ users }) => {
-        // console.log(room_id);
-        console.log(users);
+        // console.log(users);
         setRoomPlayers(users);
       });
     }
@@ -238,6 +239,49 @@ const PlayerDashboard = (props) => {
           text: "Something went wrong.",
         });
       }
+    }
+  };
+
+  const handleStartGame = async (e) => {
+    e.preventDefault();
+    if (userID === roomDetails.host_id) {
+      let countStatus = true;
+      // Fetch all users data and check if they have added atleast 3 songs for now
+      // emit roomID to fetch users songCount Details
+      socket.emit("request_song_details", { room_id: roomID });
+      socket.on("get_room_details", (data) => {
+        // console.log(data);
+        data.forEach((item) => {
+          if (item.song_count < 3) {
+            countStatus = false;
+            return;
+          }
+        });
+        if (!countStatus) {
+          Swal.fire({
+            icon: "error",
+            title: "Songs Required",
+            text: "Every Player needs to add atleast 4 songs to continue.",
+          });
+          return;
+        }
+      });
+      // Save the roomDetails in localStorage for accession in the later page
+      localStorage.setItem("playlist_roomdata", JSON.stringify(roomDetails));
+      // Redirect to GameRoom emitting an event so others might also join
+      history.push({
+        pathname: "/game-room",
+        search: `?room_id=${roomID}`,
+        state: { user_id: userID },
+      });
+      return;
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Not Authorized",
+        text: "Only the Room Host can start the Game",
+      });
+      return;
     }
   };
 
@@ -403,7 +447,9 @@ const PlayerDashboard = (props) => {
               </Row>
             ))}
         </Container>
-        <button className='start-game-button'>START GAME</button>
+        <button className='start-game-button' onClick={handleStartGame}>
+          START GAME
+        </button>
       </div>
       <FloatingTextBlock
         textMessages={chatBoxData}

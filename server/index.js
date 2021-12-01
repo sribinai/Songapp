@@ -10,6 +10,7 @@ const {
   addUser,
   removeUser,
   getUser,
+  getSongsDetails,
   getUsersInRoom,
   addUserSong,
 } = require("./utils/users");
@@ -130,6 +131,14 @@ io.on("connection", (socket) => {
         formatMessages(name, user_id, message)
       );
     }
+  });
+
+  // Get all songs of the room for game
+  socket.on("request_song_details", ({ room_id }) => {
+    const user = getUser(socket.id);
+    const roomData = getSongsDetails(room_id);
+    // console.log(roomData);
+    io.to(user.room_id).emit("get_room_details", roomData);
   });
 
   //Listen to add songs event

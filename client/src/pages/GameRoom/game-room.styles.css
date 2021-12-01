@@ -1,0 +1,32 @@
+.profile-icons-div {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  /* grid-template-columns: repeat(9, 1fr); */
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+  border-radius: 25px;
+}
+
+.add-songs-div {
+  background-color: rgb(15, 91, 163);
+  border-top-left-radius: 60px;
+  border-top-right-radius: 60px;
+  width: 100%;
+  min-height: 60px;
+  margin: 0;
+  padding: 0;
+}
+
+.start-game-button {
+  width: 100%;
+  min-height: 60px;
+  font-weight: 600;
+  font-size: 20px;
+  border: none;
+  background-color: rgb(240, 157, 3);
+}
+.start-game-button:hover {
+  background-color: rgb(171, 255, 35);
+  font-size: 21px;
+  transition: all 0.2s linear;
+}

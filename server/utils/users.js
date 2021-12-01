@@ -29,6 +29,21 @@ const getUser = (id) => {
   return users.find((user) => user.id === id);
 };
 
+const getSongsDetails = (room_id) => {
+  let arrayData = [];
+  users.forEach((user) => {
+    if (user.room_id === room_id) {
+      arrayData.push({
+        user_id: user.user_id,
+        name: user.name,
+        room_id: user.room_id,
+        song_count: user.song_count,
+      });
+    }
+  });
+  return arrayData;
+};
+
 const addUserSong = (id, new_song) => {
   let userIndex;
   users.forEach((user, index) => {
@@ -53,6 +68,7 @@ module.exports = {
   addUser,
   removeUser,
   getUser,
+  getSongsDetails,
   getUsersInRoom,
   addUserSong,
 };
