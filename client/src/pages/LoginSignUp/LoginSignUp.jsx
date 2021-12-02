@@ -351,12 +351,11 @@ const LoginSignUp = (props) => {
                 Login
               </Button>
               <p className='mt-4'>
-              
-              <Link to='/forgot-password'>
-                <span className='text-primary'>Forgot Password?</span>
-              </Link>
-              .
-            </p>
+                <Link to='/forgot-password'>
+                  <span className='text-primary'>Forgot Password?</span>
+                </Link>
+                .
+              </p>
             </Form.Group>
           </div>
           <div
