@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import logo from "../../../images/PMPL-LOGO.png";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -6,13 +6,10 @@ import "./main-header.styles.css";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import AvatarIcon from "../../../components/AvatarIcon/AvatarIcon";
 
-const MainHeaderDiv = ({
-  title,
-  routeName,
-  redirectPromt,
-  promptMessage,
-  userInfo,
-}) => {
+const MainHeaderDiv = (
+  { title, routeName, redirectPromt, promptMessage, userInfo },
+  ref
+) => {
   const history = useHistory();
   const promptCall = (path) => {
     Swal.fire({
@@ -46,7 +43,7 @@ const MainHeaderDiv = ({
   };
 
   return (
-    <div className='main-header'>
+    <div ref={ref} className='main-header'>
       <div>
         <img
           src={logo}
@@ -93,4 +90,4 @@ const MainHeaderDiv = ({
   );
 };
 
-export default MainHeaderDiv;
+export default forwardRef(MainHeaderDiv);
