@@ -15,7 +15,6 @@ import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstruc
 import FloatingTextBlock from "../../components/layouts/FloatingTextBlock/FloatingTextBlock";
 
 let socket;
-// const socket = io.connect(`http://localhost:4000`);
 
 const PlayerDashboard = (props) => {
   let history = useHistory();
@@ -154,6 +153,27 @@ const PlayerDashboard = (props) => {
         setChatBoxData((chatBoxData) => [...chatBoxData, message]);
       });
 
+      socket.on("gameStatus", (data) => {
+        // console.log(data);
+        if (data.game_status === true) {
+          Swal.fire({
+            icon: "success",
+            title: "Game Started",
+            text: "Welcome, The game is ON...!!!",
+          });
+          history.push({
+            pathname: "/game-room",
+            search: `?room_id=${roomID}`,
+            state: {
+              user_id: userID,
+              room_data: data.room_data,
+              room_players: data.room_players,
+            },
+          });
+          return;
+        }
+      });
+
       socket.on("roomUsers", ({ users }) => {
         // console.log(users);
         setRoomPlayers(users);
@@ -266,13 +286,10 @@ const PlayerDashboard = (props) => {
           return;
         }
       });
-      // Save the roomDetails in localStorage for accession in the later page
-      localStorage.setItem("playlist_roomdata", JSON.stringify(roomDetails));
       // Redirect to GameRoom emitting an event so others might also join
-      history.push({
-        pathname: "/game-room",
-        search: `?room_id=${roomID}`,
-        state: { user_id: userID },
+      socket.emit("start_game", {
+        room_data: roomDetails,
+        room_players: roomPlayers,
       });
       return;
     } else {

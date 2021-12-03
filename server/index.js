@@ -137,8 +137,23 @@ io.on("connection", (socket) => {
   socket.on("request_song_details", ({ room_id }) => {
     const user = getUser(socket.id);
     const roomData = getSongsDetails(room_id);
-    // console.log(roomData);
-    io.to(user.room_id).emit("get_room_details", roomData);
+    if (user) {
+      io.to(user.room_id).emit("get_room_details", roomData);
+    }
+  });
+
+  // Check game status
+  socket.on("start_game", ({ room_data, room_players }) => {
+    console.log("game start");
+    const user = getUser(socket.id);
+    if (user) {
+      io.to(user.room_id).emit("gameStatus", {
+        game_status: true,
+        room_data,
+        room_players,
+        users: getUsersInRoom(user.room_id),
+      });
+    }
   });
 
   //Listen to add songs event
