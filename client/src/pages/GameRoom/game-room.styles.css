@@ -10,7 +10,7 @@
  
 }
 
-.add-songs-div {
+.songs-div {
   background-color:ghostwhite;
   border-top-left-radius: 60px;
   border-top-right-radius: 60px;
@@ -21,7 +21,7 @@
   padding: 0;
 }
 
-.start-game-button {
+.take-votes-button {
   width: 100%;
   /* min-height: 60px; */
   min-height: 40px;
@@ -32,7 +32,7 @@
   color: #ffffff;
   /* background-color: rgb(240, 157, 3); */
 }
-.start-game-button:hover {
+.take-votes-button:hover {
   /* background-color: rgb(171, 255, 35); */
   background-color: rgb(240, 157, 3);
   font-size: 21px;
@@ -112,7 +112,7 @@ justify-self: center;
   gap:10px;
 }
 
-.add-songs-div{
+.songs-div{
   grid-column:1/3;
   /* grid-row: 2/4; */
   grid-row: 3/3;

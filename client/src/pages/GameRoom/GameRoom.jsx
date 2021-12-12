@@ -174,7 +174,7 @@ const GameRoom = (props) => {
         
       </div>
 
-      <div className='add-songs-div'>
+      <div className='songs-div'>
       <InputGroup style={{ position: "relative" }}>
                   
       
@@ -218,7 +218,7 @@ const GameRoom = (props) => {
           </div>
              
           <div className="button">
-          <button className='start-game-button'>
+          <button className='take-votes-button'>
           TAKE VOTES
         </button>
         </div>

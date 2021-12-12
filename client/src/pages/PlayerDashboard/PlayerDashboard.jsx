@@ -8,7 +8,14 @@ import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
-import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
+import {
+  FaPlay,
+  FaMusic,
+  FaCloudUploadAlt,
+  FaPlus,
+  FaPlusCircle,
+  FaTrashAlt,
+} from "react-icons/fa";
 
 import "./player-dashboard.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
@@ -408,9 +415,10 @@ const PlayerDashboard = (props) => {
             <Col xs={12} md={2}>
               <Button
                 variant='light'
+                className='d-flex w-100 justify-content-center align-items-center'
                 onClick={addSongs}
-                style={{ width: "100%" }}
               >
+                <FaPlusCircle className="me-1 text-success" size={22} />
                 ADD
               </Button>
             </Col>
@@ -457,8 +465,8 @@ const PlayerDashboard = (props) => {
                   </InputGroup>
                 </Col>
                 <Col xs={12} md={2}>
-                  <Button variant='light' style={{ width: "100%" }}>
-                    REMOVE
+                  <Button variant="danger" className="d-flex w-100 justify-content-center align-items-center">
+                    <FaTrashAlt className="ms-1" size={22} />REMOVE
                   </Button>
                 </Col>
               </Row>

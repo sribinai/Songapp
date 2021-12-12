@@ -239,7 +239,7 @@ const LoginSignUp = (props) => {
   };
 
   return (
-    <Container fluid>
+    <main classname="p-0 m-0">
       <Row md={2} xs={1} style={{ minHeight: "100vh" }}>
         <Col className='bg-warning d-flex flex-column justify-content-center align-items-center form-divcolumnsignup'>
           <div
@@ -380,7 +380,7 @@ const LoginSignUp = (props) => {
           </div>
         </Col>
       </Row>
-    </Container>
+    </main>
   );
 };
 
