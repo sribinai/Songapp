@@ -167,8 +167,8 @@ const GameRoom = (props) => {
                 className='d-flex justify-content-center align-items-center p-0 my-2'
                 style={{
                   backgroundColor: "rgb(150, 200, 100)",
-                  height: "320px",
-                  width: "320px",
+                  height: "260px",
+                  width: "260px",
                   borderRadius: "50%",
                 }}
               >
@@ -207,10 +207,11 @@ const GameRoom = (props) => {
               </InputGroup>
               <Button className='w-100 text-center mb-2'>TAKE VOTES</Button>
             </Col>
+
             {dataArray.map((item, index) => (
               <Col
                 key={index}
-                className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center rounded'
+                className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center text-center rounded'
                 style={{
                   border: "1px solid red",
                   backgroudColor: "yellow",
@@ -218,14 +219,14 @@ const GameRoom = (props) => {
                 }}
               >
                 Div {item + 1}
-                <div className='icon1'>
+                <div className='player-info'>
                   <div className='avatar1'>
                     <AvatarIcon
                       imageUrl='https://robohash.org/32?set=set2'
-                      AvatarWidth='80'
+                      AvatarWidth='120'
                     />
                   </div>
-                  <div className>Player Name</div>
+                  <div>Player Name</div>
                 </div>
               </Col>
             ))}
