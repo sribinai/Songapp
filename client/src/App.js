@@ -9,6 +9,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./functionalities/ProtectedRoutes";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import GameRoom from "./pages/GameRoom/GameRoom";
+import UserSettings from "./pages/UserSettings/UserSettings";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path='/login-signup' component={LoginSignUp} />
         <Route exact path='/forgot-password' component={ForgotPassword} />
         <ProtectedRoute exact path='/createRoom' component={CreateRoom} />
+        <ProtectedRoute exact path='/userSettings' component={UserSettings} />
         <ProtectedRoute exact path='/joinRoom' component={JoinRoom} />
         <ProtectedRoute exact path='/dashboard' component={PlayerDashboard} />
         <ProtectedRoute exact path='/game-room' component={GameRoom} />
