@@ -1,6 +1,6 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import logo from "../../../images/PMPL-LOGO.png";
-import { useHistory } from "react-router-dom";
+import {Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./main-header.styles.css";
 import { Dropdown, DropdownButton } from "react-bootstrap";
@@ -74,7 +74,9 @@ const MainHeaderDiv = (
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item href='#'>User Settings</Dropdown.Item>
+              
+                <Dropdown.Item   ><Link to='/userSettings'>User Settings</Link></Dropdown.Item>
+                
                 <Dropdown.Item href='#'>User Rooms</Dropdown.Item>
                 <Dropdown.Item href='#'>Logout</Dropdown.Item>
               </Dropdown.Menu>

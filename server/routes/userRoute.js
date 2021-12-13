@@ -13,5 +13,7 @@ router.post("/login", UserController.loginUser);
 router.post("/get-user-details", UserController.getUserDetailsByID); // To be done
 router.get("/logout", UserController.logoutUser); // To be done
 router.post("/forgot-password", UserController.forgotPassword);//working on it
+router.post("/userSettings", UserController.userSettings);//working on it
+
 
 module.exports = router;
