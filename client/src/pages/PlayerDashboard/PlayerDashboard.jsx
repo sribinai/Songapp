@@ -269,6 +269,48 @@ const PlayerDashboard = (props) => {
     }
   };
 
+  const handleClickSong = async (e, song) => {
+    e.preventDefault();
+    try {
+      const deleteConfirm = await  Swal.fire({
+        title: "Are you sure to remove this song from the list?",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+      });
+      
+      if (deleteConfirm.isConfirmed) {
+          const response = await axios.post(
+            `${DATA_URL}/playlist/api/game/delete-song`,
+            {
+              song,
+              room_id: roomID,
+              player_id: userID,
+            }
+          );
+          if (response.status === 200) {
+            Swal.fire("Success", response.data.message, "success");
+            fetchSongs();
+            return;
+          }
+      }
+      
+    } catch (error) {
+      if (error.response) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.response.data.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.response,
+        });
+      }
+    }
+  };
+
   const handleStartGame = async (e) => {
     e.preventDefault();
     if (userID === roomDetails.host_id) {
@@ -418,7 +460,7 @@ const PlayerDashboard = (props) => {
                 className='d-flex w-100 justify-content-center align-items-center'
                 onClick={addSongs}
               >
-                <FaPlusCircle className="me-1 text-success" size={22} />
+                <FaPlusCircle className='me-1 text-success' size={22} />
                 ADD
               </Button>
             </Col>
@@ -465,8 +507,13 @@ const PlayerDashboard = (props) => {
                   </InputGroup>
                 </Col>
                 <Col xs={12} md={2}>
-                  <Button variant="danger" className="d-flex w-100 justify-content-center align-items-center">
-                    <FaTrashAlt className="ms-1" size={22} />REMOVE
+                  <Button
+                    variant='danger'
+                    className='d-flex w-100 justify-content-center align-items-center'
+                    onClick={(e) => handleClickSong(e, song)}
+                  >
+                    <FaTrashAlt className='ms-1' size={22} />
+                    REMOVE
                   </Button>
                 </Col>
               </Row>

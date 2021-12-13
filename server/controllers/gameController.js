@@ -40,9 +40,28 @@ const addSong = async (req, res) => {
   }
 };
 
+const deleteSong = async (req, res) => {
+  const { song, room_id, player_id } = req.body;
+  try {
+    const songData = await gameModel
+      .findOne({ room_id, player_id })
+      .select(['songs']);
+    let songsArray = songData.songs;
+    songData.songs.forEach((songItem, index) => {
+      if (songItem === song) {
+        songsArray.splice(index, 1);
+      }
+    });
+    const deleteSong = await gameModel.findOneAndUpdate({ room_id, player_id }, { songs: songsArray });
+    return res.status(200).json({ success: true, message: "Song has been deleted." })
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Something went wrong." })
+  }
+}
+
 const getSongs = async (req, res) => {
   const { room_id, player_id } = req.body;
-  try {
+  try { 
     const gameData = await gameModel
       .findOne({ room_id, player_id })
       .select("+songs");
@@ -63,4 +82,4 @@ const getSongs = async (req, res) => {
   }
 };
 
-module.exports = { addSong, getSongs };
+module.exports = { addSong, deleteSong, getSongs };
