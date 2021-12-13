@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  InputGroup,
+  Button,
+  Image,
+} from "react-bootstrap";
 import axios from "axios";
 import io from "socket.io-client";
 
@@ -9,8 +17,7 @@ import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
 import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
-import logo from "../../images/chatroomimg.png";
-
+import musicImage from "../../images/chatroomimg.png";
 
 import "./game-room.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
@@ -37,7 +44,7 @@ const GameRoom = (props) => {
   const [showRules, setShowRules] = useState(false);
 
   //Temp array
-  const dataArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const dataArray = [0, 1, 2, 3, 4, 5, 6, 7];
 
   // Function to set user Details
   const setUserDetails = () => {
@@ -119,123 +126,112 @@ const GameRoom = (props) => {
         promptMessage='Are you sure, you want to leave the room?'
         userInfo={props.userInfo.data}
       />
-      <div className='d-flex flex-column align-items-center bg-light'
-       style={{ minHeight: "calc(100vh - 62px)" }}>
-     
-       {/* <div className="wrapper"> */}
-        <Container fluid>
-        
-        <div className="icon1">
-        <div className="avatar1"> 
-        <AvatarIcon
-              imageUrl='https://robohash.org/32?set=set2'
-              AvatarWidth='80'
-        />
-        </div>
-       <div className>Player Name</div>
-        </div>
 
-        <div className="icon2">
-        <div className="avatar2"> 
-        <AvatarIcon
-              imageUrl='https://robohash.org/31?set=set2'
-              AvatarWidth='80'
-        />
-        </div>
-        <div className>Player Name</div>
-        </div>
-
-        <div className="icon3">
-        <AvatarIcon
-              imageUrl='https://robohash.org/33?set=set2'
-              AvatarWidth='80'
-        />
-        <div className>Player Name</div>
-        </div>
-
-        <div className="icon4">
-        <div className>Player Name</div>
-        <AvatarIcon
-              imageUrl='https://robohash.org/34?set=set2'
-              AvatarWidth='80'
-        />
-        </div>
-        
-        
-        <div className="image">
-      <div className="image1">
-        <img
-          src={logo}
-          alt='Logo'
-          className='logo-image'
-          style={{ cursor: "pointer" }}
-       
-        />
-        
-      </div>
-
-      <div className='add-songs-div'>
-      <InputGroup style={{ position: "relative" }}>
-                  
-      
-                  <span
-                    style={{
-                      position: "absolute",
-                      zIndex: "4",
-                      left: "3px",
-                      top: "3px",
-                      // height: "33px",
-                      height: "35px",
-                      // width: "35px",
-                      width: "50px",
-                      overflow: "hidden",
-                      backgroundColor: "rgb(250, 100, 100)",
-                      boxShadow:
-                        "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
-                      border: "2px solid #fff",
-                      borderRadius: "50%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "#fff",
-                    }}
-                  >
-                    <FaMusic />
-                  </span>
-                  <Form.Control
-                    type='url'
-
-                    style={{
-                      paddingLeft: "50px",
-                      borderRadius: "50px 0 0 50px",
-                    }}
-                    disabled
-                  />
-                  <InputGroup.Text className='px-1'>
-                    <FaPlay style={{ fontSize: "24px", width: "50px" }} />
-                  </InputGroup.Text>
-                </InputGroup>
-          </div>
-             
-          <div className="button">
-          <button className='start-game-button'>
-          TAKE VOTES
-        </button>
-        </div>
-      </div>
-      
-      <div className="icon5">
-      <div className>Player Name</div>
-        <AvatarIcon
-              imageUrl='https://robohash.org/38?set=set2'
-              AvatarWidth='80'
-        />
-        </div>
-
-
-
+      <div
+        className='d-flex flex-column align-items-center bg-light'
+        style={{ minHeight: "calc(100vh - 62px)", padding: "20px" }}
+      >
+        <Container
+          className='d-flex justify-content-center align-items-center p-0'
+          style={{
+            border: "1px solid black",
+            borderRadius: "10px",
+            minHeight: "calc(100vh - 100px)",
+            // minWidth: "calc(100vw - 60px)",
+          }}
+          fluid
+        >
+          <Row
+            style={{
+              height: "100%",
+              width: "100%",
+              padding: "10px",
+              display: "grid",
+              gridGap: "10px",
+              gridTemplateColumns: "repeat(4, 1fr)",
+            }}
+          >
+            <Col
+              className='d-flex flex-column justify-content-center align-items-center rounded'
+              style={{
+                border: "1px solid gray",
+                backgroudColor: "yellow",
+                minHeight: "120px",
+                gridColumnStart: "2",
+                gridColumnEnd: "4",
+                gridRowStart: "2",
+                gridRowEnd: "4",
+              }}
+            >
+              <div
+                className='d-flex justify-content-center align-items-center p-0 my-2'
+                style={{
+                  backgroundColor: "rgb(150, 200, 100)",
+                  height: "320px",
+                  width: "320px",
+                  borderRadius: "50%",
+                }}
+              >
+                <Image
+                  src={musicImage}
+                  style={{ height: "100%", width: "100%" }}
+                />
+              </div>
+              <InputGroup className="mb-2" style={{ position: "relative" }}>
+                <span
+                  style={{
+                    position: "absolute",
+                    zIndex: "4",
+                    left: "3px",
+                    top: "3px",
+                    height: "35px",
+                    width: "35px",
+                    overflow: "hidden",
+                    backgroundColor: "rgb(250, 100, 100)",
+                    boxShadow:
+                      "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
+                    border: "2px solid #fff",
+                    borderRadius: "50%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#fff",
+                  }}
+                >
+                  <FaMusic />
+                </span>
+                <Form.Control type="text" disabled />
+                <InputGroup.Text className='px-1'>
+                  <FaPlay style={{ fontSize: "24px", width: "50px" }} />
+                </InputGroup.Text>
+              </InputGroup>
+              <Button className='w-100 text-center mb-2'>TAKE VOTES</Button>
+            </Col>
+            {dataArray.map((item, index) => (
+              <Col
+                key={index}
+                className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center rounded'
+                style={{
+                  border: "1px solid red",
+                  backgroudColor: "yellow",
+                  minHeight: "120px",
+                }}
+              >
+                Div {item + 1}
+                <div className='icon1'>
+                  <div className='avatar1'>
+                    <AvatarIcon
+                      imageUrl='https://robohash.org/32?set=set2'
+                      AvatarWidth='80'
+                    />
+                  </div>
+                  <div className>Player Name</div>
+                </div>
+              </Col>
+            ))}
+          </Row>
         </Container>
-        </div>
+      </div>
     </div>
   );
 };
