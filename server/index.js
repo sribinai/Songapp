@@ -94,25 +94,26 @@ io.on("connection", (socket) => {
         if (user) {
           // Welcome current user
           socket.join(user.room_id);
-          socket.emit(
-            "message",
-            formatMessages(
-              botName,
-              null,
-              `Welcome to this PlayMyPlayList room, ${user.name}.`
-            )
-          );
-          // Broadcast when any user connects
-          socket.broadcast
-            .to(user.room_id)
-            .emit(
-              "message",
-              formatMessages(
-                botName,
-                null,
-                `${user.name} joined the PlayMyPlayList room.`
-              )
-            );
+          socket.broadcast.emit('user-connected', user.user_id);
+          // socket.emit(
+          //   "message",
+          //   formatMessages(
+          //     botName,
+          //     null,
+          //     `Welcome to this PlayMyPlayList room, ${user.name}.`
+          //   )
+          // );
+          // // Broadcast when any user connects
+          // socket.broadcast
+          //   .to(user.room_id)
+          //   .emit(
+          //     "message",
+          //     formatMessages(
+          //       botName,
+          //       null,
+          //       `${user.name} joined the PlayMyPlayList room.`
+          //     )
+          //   );
         }
         // Send users and room Info
         io.to(user.room_id).emit("roomUsers", {
@@ -163,10 +164,10 @@ io.on("connection", (socket) => {
     if (user) {
       // Update user songs list and count function call
       addUserSong(socket.id, new_song);
-      io.to(user.room_id).emit(
-        "message",
-        formatMessages(botName, null, `${name} added new song.`)
-      );
+      // io.to(user.room_id).emit(
+      //   "message",
+      //   formatMessages(botName, null, `${name} added new song.`)
+      // );
       io.to(user.room_id).emit("roomUsers", {
         room_id: user.room_id,
         users: getUsersInRoom(user.room_id),
@@ -180,12 +181,12 @@ io.on("connection", (socket) => {
     const user = removeUser(socket.id);
     if (user) {
       // send message to all that user is disconnected
-      socket.broadcast
-        .to(user.room_id)
-        .emit(
-          "message",
-          formatMessages(botName, null, `${user.name} has left the room.`)
-        );
+      // socket.broadcast
+      //   .to(user.room_id)
+      //   .emit(
+      //     "message",
+      //     formatMessages(botName, null, `${user.name} has left the room.`)
+      //   );
       // Send users and room Info
       io.to(user.room_id).emit("roomUsers", {
         room_id: user.room_id,
