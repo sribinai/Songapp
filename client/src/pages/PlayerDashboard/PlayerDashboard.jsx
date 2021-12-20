@@ -421,7 +421,8 @@ const PlayerDashboard = (props) => {
                 >
                   <AvatarIcon
                     imageUrl='https://robohash.org/46?set=set4'
-                    statusDetails={true}
+                    // statusDetails={true}
+                    statusDetails="connected"
                     showStatus={true}
                   />
                   <span>{item.name}</span>

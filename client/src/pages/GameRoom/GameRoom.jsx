@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import io from "socket.io-client";
+import Peer from "peerjs";
 
 import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
@@ -24,6 +25,7 @@ import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstruc
 import FloatingTextBlock from "../../components/layouts/FloatingTextBlock/FloatingTextBlock";
 
 let socket;
+let myPeer = new Peer();
 
 const GameRoom = (props) => {
   let history = useHistory();
@@ -32,7 +34,7 @@ const GameRoom = (props) => {
   const [userID, setUserID] = useState("");
   const [roomID, setRoomID] = useState("");
   const [roomPlayers, setRoomPlayers] = useState([]);
-  const [hostName, setHostName] = useState("");
+  const [hostID, setHostID] = useState("");
   const [guestName, setGuestName] = useState("");
   const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
   const [message, setMessage] = useState("");
@@ -49,10 +51,13 @@ const GameRoom = (props) => {
   // Function to set user Details
   const setUserDetails = () => {
     // Set userID, UserName/GuestName, RoomID
-    const room_id = props.location.search.split("=")[1];
+    // const room_id = props.location.search.split("=")[1];
     setUserID(props.userInfo.data.id);
     setGuestName(props.userInfo.data.user_name);
-    setRoomID(room_id);
+    setRoomID(props.location.state.room_data.room_id);
+    setRoomDetails(props.location.state.room_data);
+    setRoomPlayers(props.location.state.room_players)
+    setHostID(props.location.state.room_data.host_name);
   };
 
   useEffect(() => {
@@ -63,39 +68,33 @@ const GameRoom = (props) => {
         search: "?authorization=false",
       });
     }
+    // console.log(peer);
+    // peer.on()
     // Fetch data from localStorage
     console.log(props.location.state);
-    // setUserDetails();
-    // if (roomID.length !== 0 && userID.length !== 0) {
-    //   // Fetch all the details for this page
-    //   fetchRoomDetails();
-    //   if (songCount === null) {
-    //     // fetchPlayersDetails(); // Check if required later
-    //     fetchSongs();
-    //   } else {
-    //     if (!joinRoomStatus) {
-    //       socket.emit("join_room", {
-    //         user_id: userID,
-    //         room_id: roomID,
-    //         name: guestName,
-    //         songs_list: songsList,
-    //         song_count: songCount,
-    //       });
-    //       setJoinRoomStatus(true);
-    //     }
-    //   }
+    setUserDetails();
+    if (roomID.length !== 0 && userID.length !== 0) {
+      // fetchPlayersDetails(); // Check if required later
+      socket.emit("join_room", {
+        user_id: userID,
+        room_id: roomID,
+        name: guestName,
+        songs_list: songsList,
+        song_count: songCount,
+      });
+      setJoinRoomStatus(true);
+    }
 
-    //   socket.on("message", (message) => {
-    //     console.log(message);
-    //     setChatBoxData((chatBoxData) => [...chatBoxData, message]);
-    //   });
+    socket.on("message", (message) => {
+      console.log(message);
+      setChatBoxData((chatBoxData) => [...chatBoxData, message]);
+    });
 
-    //   socket.on("roomUsers", ({ users }) => {
-    //     // console.log(room_id);
-    //     console.log(users);
-    //     setRoomPlayers(users);
-    //   });
-    // }
+    socket.on("roomUsers", ({ users }) => {
+      // console.log(room_id);
+      console.log(users);
+      setRoomPlayers(users);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ENDPOINT, roomID, userID, songCount]);
 
@@ -166,9 +165,9 @@ const GameRoom = (props) => {
               <div
                 className='d-flex justify-content-center align-items-center p-0 my-2'
                 style={{
-                  backgroundColor: "rgb(150, 200, 100)",
-                  height: "320px",
-                  width: "320px",
+                  // backgroundColor: "rgb(150, 200, 100)",
+                  height: "260px",
+                  width: "260px",
                   borderRadius: "50%",
                 }}
               >
@@ -177,7 +176,7 @@ const GameRoom = (props) => {
                   style={{ height: "100%", width: "100%" }}
                 />
               </div>
-              <InputGroup className="mb-2" style={{ position: "relative" }}>
+              <InputGroup className='mb-2' style={{ position: "relative" }}>
                 <span
                   style={{
                     position: "absolute",
@@ -200,17 +199,39 @@ const GameRoom = (props) => {
                 >
                   <FaMusic />
                 </span>
-                <Form.Control type="text" disabled />
+                <Form.Control type='text' disabled />
                 <InputGroup.Text className='px-1'>
                   <FaPlay style={{ fontSize: "24px", width: "50px" }} />
                 </InputGroup.Text>
               </InputGroup>
               <Button className='w-100 text-center mb-2'>TAKE VOTES</Button>
             </Col>
-            {dataArray.map((item, index) => (
+
+            {roomPlayers.map((player, index) => (
               <Col
                 key={index}
-                className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center rounded'
+                className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center text-center rounded'
+                style={{
+                  backgroudColor: "yellow",
+                  minHeight: "120px",
+                }}
+              >
+                <div className='player-info'>
+                  <div className='avatar1'>
+                    <AvatarIcon
+                      imageUrl='https://robohash.org/32?set=set2'
+                      AvatarWidth='120'
+                      streamButtons={true}
+                    />
+                  </div>
+                  <div>{player.name}</div>
+                </div>
+              </Col>
+            ))}
+            {/* {dataArray.map((item, index) => (
+              <Col
+                key={index}
+                className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center text-center rounded'
                 style={{
                   border: "1px solid red",
                   backgroudColor: "yellow",
@@ -218,20 +239,31 @@ const GameRoom = (props) => {
                 }}
               >
                 Div {item + 1}
-                <div className='icon1'>
+                <div className='player-info'>
                   <div className='avatar1'>
                     <AvatarIcon
                       imageUrl='https://robohash.org/32?set=set2'
-                      AvatarWidth='80'
+                      AvatarWidth='120'
                     />
                   </div>
-                  <div className>Player Name</div>
+                  <div>Player Name</div>
                 </div>
               </Col>
-            ))}
+            ))} */}
           </Row>
         </Container>
       </div>
+      <FloatingTextBlock
+        textMessages={chatBoxData}
+        message={message}
+        userID={userID}
+        setMessage={(e) => setMessage(e.target.value)}
+        onClick={(e) => {
+          e.preventDefault();
+          emitChatMessages();
+          setMessage("");
+        }}
+      />
     </div>
   );
 };
