@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Figure } from "react-bootstrap";
-import { FaCheck, FaMicrophoneAlt, FaMicrophoneAltSlash, FaTrophy, FaVideo, FaVideoSlash } from "react-icons/fa";
+import {
+  FaCheck,
+  FaMicrophoneAlt,
+  FaMicrophoneAltSlash,
+  FaTrophy,
+  FaVideo,
+  FaVideoSlash,
+} from "react-icons/fa";
 // import { FaRegCheckCircle } from "react-icons/fa";
 import { BiWifiOff } from "react-icons/bi";
 
@@ -18,58 +25,82 @@ const AvatarIcon = ({
   recieveStream,
   declineStream,
 }) => {
+  const streamVideoRef = useRef(null);
+  // console.log(streamData)
+
+  useEffect(() => {
+    if (streamVideoRef.current !== null) {
+      console.log(streamData)
+      streamVideoRef.current.srcObject = streamData;
+    }
+    // if (streamVideoRef !== null) streamVideoRef.current.srcObject = streamData
+  }, [streamVideoRef, streamData])
+
   return (
     <Figure
       style={{ height: `${AvatarWidth}px`, width: `${AvatarWidth}px` }}
       className='avatar-icon-shape'
     >
-      <Figure.Image
-        height={`${AvatarWidth}px`}
-        width={`${AvatarWidth}px`}
-        alt='profile-image'
-        src={imageUrl}
-        className='avatar-icon'
-        roundedCircle
-      />
+      {streamData ? (
+        <>
+          <video
+            ref={streamVideoRef}
+            // src={streamData}
+            height={`${AvatarWidth}px`}
+            width={`${AvatarWidth}px`}
+            // controls
+            autoPlay
+            style={{ borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}
+          >
+            <p>
+              Your browser doesn't support HTML5 video.
+            </p>
+          </video>
+        </>
+      ) : (
+        <Figure.Image
+          height={`${AvatarWidth}px`}
+          width={`${AvatarWidth}px`}
+          alt='profile-image'
+          src={imageUrl}
+          className='avatar-icon'
+          roundedCircle
+        />
+      )}
       {/* <video src="rabbit320.webm" controls>
         <p>Your browser doesn't support HTML5 video. Here is a <a href="rabbit320.webm">link to the video</a> instead.</p>
       </video> */}
 
       {streamButtons && (
-        <span
-        className="d-flex justify-content-center align-items-center"
-          style={{
-            position: "absolute",
-            left: "25px",
-            bottom: "10px",
-            height: "30px",
-            width: "30px",
-            border: "1px solid rgb(0,0,0,0.4)",
-            borderRadius: "50%",
-            backgroundColor: "rgb(250, 100, 100)"
-          }}
-        >
-          {/* <FaMicrophoneAlt /> */}
-          <FaMicrophoneAltSlash />
-        </span>
-      )}
-      {streamButtons && (
-        <span
-          className="d-flex justify-content-center align-items-center"
-          style={{
-            position: "absolute",
-            right: "25px",
-            bottom: "10px",
-            height: "30px",
-            width: "30px",
-            border: "1px solid rgb(250,250,250,0.9)",
-            borderRadius: "50%",
-            backgroundColor: "rgb(100, 200, 100)"
-          }}
-        >
-          <FaVideo />
-          {/* <FaVideoSlash /> */}
-        </span>
+        <div className="d-flex" style={{ position: "absolute", bottom: "0", left: "50%",  transform: 'translate(-50%, -50%)' }}>
+          <span
+            className='d-flex justify-content-center align-items-center mx-2'
+            style={{
+              height: "30px",
+              width: "30px",
+              border: "1px solid rgb(0,0,0,0.4)",
+              borderRadius: "50%",
+              backgroundColor: "rgb(250, 100, 100)",
+            }}
+          >
+            {/* <FaMicrophoneAlt /> */}
+            <FaMicrophoneAltSlash />
+          </span>
+          <span
+            className='d-flex justify-content-center align-items-center mx-2'
+            style={{
+              height: "30px",
+              width: "30px",
+              border: "1px solid rgb(250,250,250,0.9)",
+              borderRadius: "50%",
+              backgroundColor: "rgb(100, 200, 100)",
+            }}
+          >
+            <FaVideo />
+            {/* <FaVideoSlash /> */}
+          </span>
+
+        </div>
       )}
 
       {showStatus && (

@@ -40,6 +40,8 @@ const GameRoom = (props) => {
   const [message, setMessage] = useState("");
   const [chatBoxData, setChatBoxData] = useState([]);
 
+  const [streamVideo, setStreamVideo] = useState(null);
+
   const [songCount, setSongCount] = useState(null);
   const [songLink, setSongLink] = useState("");
   const [songsList, setSongsList] = useState([]);
@@ -56,7 +58,7 @@ const GameRoom = (props) => {
     setGuestName(props.userInfo.data.user_name);
     setRoomID(props.location.state.room_data.room_id);
     setRoomDetails(props.location.state.room_data);
-    setRoomPlayers(props.location.state.room_players)
+    setRoomPlayers(props.location.state.room_players);
     setHostID(props.location.state.room_data.host_name);
   };
 
@@ -70,10 +72,31 @@ const GameRoom = (props) => {
     }
     // console.log(peer);
     // peer.on()
+    // Access the user's video and audio
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then((stream) => {
+        console.log("Streaming my media");
+        setStreamVideo(stream)
+      });
     // Fetch data from localStorage
-    console.log(props.location.state);
     setUserDetails();
     if (roomID.length !== 0 && userID.length !== 0) {
+      let conn = myPeer.connect(userID);
+      // on open will be launch when you successfully connect to PeerServer
+      conn.on("open", function () {
+        // here you have conn.id
+        conn.send("user connected to peer");
+      });
+      myPeer.on("connection", function (conn) {
+        conn.on("data", function (data) {
+          // Will print 'hi!'
+          console.log(data);
+        });
+      });
       // fetchPlayersDetails(); // Check if required later
       socket.emit("join_room", {
         user_id: userID,
@@ -147,7 +170,7 @@ const GameRoom = (props) => {
               padding: "10px",
               display: "grid",
               gridGap: "10px",
-              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateColumns: "repeat(3, 1fr)",
             }}
           >
             <Col
@@ -157,17 +180,17 @@ const GameRoom = (props) => {
                 backgroudColor: "yellow",
                 minHeight: "120px",
                 gridColumnStart: "2",
-                gridColumnEnd: "4",
+                gridColumnEnd: "3",
                 gridRowStart: "2",
-                gridRowEnd: "4",
+                gridRowEnd: "3",
               }}
             >
               <div
                 className='d-flex justify-content-center align-items-center p-0 my-2'
                 style={{
                   // backgroundColor: "rgb(150, 200, 100)",
-                  height: "260px",
-                  width: "260px",
+                  height: "200px",
+                  width: "200px",
                   borderRadius: "50%",
                 }}
               >
@@ -220,8 +243,9 @@ const GameRoom = (props) => {
                   <div className='avatar1'>
                     <AvatarIcon
                       imageUrl='https://robohash.org/32?set=set2'
-                      AvatarWidth='120'
+                      AvatarWidth='180'
                       streamButtons={true}
+                      streamData={streamVideo}
                     />
                   </div>
                   <div>{player.name}</div>
@@ -233,20 +257,17 @@ const GameRoom = (props) => {
                 key={index}
                 className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center text-center rounded'
                 style={{
-                  border: "1px solid red",
-                  backgroudColor: "yellow",
                   minHeight: "120px",
                 }}
               >
-                Div {item + 1}
                 <div className='player-info'>
                   <div className='avatar1'>
                     <AvatarIcon
-                      imageUrl='https://robohash.org/32?set=set2'
-                      AvatarWidth='120'
+                      imageUrl='https://robohash.org/31?set=set4'
+                      AvatarWidth='130'
                     />
                   </div>
-                  <div>Player Name</div>
+                  <div>Player {index + 1}</div>
                 </div>
               </Col>
             ))} */}
