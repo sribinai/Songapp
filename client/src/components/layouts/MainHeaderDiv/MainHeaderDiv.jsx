@@ -75,8 +75,7 @@ const MainHeaderDiv = (
 
               <Dropdown.Menu>
               
-                <Dropdown.Item   ><Link to='/userSettings'>User Settings</Link></Dropdown.Item>
-                
+                <Dropdown.Item as={Link} to='/userSettings'>User Settings</Dropdown.Item>
                 <Dropdown.Item href='#'>User Rooms</Dropdown.Item>
                 <Dropdown.Item href='#'>Logout</Dropdown.Item>
               </Dropdown.Menu>

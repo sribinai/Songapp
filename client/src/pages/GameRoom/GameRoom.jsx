@@ -41,6 +41,8 @@ const GameRoom = (props) => {
   const [chatBoxData, setChatBoxData] = useState([]);
 
   const [streamVideo, setStreamVideo] = useState(null);
+  const [passVideo, setPassVideo] = useState(true);
+  const [passAudio, setPassAudio] = useState(true);
 
   const [songCount, setSongCount] = useState(null);
   const [songLink, setSongLink] = useState("");
@@ -72,25 +74,16 @@ const GameRoom = (props) => {
     }
     // console.log(peer);
     // peer.on()
-    // Access the user's video and audio
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
-      .then((stream) => {
-        console.log("Streaming my media");
-        setStreamVideo(stream)
-      });
+    
     // Fetch data from localStorage
     setUserDetails();
     if (roomID.length !== 0 && userID.length !== 0) {
       let conn = myPeer.connect(userID);
       // on open will be launch when you successfully connect to PeerServer
-      conn.on("open", function () {
-        // here you have conn.id
-        conn.send("user connected to peer");
-      });
+      // conn.on("open", function () {
+      //   // here you have conn.id
+      //   conn.send("user connected to peer");
+      // });
       myPeer.on("connection", function (conn) {
         conn.on("data", function (data) {
           // Will print 'hi!'
@@ -120,6 +113,34 @@ const GameRoom = (props) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ENDPOINT, roomID, userID, songCount]);
+
+  useEffect(() => {
+    // Access the user's video and audio
+    navigator.mediaDevices
+      .getUserMedia({
+        video: passVideo,
+        audio: passAudio,
+      })
+      .then((stream) => {
+        setStreamVideo(stream)
+      }).catch(err => {
+        console.log(err)
+        console.log(err.name)
+        if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
+            //required track is missing 
+        } else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
+            //webcam or mic are already in use 
+        } else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
+            //constraints can not be satisfied by avb. devices 
+        } else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
+            //permission denied in browser 
+        } else if (err.name == "TypeError" || err.name == "TypeError") {
+            //empty constraints object 
+        } else {
+            //other errors 
+        }
+      });
+  }, [passAudio, passVideo])
 
   useEffect(() => {
     // Cleanup function to be run on Unmounting the component
@@ -246,6 +267,10 @@ const GameRoom = (props) => {
                       AvatarWidth='180'
                       streamButtons={true}
                       streamData={streamVideo}
+                      passAudio={passAudio}
+                      toggleAudio={() => setPassAudio(!passAudio)}
+                      passVideo={passVideo}
+                      toggleVideo={() => setPassVideo(!passVideo)}
                     />
                   </div>
                   <div>{player.name}</div>
