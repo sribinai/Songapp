@@ -22,8 +22,10 @@ const AvatarIcon = ({
   streamButtons,
   streamStatus,
   streamData,
-  recieveStream,
-  declineStream,
+  passVideo,
+  passAudio,
+  toggleAudio,
+  toggleVideo
 }) => {
   const streamVideoRef = useRef(null);
   // console.log(streamData)
@@ -41,16 +43,14 @@ const AvatarIcon = ({
       style={{ height: `${AvatarWidth}px`, width: `${AvatarWidth}px` }}
       className='avatar-icon-shape'
     >
-      {streamData ? (
+      {passVideo ? (
         <>
           <video
+            className="video-stream"
             ref={streamVideoRef}
-            // src={streamData}
             height={`${AvatarWidth}px`}
             width={`${AvatarWidth}px`}
-            // controls
             autoPlay
-            style={{ borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}
           >
             <p>
               Your browser doesn't support HTML5 video.
@@ -67,9 +67,6 @@ const AvatarIcon = ({
           roundedCircle
         />
       )}
-      {/* <video src="rabbit320.webm" controls>
-        <p>Your browser doesn't support HTML5 video. Here is a <a href="rabbit320.webm">link to the video</a> instead.</p>
-      </video> */}
 
       {streamButtons && (
         <div className="d-flex" style={{ position: "absolute", bottom: "0", left: "50%",  transform: 'translate(-50%, -50%)' }}>
@@ -80,11 +77,10 @@ const AvatarIcon = ({
               width: "30px",
               border: "1px solid rgb(0,0,0,0.4)",
               borderRadius: "50%",
-              backgroundColor: "rgb(250, 100, 100)",
+              backgroundColor: `${!passAudio ? "rgb(100, 200, 100)" : "rgb(250, 100, 100)" }`,
             }}
           >
-            {/* <FaMicrophoneAlt /> */}
-            <FaMicrophoneAltSlash />
+            {passAudio ? <FaMicrophoneAltSlash onClick={toggleAudio} /> : <FaMicrophoneAlt onClick={toggleAudio} /> }
           </span>
           <span
             className='d-flex justify-content-center align-items-center mx-2'
@@ -93,11 +89,10 @@ const AvatarIcon = ({
               width: "30px",
               border: "1px solid rgb(250,250,250,0.9)",
               borderRadius: "50%",
-              backgroundColor: "rgb(100, 200, 100)",
+              backgroundColor: `${!passVideo ? "rgb(100, 200, 100)" : "rgb(250, 100, 100)" }`,
             }}
-          >
-            <FaVideo />
-            {/* <FaVideoSlash /> */}
+            >
+            {passVideo ? <FaVideoSlash onClick={toggleVideo} /> : <FaVideo onClick={toggleVideo} /> }
           </span>
 
         </div>
