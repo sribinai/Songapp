@@ -11,10 +11,11 @@ import LoadingSpinner from "../../components/layouts/LoadingSpinner/LoadingSpinn
 import "./homepage.styles.css";
 import { DATA_URL } from "../..";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const HomePage = () => {
   let history = useHistory();
-  const [cookie] = useCookies(["playlist_token"]);
+  const [cookie, removeCookie] = useCookies(["playlist_token"]);
   const positionValue = [0, 16]; // postion left and top, in vw and vh respectively
   const paddingValue = [10, 5, 10, 5]; // top, right, bottom, left in pixels
   const borderRadiusValue = [0, 20, 20, 0]; // left top, right top, right bottom, left bottom in pixels
@@ -54,22 +55,34 @@ const HomePage = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      console.log(cookie);
       const response = await axios.get(`${DATA_URL}/playlist/api/user/logout`, {
         withCredentials: true,
       });
       if (response.status === 200) {
-        console.log(response);
-        console.log(cookie);
-      } else {
-        console.log("error");
+        console.log('logout');
+        removeCookie("playlist_token");
+        history.push({
+          pathname: "/",
+          search: "?logout=success",
+        })
+        return;
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.response.data.message
+        });
       } else {
-        console.log(error.message);
+        // console.log(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Something went wrong."
+        });
       }
+      return;
     }
   };
 

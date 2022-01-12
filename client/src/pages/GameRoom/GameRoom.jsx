@@ -41,7 +41,7 @@ const GameRoom = (props) => {
   const [chatBoxData, setChatBoxData] = useState([]);
 
   const [streamVideo, setStreamVideo] = useState(null);
-  const [passVideo, setPassVideo] = useState(true);
+  const [passVideo, setPassVideo] = useState(false);
   const [passAudio, setPassAudio] = useState(true);
 
   const [songCount, setSongCount] = useState(null);
@@ -118,8 +118,8 @@ const GameRoom = (props) => {
     // Access the user's video and audio
     navigator.mediaDevices
       .getUserMedia({
-        video: passVideo,
         audio: passAudio,
+        video: passVideo,
       })
       .then((stream) => {
         setStreamVideo(stream)
