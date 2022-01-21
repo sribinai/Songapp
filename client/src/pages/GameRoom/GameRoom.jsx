@@ -42,7 +42,7 @@ const GameRoom = (props) => {
 
   const [streamVideo, setStreamVideo] = useState(null);
   const [passVideo, setPassVideo] = useState(false);
-  const [passAudio, setPassAudio] = useState(true);
+  const [passAudio, setPassAudio] = useState(false);
 
   const [songCount, setSongCount] = useState(null);
   const [songLink, setSongLink] = useState("");

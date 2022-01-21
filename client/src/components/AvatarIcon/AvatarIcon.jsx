@@ -77,10 +77,10 @@ const AvatarIcon = ({
               width: "30px",
               border: "1px solid rgb(0,0,0,0.4)",
               borderRadius: "50%",
-              backgroundColor: `${!passAudio ? "rgb(100, 200, 100)" : "rgb(250, 100, 100)" }`,
+              backgroundColor: `${passAudio ? "rgb(100, 200, 100)" : "rgb(250, 100, 100)" }`,
             }}
           >
-            {passAudio ? <FaMicrophoneAltSlash onClick={toggleAudio} /> : <FaMicrophoneAlt onClick={toggleAudio} /> }
+            {!passAudio ? <FaMicrophoneAltSlash onClick={toggleAudio} /> : <FaMicrophoneAlt onClick={toggleAudio} /> }
           </span>
           <span
             className='d-flex justify-content-center align-items-center mx-2'
@@ -89,10 +89,10 @@ const AvatarIcon = ({
               width: "30px",
               border: "1px solid rgb(250,250,250,0.9)",
               borderRadius: "50%",
-              backgroundColor: `${!passVideo ? "rgb(100, 200, 100)" : "rgb(250, 100, 100)" }`,
+              backgroundColor: `${passVideo ? "rgb(100, 200, 100)" : "rgb(250, 100, 100)" }`,
             }}
             >
-            {passVideo ? <FaVideoSlash onClick={toggleVideo} /> : <FaVideo onClick={toggleVideo} /> }
+            {!passVideo ? <FaVideoSlash onClick={toggleVideo} /> : <FaVideo onClick={toggleVideo} /> }
           </span>
 
         </div>
