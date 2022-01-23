@@ -94,17 +94,17 @@ const PlayerDashboard = (props) => {
   const fetchSongs = async () => {
     try {
       const response = await axios.post(
-        `${DATA_URL}/playlist/api/game/get-songs`,
+        `${DATA_URL}/playlist/api/song/get-player-songs`,
         {
           room_id: roomID,
           player_id: userID,
         }
       );
-      // console.log(response);
+      console.log(response);
       if (response.status === 200) {
         // Reset song input data to empty
         setSongsList(response.data.songsData);
-        setSongCount(response.data.songsData.length);
+        setSongCount(response.data.songsCount);
         return;
       } else {
         console.log(response.data.message);
@@ -221,14 +221,14 @@ const PlayerDashboard = (props) => {
     }
     try {
       const response = await axios.post(
-        `${DATA_URL}/playlist/api/game/add-song`,
+        `${DATA_URL}/playlist/api/song/add-song`,
         {
           room_id: roomID,
           player_id: userID,
           song: songLink,
         }
       );
-      // console.log(response);
+      console.log(response);
       if (response.status === 200) {
         socket.emit("add_songs", {
           name: guestName,
@@ -269,7 +269,7 @@ const PlayerDashboard = (props) => {
     }
   };
 
-  const handleClickSong = async (e, song) => {
+  const handleClickSong = async (e, song_id) => {
     e.preventDefault();
     try {
       const deleteConfirm = await  Swal.fire({
@@ -280,13 +280,13 @@ const PlayerDashboard = (props) => {
       
       if (deleteConfirm.isConfirmed) {
           const response = await axios.post(
-            `${DATA_URL}/playlist/api/game/delete-song`,
+            `${DATA_URL}/playlist/api/song/delete-song`,
             {
-              song,
-              room_id: roomID,
+              song_id,
               player_id: userID,
             }
           );
+          console.log(response);
           if (response.status === 200) {
             Swal.fire("Success", response.data.message, "success");
             fetchSongs();
@@ -495,7 +495,7 @@ const PlayerDashboard = (props) => {
                     </span>
                     <Form.Control
                       type='url'
-                      value={song}
+                      value={song.song}
                       style={{
                         paddingLeft: "50px",
                         borderRadius: "50px 0 0 50px",
@@ -511,7 +511,7 @@ const PlayerDashboard = (props) => {
                   <Button
                     variant='danger'
                     className='d-flex w-100 justify-content-center align-items-center'
-                    onClick={(e) => handleClickSong(e, song)}
+                    onClick={(e) => handleClickSong(e, song._id)}
                   >
                     <FaTrashAlt className='ms-1' size={22} />
                     REMOVE
