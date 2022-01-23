@@ -11,6 +11,11 @@ const RoomSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  game_status: {
+    type: String,
+    default: "not_started",
+    required: true,
+  },
   room_name: {
     type: String,
     min: 4,
