@@ -119,7 +119,7 @@ const getRoomSongs = async (req, res) => {
 const getPlayerSongs = async (req, res) => {
   const { room_id, player_id } = req.body;
   try {
-    const gameData = await songModel.find({ room_id, player_id });
+    const gameData = await songModel.find({ room_id, player_id }).select('-room_id -player_id');
     const songsCount = await songModel
     .where({ room_id: room_id, player_id: player_id })
     .count();
@@ -141,6 +141,19 @@ const getPlayerSongs = async (req, res) => {
     .json({ success: false, message: "Some error occurred in server." });
   }
 };
+
+const getSongById = async (req, res) => {
+  const {song_id} = req.body;
+  try {
+    const songInfo = await songModel.find({ _id: song_id });
+    if (songInfo.length === 0) {
+      return res.status(400).json({ status: false, message: "Coould not find the song." });
+    }
+    return res.status(200).json({ success: true, songInfo: songInfo[0], message: "Successfully fetched the song." });
+  } catch (error) {
+    return res.status(500).json({ status: false, message: "Unexpected error in server." });
+  }
+}
 
 // Route for voting a particular player
 const votePlayer = async (req, res) => {
@@ -186,4 +199,4 @@ const votePlayer = async (req, res) => {
   }
 };
 
-module.exports = { addSong, deleteSong, getRoomSongs, getPlayerSongs, votePlayer };
+module.exports = { addSong, deleteSong, getRoomSongs, getPlayerSongs, getSongById, votePlayer };

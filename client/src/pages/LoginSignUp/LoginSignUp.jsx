@@ -131,7 +131,7 @@ const LoginSignUp = (props) => {
       }
     } catch (error) {
       // console.log(error);
-      if (error.response.data.message) {
+      if (error.response) {
         Swal.fire({
           icon: "error",
           title: "Oops..",
