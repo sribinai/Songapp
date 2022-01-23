@@ -173,12 +173,12 @@ const getRoomDetails = async (req, res) => {
   let output = {};
   try {
     let roomDetails = await roomModel
-      .findOne({ room_id })
+    .findOne({ room_id })
       .select("-password -_id"); // Fetching all details of room except password and _id
     // fetch Hostname
     let user = await UserModel.findOne({ user_id: roomDetails.host_id }).select(
       "-password"
-    );
+      );
     output.roomDetails = roomDetails;
     output.host_name = user.name;
   } catch (error) {
@@ -190,6 +190,23 @@ const getRoomDetails = async (req, res) => {
   output.message = "Successfully fetched room Details.";
   res.status(200).json(output);
 };
+
+// Route for staring the game
+const startGameRoom = async (req, res) => {
+  const { room_id, host_id } = req.body;
+  try {
+    const gameRoomDetails = await roomModel.find({ room_id, host_id });
+    if (gameRoomDetails.length === 0) {
+      return res.status(400).json({ success: false, message: "Could not find the data you are looking for." });
+    }
+    // change game status from "not_started" to "started"
+    const gameData = await roomModel.findOneAndUpdate({ room_id, host_id },{ game_status: "started" },{ new: true });
+
+    return res.status(200).json({ success: true, message: "Successfully changed the game status.", gameData });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Some error occurred in the server." });
+  }
+}
 
 // Function to create a random roomID
 function createRoomId() {
@@ -209,4 +226,5 @@ module.exports = {
   checkRoom,
   joinRoom,
   getRoomDetails,
+  startGameRoom,
 };
