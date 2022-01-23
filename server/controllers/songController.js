@@ -155,44 +155,30 @@ const votePlayer = async (req, res) => {
     }
 
     let points = 0;
-    // console.log(songData);
     
     let scoreDetails = await scorePointModel.find({ room_id, player_id });
     let scoreData;
-    console.log(scoreDetails);
     if (scoreDetails.length === 0) {
       if (songData[0].player_id === voted_player_id) {
         // If voted person is right 10 points
         points = 10;
       }
-      scoreData = await scorePointModel.create({
-        room_id,
-        scores: {
-          player_id,
-          points,
-        },
-      });
+      scoreData = await scorePointModel.create({ room_id, player_id, points });
     } else {
-      if (songData[0].player_id === voted_player_id) {
-        // If voted person is right 10 points
-        points = scoreDetails[0].scores.points + 10;
-      } else {
-        // If voted person is wrong 0 ponits
-        points = scoreDetails[0].scores.points;
-      }
-      console.log(points);
-      // if (songData.player_id === voted_player_id) {
-      //   // If voted person is right 10 points
-      //   points = 10;
-      // }
-      // // changes to points if game has already started
-      scoreData = await scorePointModel.findOneAndUpdate({ room_id, player_id }, { $set: { points } })
-      console.log(scoreData);
+          if (songData[0].player_id === voted_player_id) {
+            // If voted person is right 10 points
+            points = scoreDetails[0].points + 10;
+          }
+          scoreData = await scorePointModel.findOneAndUpdate({ room_id, player_id },{ points },{ new: true });
+          // Delete the song id from active room details once voted, 
+          // (so that voting is done only once by each person for each song)
+          
+          // }
+          // while scoring check if anyone got the answer right or all got wrong
     }
-    // while scoring check if anyone got the answer right or all got wrong
     return res
     .status(200)
-    .json({ success: true, message: "Vote Player success." });
+    .json({ success: true, message: "Vote Player success.", scoreData });
   } catch (error) {
     return res
     .status(500)
