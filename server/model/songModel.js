@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const GameSchema = new mongoose.Schema({
+const SongSchema = new mongoose.Schema({
   room_id: {
     type: String,
     min: 4,
@@ -12,10 +12,10 @@ const GameSchema = new mongoose.Schema({
   },
   song: {
     type: String,
-    required: false,
+    required: true,
   },
 });
 
-const gameModel = mongoose.model("game", GameSchema);
+const songModel = mongoose.model("song", SongSchema);
 
-module.exports = gameModel;
+module.exports = songModel;

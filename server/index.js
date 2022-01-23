@@ -22,7 +22,7 @@ dotenv.config({ path: "./config/config.env" });
 const logger = require("./middlewares/logger");
 const userInfo = require("./routes/userRoute");
 const roomInfo = require("./routes/roomRoute");
-const gameInfo = require("./routes/gameRoute");
+const songInfo = require("./routes/songRoute");
 
 const app = express();
 const server = http.createServer(app);
@@ -55,7 +55,7 @@ app.use(cookieParser());
 
 app.use("/playlist/api/user", userInfo);
 app.use("/playlist/api/room", roomInfo);
-app.use("/playlist/api/game", gameInfo);
+app.use("/playlist/api/song", songInfo);
 
 app.get("/", (req, res) => {
   res.send("Welcome to play-my-playlist REST api");

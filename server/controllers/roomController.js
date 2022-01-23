@@ -1,5 +1,5 @@
 const roomModel = require("../model/roomModel");
-const gameModel = require("../model/gameModel");
+const songModel = require("../model/songModel");
 const UserModel = require("../model/userModel");
 const Joi = require("joi");
 
@@ -152,9 +152,9 @@ const joinRoom = async (req, res) => {
     }
 
     // when join room is successful add document the games collection if not created already
-    const playersData = await gameModel.find({ room_id, player_id });
+    const playersData = await songModel.find({ room_id, player_id });
     if (playersData.length === 0) {
-      await gameModel.create({ room_id, player_id });
+      await songModel.create({ room_id, player_id });
     }
     output.roomInfo = dbJoinRoom;
   } catch (error) {
