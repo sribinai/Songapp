@@ -133,17 +133,23 @@ const joinRoom = async (req, res) => {
     // Adding new players joining room in
     let players = [...dbJoinRoom.players];
     if (players.length !== 0) {
-      let exist = false;
+      let exist = false, adminExist = false;
       // Check for each item if the id already there in document
       players.forEach((item) => {
         if (item === player_id) exist = true;
+        if (item === dbJoinRoom.host_id) adminExist = true;
       });
       // If player Id does not already exist in array push it in players array and save it in document
       if (!exist) {
+        if (!adminExist) {
+          // check if admin has not joined, keep one space for them to start the game
+          if (dbJoinRoom.no_of_players === players.length - 1) {
+            return res.status(501).json({ success: false, message: "Player limit has reached." });
+          }
+        }
         // Check if the limit of number of players is exceeded if new player is added
         if (dbJoinRoom.no_of_players < players.length + 1) {
-          message = "Request the Host to extend the players limit.";
-          return res.status(501).json({ success: false, message });
+          return res.status(501).json({ success: false, message: "Room player limit has reached." });
         }
         players.push(player_id);
         dbJoinRoom.players = players;

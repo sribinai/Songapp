@@ -289,5 +289,4 @@ module.exports = {
   getUserDetailsByID,
   forgotPassword,
   userSettings
-
 };

@@ -269,7 +269,7 @@ const PlayerDashboard = (props) => {
     }
   };
 
-  const handleClickSong = async (e, song_id) => {
+  const handleDeleteSong = async (e, song_id) => {
     e.preventDefault();
     try {
       const deleteConfirm = await  Swal.fire({
@@ -511,7 +511,7 @@ const PlayerDashboard = (props) => {
                   <Button
                     variant='danger'
                     className='d-flex w-100 justify-content-center align-items-center'
-                    onClick={(e) => handleClickSong(e, song._id)}
+                    onClick={(e) => handleDeleteSong(e, song._id)}
                   >
                     <FaTrashAlt className='ms-1' size={22} />
                     REMOVE

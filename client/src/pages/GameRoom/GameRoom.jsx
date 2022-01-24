@@ -42,7 +42,7 @@ const GameRoom = (props) => {
 
   const [streamVideo, setStreamVideo] = useState(null);
   const [passVideo, setPassVideo] = useState(false);
-  const [passAudio, setPassAudio] = useState(false);
+  const [passAudio, setPassAudio] = useState(true);
 
   const [songCount, setSongCount] = useState(null);
   const [songLink, setSongLink] = useState("");
@@ -108,7 +108,7 @@ const GameRoom = (props) => {
 
     socket.on("roomUsers", ({ users }) => {
       // console.log(room_id);
-      console.log(users);
+      // console.log(users);
       setRoomPlayers(users);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -265,12 +265,12 @@ const GameRoom = (props) => {
                     <AvatarIcon
                       imageUrl='https://robohash.org/32?set=set2'
                       AvatarWidth='180'
-                      streamButtons={true}
-                      streamData={streamVideo}
-                      passAudio={passAudio}
-                      toggleAudio={() => setPassAudio(!passAudio)}
-                      passVideo={passVideo}
-                      toggleVideo={() => setPassVideo(!passVideo)}
+                      // streamButtons={true}
+                      // streamData={streamVideo}
+                      // passAudio={passAudio}
+                      // toggleAudio={() => setPassAudio(!passAudio)}
+                      // passVideo={passVideo}
+                      // toggleVideo={() => setPassVideo(!passVideo)}
                     />
                   </div>
                   <div>{player.name}</div>
