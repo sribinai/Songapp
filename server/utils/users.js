@@ -1,3 +1,5 @@
+const { removePlayer } = require('./dbOperations');
+
 const users = [];
 
 const addUser = ({ id, user_id, name, room_id, songs_list, song_count }) => {

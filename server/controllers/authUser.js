@@ -2,9 +2,7 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../model/userModel");
 
 const getData = async (req, res) => {
-  // console.log(tokenData);
-  // console.log(res.req.rawHeaders);
-  res.json({
+  return res.json({
     auth: true,
     data: req.tokenData,
     message: "Successfully fetched User data.",
