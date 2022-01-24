@@ -156,21 +156,16 @@ const joinRoom = async (req, res) => {
         await dbJoinRoom.save();
       }
     }
-
-    // when join room is successful add document the games collection if not created already
-    const playersData = await songModel.find({ room_id, player_id });
-    if (playersData.length === 0) {
-      await songModel.create({ room_id, player_id });
-    }
+    
     output.roomInfo = dbJoinRoom;
+    output.status = "success";
+    output.message = "Successfully joined into the room.";
+    return res.status(200).json(output);
   } catch (error) {
     output.status = "error";
     output.message = error._message;
     return res.status(500).send(output);
   }
-  output.status = "success";
-  output.message = "Successfully joined into the room.";
-  res.status(200).json(output);
 };
 
 // Get room Details

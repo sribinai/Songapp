@@ -65,29 +65,23 @@ const deleteSong = async (req, res) => {
   try {
     const songData = await songModel.findOne({ _id: song_id });
     if (songData === null) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Can't find the song you are looking for.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Can't find the song you are looking for.",
+      });
     } else if (player_id !== songData.player_id) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Only the owner can delete the song.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Only the owner can delete the song.",
+      });
     } else {
       // const deleteSong = await songModel.findOneAndUpdate({ room_id, player_id }, { songs: songsArray });
       const deletedSong = await songModel.findByIdAndRemove({ _id: song_id });
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message: "Song has been deleted.",
-          deletedSong,
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Song has been deleted.",
+        deletedSong,
+      });
     }
   } catch (error) {
     return res
@@ -101,14 +95,12 @@ const getRoomSongs = async (req, res) => {
   try {
     const songsData = await songModel.find({ room_id });
     const songsCount = await songModel.where({ room_id: room_id }).count();
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: `Successfully fetched songs of room: ${room_id} .`,
-        songsCount,
-        songsData,
-      });
+    return res.status(200).json({
+      success: true,
+      message: `Successfully fetched songs of room: ${room_id} .`,
+      songsCount,
+      songsData,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -119,41 +111,47 @@ const getRoomSongs = async (req, res) => {
 const getPlayerSongs = async (req, res) => {
   const { room_id, player_id } = req.body;
   try {
-    const gameData = await songModel.find({ room_id, player_id }).select('-room_id -player_id');
+    const gameData = await songModel
+      .find({ room_id, player_id })
+      .select("-room_id -player_id");
     const songsCount = await songModel
-    .where({ room_id: room_id, player_id: player_id })
-    .count();
-    if (gameData.length === 0) {
-      return res
-      .status(400)
-      .json({ success: false, message: "Player hasn't added any songs." });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "Successfully fetched all songs.",
-        songsCount: songsCount,
-        songsData: gameData,
-      });
-    }
+      .where({ room_id: room_id, player_id: player_id })
+      .count();
+    return res.status(200).json({
+      success: true,
+      message: "Successfully fetched all songs.",
+      songsCount: songsCount,
+      songsData: gameData,
+    });
   } catch (error) {
     return res
-    .status(500)
-    .json({ success: false, message: "Some error occurred in server." });
+      .status(500)
+      .json({ success: false, message: "Some error occurred in server." });
   }
 };
 
 const getSongById = async (req, res) => {
-  const {song_id} = req.body;
+  const { song_id } = req.body;
   try {
     const songInfo = await songModel.find({ _id: song_id });
     if (songInfo.length === 0) {
-      return res.status(400).json({ status: false, message: "Coould not find the song." });
+      return res
+        .status(400)
+        .json({ status: false, message: "Coould not find the song." });
     }
-    return res.status(200).json({ success: true, songInfo: songInfo[0], message: "Successfully fetched the song." });
+    return res
+      .status(200)
+      .json({
+        success: true,
+        songInfo: songInfo[0],
+        message: "Successfully fetched the song.",
+      });
   } catch (error) {
-    return res.status(500).json({ status: false, message: "Unexpected error in server." });
+    return res
+      .status(500)
+      .json({ status: false, message: "Unexpected error in server." });
   }
-}
+};
 
 // Route for voting a particular player
 const votePlayer = async (req, res) => {
@@ -163,12 +161,12 @@ const votePlayer = async (req, res) => {
     // Check the player cannot themselves
     if (voted_player_id === player_id) {
       return res
-      .status(400)
-      .json({ success: false, message: "You cannot vote yourself." });
+        .status(400)
+        .json({ success: false, message: "You cannot vote yourself." });
     }
 
     let points = 0;
-    
+
     let scoreDetails = await scorePointModel.find({ room_id, player_id });
     let scoreData;
     if (scoreDetails.length === 0) {
@@ -178,25 +176,36 @@ const votePlayer = async (req, res) => {
       }
       scoreData = await scorePointModel.create({ room_id, player_id, points });
     } else {
-          if (songData[0].player_id === voted_player_id) {
-            // If voted person is right 10 points
-            points = scoreDetails[0].points + 10;
-          }
-          scoreData = await scorePointModel.findOneAndUpdate({ room_id, player_id },{ points },{ new: true });
-          // Delete the song id from active room details once voted, 
-          // (so that voting is done only once by each person for each song)
-          
-          // }
-          // while scoring check if anyone got the answer right or all got wrong
+      if (songData[0].player_id === voted_player_id) {
+        // If voted person is right 10 points
+        points = scoreDetails[0].points + 10;
+      }
+      scoreData = await scorePointModel.findOneAndUpdate(
+        { room_id, player_id },
+        { points },
+        { new: true }
+      );
+      // Delete the song id from active room details once voted,
+      // (so that voting is done only once by each person for each song)
+
+      // }
+      // while scoring check if anyone got the answer right or all got wrong
     }
     return res
-    .status(200)
-    .json({ success: true, message: "Vote Player success.", scoreData });
+      .status(200)
+      .json({ success: true, message: "Vote Player success.", scoreData });
   } catch (error) {
     return res
-    .status(500)
-    .json({ success: false, message: "Some error occurred in server." });
+      .status(500)
+      .json({ success: false, message: "Some error occurred in server." });
   }
 };
 
-module.exports = { addSong, deleteSong, getRoomSongs, getPlayerSongs, getSongById, votePlayer };
+module.exports = {
+  addSong,
+  deleteSong,
+  getRoomSongs,
+  getPlayerSongs,
+  getSongById,
+  votePlayer,
+};
