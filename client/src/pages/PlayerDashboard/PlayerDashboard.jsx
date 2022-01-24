@@ -106,29 +106,22 @@ const PlayerDashboard = (props) => {
         setSongsList(response.data.songsData);
         setSongCount(response.data.songsCount);
         return;
-      } else {
-        console.log(response.data.message);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: response.data.message,
-        });
       }
     } catch (error) {
       if (error.response) {
         console.log(error.response.data.message);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: error.response.data.message,
-        });
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "Oops..",
+        //   text: error.response.data.message,
+        // });
       } else {
         console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: "Something went wrong.",
-        });
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "Oops..",
+        //   text: "Something went wrong.",
+        // });
       }
     }
   };
@@ -288,8 +281,8 @@ const PlayerDashboard = (props) => {
           );
           console.log(response);
           if (response.status === 200) {
-            Swal.fire("Success", response.data.message, "success");
             fetchSongs();
+            Swal.fire("Success", response.data.message, "success");
             return;
           }
       }
