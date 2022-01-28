@@ -104,7 +104,7 @@ const getRoomSongs = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, message: "Something went wrong." });
+      .json({ success: false, error, message: "Something went wrong." });
   }
 };
 

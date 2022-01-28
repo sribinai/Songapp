@@ -50,7 +50,7 @@ const addUserSong = (id, new_song) => {
   let userIndex;
   users.forEach((user, index) => {
     if (user.id === id) {
-      console.log(user);
+      // console.log(user);
       userIndex = index;
     }
   });

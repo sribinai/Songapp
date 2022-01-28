@@ -29,136 +29,85 @@ let myPeer = new Peer();
 
 const GameRoom = (props) => {
   let history = useHistory();
-  const ENDPOINT = DATA_URL;
-  const [joinRoomStatus, setJoinRoomStatus] = useState(false);
-  const [userID, setUserID] = useState("");
   const [roomID, setRoomID] = useState("");
-  const [roomPlayers, setRoomPlayers] = useState([]);
   const [hostID, setHostID] = useState("");
-  const [guestName, setGuestName] = useState("");
-  const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
-  const [message, setMessage] = useState("");
-  const [chatBoxData, setChatBoxData] = useState([]);
+  const [userID, setUserID] = useState("");
+  // const [gameStatus, setGameStatus] = useState("");
+  const [roomDetails, setRoomDetails] = useState(null);
+  const [currentSong, setCurrentSong] = useState(null);
+  const [players, setPlayers] = useState([]);
+  const [songs, setSongs] = useState([]);
+  const [songsCount, setSongsCount] = useState('');
+  
+  const handleStartGame = async (room_id) => {
+    try {
+      const response = await axios.post(`${DATA_URL}/playlist/api/room/start-game`, { room_id });
+      if (response.status === 200) {
+        console.log(response)
+        setRoomDetails(response.data.gameData);
+        setHostID(response.data.gameData.host_id);
+        handleFetchRoomSongs(room_id);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      } else {
+        console.log(error);
+      }
+    }
+  }
+  
+  const handleFetchRoomSongs = async (room_id) => {
+    try {
+      const response = await axios.post(`${DATA_URL}/playlist/api/song/get-room-songs`, { room_id });
+      if (response.status === 200) {
+        console.log(response);
+        setSongs(response.data.songsData);
+        setSongsCount(response.data.songsCount);
+        handlePickRandomSong(response.data.songsData);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      } else {
+        console.log(error);
+      }
+    }
+  }
 
-  const [streamVideo, setStreamVideo] = useState(null);
-  const [passVideo, setPassVideo] = useState(false);
-  const [passAudio, setPassAudio] = useState(true);
-
-  const [songCount, setSongCount] = useState(null);
-  const [songLink, setSongLink] = useState("");
-  const [songsList, setSongsList] = useState([]);
-  const [showRules, setShowRules] = useState(false);
-
-  //Temp array
-  const dataArray = [0, 1, 2, 3, 4, 5, 6, 7];
-
-  // Function to set user Details
-  const setUserDetails = () => {
-    // Set userID, UserName/GuestName, RoomID
-    // const room_id = props.location.search.split("=")[1];
-    setUserID(props.userInfo.data.id);
-    setGuestName(props.userInfo.data.user_name);
-    setRoomID(props.location.state.room_data.room_id);
-    setRoomDetails(props.location.state.room_data);
-    setRoomPlayers(props.location.state.room_players);
-    setHostID(props.location.state.room_data.host_name);
-  };
+  const handlePickRandomSong = (songs_list) => {
+    // console.log(Math.floor(Math.random()*(songs_list.length)));
+    let song_index = Math.floor(Math.random()*(songs_list.length));
+    setCurrentSong(songs_list[song_index]);
+  }
 
   useEffect(() => {
-    socket = io(ENDPOINT);
-    if (!props.location.state) {
-      history.push({
-        pathname: "/",
-        search: "?authorization=false",
-      });
+    if (roomID === "") {
+      let room_id = props.location.search.split("=")[1];
+      setUserID(props.userInfo.data.id);
+      setRoomID(room_id)
+      handleStartGame(room_id);
     }
-    // console.log(peer);
-    // peer.on()
-    
-    // Fetch data from localStorage
-    setUserDetails();
-    if (roomID.length !== 0 && userID.length !== 0) {
-      let conn = myPeer.connect(userID);
-      // on open will be launch when you successfully connect to PeerServer
-      // conn.on("open", function () {
-      //   // here you have conn.id
-      //   conn.send("user connected to peer");
-      // });
-      myPeer.on("connection", function (conn) {
-        conn.on("data", function (data) {
-          // Will print 'hi!'
-          console.log(data);
-        });
-      });
-      // fetchPlayersDetails(); // Check if required later
-      socket.emit("join_room", {
-        user_id: userID,
+  }, [roomID])
+
+  const handleVotingPlayer = async (e, song_id, voted_player_id) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${DATA_URL}/playlist/api/song//vote-player`, {
         room_id: roomID,
-        name: guestName,
-        songs_list: songsList,
-        song_count: songCount,
-      });
-      setJoinRoomStatus(true);
-    }
+        song_id,
+        voted_player_id,
+        player_id: userID
 
-    socket.on("message", (message) => {
-      console.log(message);
-      setChatBoxData((chatBoxData) => [...chatBoxData, message]);
-    });
-
-    socket.on("roomUsers", ({ users }) => {
-      // console.log(room_id);
-      // console.log(users);
-      setRoomPlayers(users);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ENDPOINT, roomID, userID, songCount]);
-
-  useEffect(() => {
-    // Access the user's video and audio
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: passAudio,
-        video: passVideo,
       })
-      .then((stream) => {
-        setStreamVideo(stream)
-      }).catch(err => {
-        console.log(err)
-        console.log(err.name)
-        if (err.name == "NotFoundError" || err.name == "DevicesNotFoundError") {
-            //required track is missing 
-        } else if (err.name == "NotReadableError" || err.name == "TrackStartError") {
-            //webcam or mic are already in use 
-        } else if (err.name == "OverconstrainedError" || err.name == "ConstraintNotSatisfiedError") {
-            //constraints can not be satisfied by avb. devices 
-        } else if (err.name == "NotAllowedError" || err.name == "PermissionDeniedError") {
-            //permission denied in browser 
-        } else if (err.name == "TypeError" || err.name == "TypeError") {
-            //empty constraints object 
-        } else {
-            //other errors 
-        }
-      });
-  }, [passAudio, passVideo])
-
-  useEffect(() => {
-    // Cleanup function to be run on Unmounting the component
-    return () => {
-      // socket.close();
-      socket.disconnect();
-    };
-  }, []);
-
-  // Function to emit Chat messages to Socket IO
-  const emitChatMessages = () => {
-    socket.emit("chat_message", {
-      user_id: userID,
-      room_id: roomID,
-      name: guestName,
-      message: message,
-    });
-  };
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      } else {
+        console.log(error);
+      }
+    }
+  }
 
   return (
     <div className='main-container'>
@@ -174,6 +123,21 @@ const GameRoom = (props) => {
         className='d-flex flex-column align-items-center bg-light'
         style={{ minHeight: "calc(100vh - 62px)", padding: "20px" }}
       >
+        <div>
+          <i>
+            {roomDetails !== null && (
+              <div>
+                <span className='me-2'>
+                  <b>Room Name:</b> {roomDetails.room_name}
+                </span>
+                |
+                <span className='ms-2'>
+                  <b>RoomID:</b> {roomDetails.room_id}
+                </span>
+              </div>
+              )}
+          </i>
+        </div>
         <Container
           className='d-flex justify-content-center align-items-center p-0'
           style={{
@@ -221,13 +185,14 @@ const GameRoom = (props) => {
                 />
               </div>
               <InputGroup className='mb-2' style={{ position: "relative" }}>
+                <InputGroup.Text className='px-1' style={{ position: "relative", borderRadius: "50% 0px 0px 50%" }}>
                 <span
                   style={{
-                    position: "absolute",
+                    // position: "absolute",
                     zIndex: "4",
                     left: "3px",
                     top: "3px",
-                    height: "35px",
+                    height: "33px",
                     width: "35px",
                     overflow: "hidden",
                     backgroundColor: "rgb(250, 100, 100)",
@@ -243,15 +208,16 @@ const GameRoom = (props) => {
                 >
                   <FaMusic />
                 </span>
+                </InputGroup.Text>
                 <Form.Control type='text' disabled />
                 <InputGroup.Text className='px-1'>
                   <FaPlay style={{ fontSize: "24px", width: "50px" }} />
                 </InputGroup.Text>
               </InputGroup>
-              <Button className='w-100 text-center mb-2'>TAKE VOTES</Button>
+              <Button className='w-100 text-center mb-2' onClick={handleVotingPlayer}>TAKE VOTES</Button>
             </Col>
 
-            {roomPlayers.map((player, index) => (
+            {/* {roomPlayers.map((player, index) => (
               <Col
                 key={index}
                 className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center text-center rounded'
@@ -276,7 +242,7 @@ const GameRoom = (props) => {
                   <div>{player.name}</div>
                 </div>
               </Col>
-            ))}
+            ))} */}
             {/* {dataArray.map((item, index) => (
               <Col
                 key={index}
@@ -299,7 +265,7 @@ const GameRoom = (props) => {
           </Row>
         </Container>
       </div>
-      <FloatingTextBlock
+      {/* <FloatingTextBlock
         textMessages={chatBoxData}
         message={message}
         userID={userID}
@@ -309,7 +275,7 @@ const GameRoom = (props) => {
           emitChatMessages();
           setMessage("");
         }}
-      />
+      /> */}
     </div>
   );
 };
