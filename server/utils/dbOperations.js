@@ -12,7 +12,7 @@ const removePlayer = async (user_id, room_id) => {
         songs = data;
       }
     });
-    console.log(songs);
+    // console.log(songs);
     return { data: songs };
   } catch (error) {
     return error;

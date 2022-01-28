@@ -303,9 +303,10 @@ const PlayerDashboard = (props) => {
       }
     }
   };
-
+  
   const handleStartGame = async (e) => {
     e.preventDefault();
+    try {
     if (userID === roomDetails.host_id) {
       let countStatus = true;
       // Fetch all users data and check if they have added atleast 3 songs for now
@@ -316,7 +317,6 @@ const PlayerDashboard = (props) => {
         data.forEach((item) => {
           if (item.song_count < 3) {
             countStatus = false;
-            return;
           }
         });
         if (!countStatus) {
@@ -325,7 +325,9 @@ const PlayerDashboard = (props) => {
             title: "Songs Required",
             text: "Every Player needs to add atleast 4 songs to continue.",
           });
-          return;
+          return false;
+        } else {
+
         }
       });
       // Redirect to GameRoom emitting an event so others might also join
@@ -342,6 +344,13 @@ const PlayerDashboard = (props) => {
       });
       return;
     }
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response);
+    } else {
+      console.log(error);
+    }
+  }
   };
 
   return (

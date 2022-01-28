@@ -145,7 +145,7 @@ io.on("connection", (socket) => {
 
   // Check game status
   socket.on("start_game", ({ room_data, room_players }) => {
-    console.log("game start");
+    // console.log("game start");
     const user = getUser(socket.id);
     if (user) {
       io.to(user.room_id).emit("gameStatus", {
@@ -159,7 +159,7 @@ io.on("connection", (socket) => {
 
   //Listen to add songs event
   socket.on("add_songs", ({ name, new_song }) => {
-    console.log("Adding Songs");
+    // console.log("Adding Songs");
     const user = getUser(socket.id);
     if (user) {
       // Update user songs list and count function call

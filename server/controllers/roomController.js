@@ -171,37 +171,36 @@ const joinRoom = async (req, res) => {
 // Get room Details
 const getRoomDetails = async (req, res) => {
   const { room_id } = req.body;
-  let output = {};
   try {
-    let roomDetails = await roomModel
-    .findOne({ room_id })
+    const roomDetails = await roomModel
+      .find({ room_id })
       .select("-password -_id"); // Fetching all details of room except password and _id
-    // fetch Hostname
-    let user = await UserModel.findOne({ user_id: roomDetails.host_id }).select(
-      "-password"
-      );
-    output.roomDetails = roomDetails;
-    output.host_name = user.name;
+
+      // console.log(roomDetails);
+      
+    if (roomDetails.length === 0) {
+      return res.status(400).json({ status: "error", message: "Could not fetch room Details." });
+    } else {
+      // fetch Hostname
+      const user = await UserModel.findOne({ _id: roomDetails[0].host_id }).select("-password");
+      
+      return res.status(200).json({ status: "success", roomDetails: roomDetails[0], host_name: user.name, message: "Successfully fetched room Details." });
+    }
   } catch (error) {
-    output.status = "error";
-    output.message = error._message;
-    return res.status(500).send(output);
+    return res.status(500).json({ status: "error", error, message: "Something went wrong in server." });
   }
-  output.status = "success";
-  output.message = "Successfully fetched room Details.";
-  res.status(200).json(output);
 };
 
 // Route for staring the game
 const startGameRoom = async (req, res) => {
-  const { room_id, host_id } = req.body;
+  const { room_id } = req.body;
   try {
-    const gameRoomDetails = await roomModel.find({ room_id, host_id });
+    const gameRoomDetails = await roomModel.find({ room_id });
     if (gameRoomDetails.length === 0) {
       return res.status(400).json({ success: false, message: "Could not find the data you are looking for." });
     }
     // change game status from "not_started" to "started"
-    const gameData = await roomModel.findOneAndUpdate({ room_id, host_id },{ game_status: "started" },{ new: true });
+    const gameData = await roomModel.findOneAndUpdate({ room_id },{ game_status: "started" },{ new: true });
 
     return res.status(200).json({ success: true, message: "Successfully changed the game status.", gameData });
   } catch (error) {
