@@ -187,7 +187,7 @@ io.on("connection", (socket) => {
       //     "message",
       //     formatMessages(botName, null, `${user.name} has left the room.`)
       //   );
-      removePlayer(user.user_id, user.room_id)
+      // removePlayer(user.user_id, user.room_id)
       // Send users and room Info
       io.to(user.room_id).emit("roomUsers", {
         room_id: user.room_id,

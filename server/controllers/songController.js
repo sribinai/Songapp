@@ -153,6 +153,22 @@ const getSongById = async (req, res) => {
   }
 };
 
+const chooseRandomRoomSong = async (req, res) => {
+  const { room_id } = req.body;
+  try {
+    const songsData = await songModel.find({ room_id });
+    // const songsCount = await songModel.where({ room_id: room_id }).count();
+
+    let song_index = await Math.floor(Math.random()*(songsData.length)); // find a rondom index number for songsData
+    let randomSong = songsData[song_index];
+
+    return res.status(200).json({ success: true, randomSong , message: "Successfully fetched song." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: "Something went wrong in the server." });
+  }
+}
+
 // Route for voting a particular player
 const votePlayer = async (req, res) => {
   const { room_id, song_id, voted_player_id, player_id } = req.body;
@@ -207,5 +223,6 @@ module.exports = {
   getRoomSongs,
   getPlayerSongs,
   getSongById,
+  chooseRandomRoomSong,
   votePlayer,
 };
