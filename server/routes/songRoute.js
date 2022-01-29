@@ -8,6 +8,7 @@ router.post("/delete-song", SongController.deleteSong);
 router.post("/get-room-songs", SongController.getRoomSongs);
 router.post("/get-player-songs", SongController.getPlayerSongs);
 router.post("/get-songbyID", SongController.getPlayerSongs);
+router.post("/get-random-room-song", SongController.chooseRandomRoomSong);
 router.post("/vote-player", SongController.votePlayer);
 
 module.exports = router;

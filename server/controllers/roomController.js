@@ -29,7 +29,7 @@ const createRoom = async (req, res) => {
     room_id: Joi.string().alphanum().min(4).required(),
     host_id: Joi.string().min(3).required(),
     room_name: Joi.string().min(4).max(20).required(),
-    no_of_players: Joi.number().required(),
+    no_of_players: Joi.number().required().min(2).max(4), // maximum 4 no of players in a room for now
     password: Joi.string()
       .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
       .min(6)

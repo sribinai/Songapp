@@ -17,33 +17,51 @@ import { DATA_URL } from "../../index";
 import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
 import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
-import { FaPlay, FaMusic, FaCloudUploadAlt } from "react-icons/fa";
+import {
+  FaPlay,
+  FaMusic,
+  FaCloudUploadAlt,
+  FaCloudDownloadAlt,
+} from "react-icons/fa";
+import { FiRefreshCcw } from "react-icons/fi";
+import { MdWhereToVote } from "react-icons/md";
 import musicImage from "../../images/chatroomimg.png";
 
 import "./game-room.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
 import FloatingTextBlock from "../../components/layouts/FloatingTextBlock/FloatingTextBlock";
+import { BiRefresh } from "react-icons/bi";
 
 let socket;
 let myPeer = new Peer();
 
 const GameRoom = (props) => {
   let history = useHistory();
+  const ENDPOINT = DATA_URL;
   const [roomID, setRoomID] = useState("");
   const [hostID, setHostID] = useState("");
   const [userID, setUserID] = useState("");
+  const [hostName, setHostName] = useState("");
+  const [guestName, setGuestName] = useState("");
   // const [gameStatus, setGameStatus] = useState("");
   const [roomDetails, setRoomDetails] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
+  const [playerSongsCount, setPlayerSongsCount] = useState("");
   const [players, setPlayers] = useState([]);
   const [songs, setSongs] = useState([]);
-  const [songsCount, setSongsCount] = useState('');
-  
+  const [songsCount, setSongsCount] = useState("");
+  const [message, setMessage] = useState("");
+  const [chatBoxData, setChatBoxData] = useState([]);
+  const [roomPlayers, setRoomPlayers] = useState([]);
+
   const handleStartGame = async (room_id) => {
     try {
-      const response = await axios.post(`${DATA_URL}/playlist/api/room/start-game`, { room_id });
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/room/start-game`,
+        { room_id }
+      );
       if (response.status === 200) {
-        console.log(response)
+        console.log(response);
         setRoomDetails(response.data.gameData);
         setHostID(response.data.gameData.host_id);
         handleFetchRoomSongs(room_id);
@@ -55,16 +73,17 @@ const GameRoom = (props) => {
         console.log(error);
       }
     }
-  }
-  
+  };
+
   const handleFetchRoomSongs = async (room_id) => {
     try {
-      const response = await axios.post(`${DATA_URL}/playlist/api/song/get-room-songs`, { room_id });
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/song/get-room-songs`,
+        { room_id }
+      );
       if (response.status === 200) {
-        console.log(response);
         setSongs(response.data.songsData);
         setSongsCount(response.data.songsCount);
-        handlePickRandomSong(response.data.songsData);
       }
     } catch (error) {
       if (error.response) {
@@ -73,33 +92,54 @@ const GameRoom = (props) => {
         console.log(error);
       }
     }
-  }
+  };
 
-  const handlePickRandomSong = (songs_list) => {
-    // console.log(Math.floor(Math.random()*(songs_list.length)));
-    let song_index = Math.floor(Math.random()*(songs_list.length));
-    setCurrentSong(songs_list[song_index]);
-  }
+  const handlePickRandomSong = async (e, room_id) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/song//get-random-room-song`,
+        { room_id }
+      );
+      if (response.status === 200) {
+        console.log(response);
+        setCurrentSong(response.data.randomSong);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Something went wrong.",
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     if (roomID === "") {
       let room_id = props.location.search.split("=")[1];
       setUserID(props.userInfo.data.id);
-      setRoomID(room_id)
+      setGuestName(props.userInfo.data.user_name);
+      setRoomID(room_id);
       handleStartGame(room_id);
     }
-  }, [roomID])
+  }, [roomID]);
 
   const handleVotingPlayer = async (e, song_id, voted_player_id) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${DATA_URL}/playlist/api/song//vote-player`, {
-        room_id: roomID,
-        song_id,
-        voted_player_id,
-        player_id: userID
-
-      })
+      const response = await axios.post(
+        `${DATA_URL}/playlist/api/song//vote-player`,
+        {
+          room_id: roomID,
+          song_id,
+          voted_player_id,
+          player_id: userID,
+        }
+      );
     } catch (error) {
       if (error.response) {
         console.log(error.response);
@@ -107,7 +147,75 @@ const GameRoom = (props) => {
         console.log(error);
       }
     }
-  }
+  };
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    if (roomID.length !== 0 && userID.length !== 0) {
+      // Fetch all the details for this page
+      // if (playerSongsCount === null) {
+      //   if (!joinRoomStatus) {
+      socket.emit("join_room", {
+        user_id: userID,
+        room_id: roomID,
+        name: guestName,
+        // songs_list: songsList,
+        // song_count: playerSongsCount,
+      });
+      // setJoinRoomStatus(true);
+      //   }
+      // }
+
+      socket.on("message", (message) => {
+        console.log(message);
+        setChatBoxData((chatBoxData) => [...chatBoxData, message]);
+      });
+
+      socket.on("gameStatus", (data) => {
+        // console.log(data);
+        if (data.game_status === true) {
+          Swal.fire({
+            icon: "success",
+            title: "Game Started",
+            text: "Welcome, The game is ON...!!!",
+          });
+          history.push({
+            pathname: "/game-room",
+            search: `?room_id=${roomID}`,
+            state: {
+              user_id: userID,
+              room_data: data.room_data,
+              room_players: data.room_players,
+            },
+          });
+          return;
+        }
+      });
+
+      socket.on("roomUsers", ({ users }) => {
+        setRoomPlayers(users);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ENDPOINT, roomID, userID, playerSongsCount]);
+
+  useEffect(() => {
+    // Cleanup function to be run on Unmounting the component
+    return () => {
+      // socket.close();
+      socket.disconnect();
+    };
+  }, []);
+
+  // Function to emit Chat messages to Socket IO
+  const emitChatMessages = () => {
+    socket.emit("chat_message", {
+      user_id: userID,
+      room_id: roomID,
+      name: guestName,
+      message: message,
+    });
+  };
 
   return (
     <div className='main-container'>
@@ -135,7 +243,7 @@ const GameRoom = (props) => {
                   <b>RoomID:</b> {roomDetails.room_id}
                 </span>
               </div>
-              )}
+            )}
           </i>
         </div>
         <Container
@@ -166,10 +274,27 @@ const GameRoom = (props) => {
                 minHeight: "120px",
                 gridColumnStart: "2",
                 gridColumnEnd: "3",
-                gridRowStart: "2",
-                gridRowEnd: "3",
+                gridRowStart: "1",
+                gridRowEnd: "2",
+                position: "relative",
               }}
             >
+              <div
+                className='bg-primary text-white d-flex text-center p-1'
+                style={{
+                  position: "absolute",
+                  left: "10px",
+                  top: "10px",
+                  borderRadius: "50%",
+                }}
+              >
+                {/* <FaCloudDownloadAlt /> */}
+                <FiRefreshCcw
+                  onClick={(e) => handlePickRandomSong(e, roomID)}
+                  title='Fetch random song'
+                />
+              </div>
+
               <div
                 className='d-flex justify-content-center align-items-center p-0 my-2'
                 style={{
@@ -185,39 +310,54 @@ const GameRoom = (props) => {
                 />
               </div>
               <InputGroup className='mb-2' style={{ position: "relative" }}>
-                <InputGroup.Text className='px-1' style={{ position: "relative", borderRadius: "50% 0px 0px 50%" }}>
-                <span
+                <InputGroup.Text
+                  className='px-1'
                   style={{
-                    // position: "absolute",
-                    zIndex: "4",
-                    left: "3px",
-                    top: "3px",
-                    height: "33px",
-                    width: "35px",
-                    overflow: "hidden",
-                    backgroundColor: "rgb(250, 100, 100)",
-                    boxShadow:
-                      "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
-                    border: "2px solid #fff",
-                    borderRadius: "50%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "#fff",
+                    position: "relative",
+                    borderRadius: "50% 0px 0px 50%",
                   }}
                 >
-                  <FaMusic />
-                </span>
+                  <span
+                    style={{
+                      // position: "absolute",
+                      zIndex: "4",
+                      left: "3px",
+                      top: "3px",
+                      height: "33px",
+                      width: "35px",
+                      overflow: "hidden",
+                      backgroundColor: "rgb(250, 100, 100)",
+                      boxShadow:
+                        "1px 1px 3px rgb(100,100,100), -1px -1px 3px rgb(100,100,100)",
+                      border: "2px solid #fff",
+                      borderRadius: "50%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      color: "#fff",
+                    }}
+                  >
+                    <FaMusic />
+                  </span>
                 </InputGroup.Text>
-                <Form.Control type='text' disabled />
+                <Form.Control
+                  type='text'
+                  value={currentSong ? currentSong.song : ""}
+                  disabled
+                />
                 <InputGroup.Text className='px-1'>
                   <FaPlay style={{ fontSize: "24px", width: "50px" }} />
                 </InputGroup.Text>
               </InputGroup>
-              <Button className='w-100 text-center mb-2' onClick={handleVotingPlayer}>TAKE VOTES</Button>
+              <Button
+                className='w-100 text-center mb-2'
+                onClick={handleVotingPlayer}
+              >
+                TAKE VOTES
+              </Button>
             </Col>
 
-            {/* {roomPlayers.map((player, index) => (
+            {roomPlayers.map((player, index) => (
               <Col
                 key={index}
                 className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center text-center rounded'
@@ -227,7 +367,25 @@ const GameRoom = (props) => {
                 }}
               >
                 <div className='player-info'>
-                  <div className='avatar1'>
+                  <div className='avatar1' style={{ position: "relative" }}>
+                    <Button
+                      // className='d-flex justify-content-center align-items-center p-0'
+                      // className='bg-success d-flex justify-content-center align-items-center p-0'
+                      className='bg-warning d-flex justify-content-center align-items-center p-0'
+                      title="Click here to vote"
+                      style={{
+                        position: "absolute",
+                        left: "10px",
+                        top: "10px",
+                        zIndex: "100",
+                        height: "30px",
+                        width: "30px",
+                        borderRadius: "50%",
+                        fontSize: "20px",
+                      }}
+                    >
+                      <MdWhereToVote />
+                    </Button>
                     <AvatarIcon
                       imageUrl='https://robohash.org/32?set=set2'
                       AvatarWidth='180'
@@ -242,7 +400,7 @@ const GameRoom = (props) => {
                   <div>{player.name}</div>
                 </div>
               </Col>
-            ))} */}
+            ))}
             {/* {dataArray.map((item, index) => (
               <Col
                 key={index}
@@ -265,7 +423,7 @@ const GameRoom = (props) => {
           </Row>
         </Container>
       </div>
-      {/* <FloatingTextBlock
+      <FloatingTextBlock
         textMessages={chatBoxData}
         message={message}
         userID={userID}
@@ -275,7 +433,7 @@ const GameRoom = (props) => {
           emitChatMessages();
           setMessage("");
         }}
-      /> */}
+      />
     </div>
   );
 };

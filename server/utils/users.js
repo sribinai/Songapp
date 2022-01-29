@@ -22,6 +22,12 @@ const addUser = ({ id, user_id, name, room_id, songs_list, song_count }) => {
 const removeUser = (id) => {
   const index = users.findIndex((user) => user.id === id);
 
+  // users.forEach(async (user) => {
+  //   if (user.id === id) {
+  //     await removePlayer(user.id, user.room_id)
+  //   }
+  // });
+
   if (index !== -1) {
     return users.splice(index, 1)[0];
   }

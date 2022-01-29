@@ -100,7 +100,7 @@ const PlayerDashboard = (props) => {
           player_id: userID,
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         // Reset song input data to empty
         setSongsList(response.data.songsData);
