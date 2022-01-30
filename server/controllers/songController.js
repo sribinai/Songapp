@@ -1,4 +1,5 @@
 const songModel = require("../model/songModel");
+const voteModel = require("../model/voteModel");
 const scorePointModel = require("../model/scorePointModel");
 const Joi = require("joi");
 
@@ -174,17 +175,31 @@ const votePlayer = async (req, res) => {
   const { room_id, song_id, voted_player_id, player_id } = req.body;
   try {
     const songData = await songModel.find({ _id: song_id });
-    // Check the player cannot themselves
-    if (voted_player_id === player_id) {
-      return res
-        .status(400)
-        .json({ success: false, message: "You cannot vote yourself." });
-    }
-
-    let points = 0;
-
+    let voteData = await voteModel.find({ room_id, player_id, song_id });
     let scoreDetails = await scorePointModel.find({ room_id, player_id });
-    let scoreData;
+    
+    let points = 0, scoreData;
+    
+    // Check the player cannot themselves
+    // if (voted_player_id === player_id) {
+    //   return res
+    //   .status(400)
+    //   .json({ success: false, message: "You cannot vote yourself." });
+    // }
+    
+    if (voteData.length > 0) {
+      // if the voted_id is different then update the record or return error
+      if (songData[0].player_id === voteData[0].voted_player_id) {
+        points = -10;
+      }
+      if (voted_player_id === voteData[0].voted_player_id) {
+        // if the player has already voted then return error
+        return res.status(400).json({ success: false, message: "You have already voted for this player." });
+      }
+    } else {
+      voteData = await voteModel.create({ room_id, player_id, voted_player_id, song_id });
+    }
+    
     if (scoreDetails.length === 0) {
       if (songData[0].player_id === voted_player_id) {
         // If voted person is right 10 points
@@ -194,28 +209,42 @@ const votePlayer = async (req, res) => {
     } else {
       if (songData[0].player_id === voted_player_id) {
         // If voted person is right 10 points
-        points = scoreDetails[0].points + 10;
+        points = 10;
       }
+      points = scoreDetails[0].points + points;
+      if (points < 0) points = 0;
+
       scoreData = await scorePointModel.findOneAndUpdate(
         { room_id, player_id },
         { points },
         { new: true }
-      );
-      // Delete the song id from active room details once voted,
+        );
+        // Delete the song id from active room details once voted,
       // (so that voting is done only once by each person for each song)
-
+      
       // }
       // while scoring check if anyone got the answer right or all got wrong
     }
     return res
       .status(200)
       .json({ success: true, message: "Vote Player success.", scoreData });
-  } catch (error) {
+    } catch (error) {
     return res
-      .status(500)
-      .json({ success: false, message: "Some error occurred in server." });
+    .status(500)
+    .json({ success: false, message: "Some error occurred in server." });
   }
 };
+
+// Route for voting a particular player
+const fetchUserVote = async (req, res) => {
+  const { room_id, player_id } = req.body;
+  try {
+    return res.status(200).json({ success: true, message: "Successfully fetched user vote." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: "Some error occurred in server." });
+  }
+}
 
 module.exports = {
   addSong,
@@ -225,4 +254,5 @@ module.exports = {
   getSongById,
   chooseRandomRoomSong,
   votePlayer,
+  fetchUserVote,
 };
