@@ -27,10 +27,14 @@ import { FiRefreshCcw } from "react-icons/fi";
 import { MdWhereToVote } from "react-icons/md";
 import musicImage from "../../images/chatroomimg.png";
 
+
+import { render } from "react-dom";
+
 import "./game-room.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
 import FloatingTextBlock from "../../components/layouts/FloatingTextBlock/FloatingTextBlock";
 import { BiRefresh } from "react-icons/bi";
+import { NotifyToastContainer } from "../../components/NotifyToast/NotifyToast";
 
 let socket;
 let myPeer = new Peer();
@@ -53,6 +57,8 @@ const GameRoom = (props) => {
   const [message, setMessage] = useState("");
   const [chatBoxData, setChatBoxData] = useState([]);
   const [roomPlayers, setRoomPlayers] = useState([]);
+
+  const [notification, setNotification] = useState(false);
 
   const handleStartGame = async (room_id) => {
     try {
@@ -94,6 +100,7 @@ const GameRoom = (props) => {
     }
   };
 
+  // pick using node js and socket io
   const handlePickRandomSong = async (e, room_id) => {
     e.preventDefault();
     try {
@@ -131,6 +138,15 @@ const GameRoom = (props) => {
   const handleVotingPlayer = async (e, song_id, voted_player_id) => {
     e.preventDefault();
     try {
+      if (song_id === null) {
+        Swal.fire({
+          icon: 'warning',
+          title: "Song Unavailable",
+          text: 'Please fetch a song to vote'
+        })
+        return;  
+      }
+
       const response = await axios.post(
         `${DATA_URL}/playlist/api/song//vote-player`,
         {
@@ -140,6 +156,9 @@ const GameRoom = (props) => {
           player_id: userID,
         }
       );
+      if (response.status === 200) {
+        console.log(response);
+      }
     } catch (error) {
       if (error.response) {
         console.log(error.response);
@@ -170,7 +189,7 @@ const GameRoom = (props) => {
         console.log(message);
         setChatBoxData((chatBoxData) => [...chatBoxData, message]);
       });
-
+      
       socket.on("gameStatus", (data) => {
         // console.log(data);
         if (data.game_status === true) {
@@ -191,14 +210,14 @@ const GameRoom = (props) => {
           return;
         }
       });
-
+      
       socket.on("roomUsers", ({ users }) => {
         setRoomPlayers(users);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ENDPOINT, roomID, userID, playerSongsCount]);
-
+  
   useEffect(() => {
     // Cleanup function to be run on Unmounting the component
     return () => {
@@ -206,7 +225,7 @@ const GameRoom = (props) => {
       socket.disconnect();
     };
   }, []);
-
+  
   // Function to emit Chat messages to Socket IO
   const emitChatMessages = () => {
     socket.emit("chat_message", {
@@ -216,7 +235,19 @@ const GameRoom = (props) => {
       message: message,
     });
   };
-
+  
+  // if (notification) {
+  //  <NotifyToastContainer title="Godson" message='This message is for Godson' type='success' />
+  // }
+  // const ShowError = () => {
+  //   render(<NotifyToastContainer title="Godson" message='This message is for Godson' type='success' />);
+  //   // render(<ToastNotification title='HRMS' body='ERROR!' color='red' />);
+  // };
+  
+test("it expands when the button is clicked",() => {
+  render(<Button>Hello, Test button</Button>)
+});
+  
   return (
     <div className='main-container'>
       <MainHeaderDiv
@@ -226,6 +257,13 @@ const GameRoom = (props) => {
         promptMessage='Are you sure, you want to leave the room?'
         userInfo={props.userInfo.data}
       />
+
+      {/* <button onClick={() => ShowError()}>Click on me</button> */}
+      {/* <button onClick={() => setNotification(!notification)}>Click on me</button> */}
+
+      {/* <NotifyToastContainer title="Godson" message='This message is for Godson' type='success' />
+      <NotifyToastContainer title="Godson" message='This message is for Godson' type='error' />
+      <NotifyToastContainer title="Godson" message='This message is for Godson' type='warning' /> */}
 
       <div
         className='d-flex flex-column align-items-center bg-light'
@@ -351,10 +389,11 @@ const GameRoom = (props) => {
               </InputGroup>
               <Button
                 className='w-100 text-center mb-2'
-                onClick={handleVotingPlayer}
+                // onClick={handleVotingPlayer}
               >
                 TAKE VOTES
               </Button>
+              {/* Check every player has voted using socket IO and accordingly fetch a new song to all players using socket IO */}
             </Col>
 
             {roomPlayers.map((player, index) => (
@@ -369,8 +408,7 @@ const GameRoom = (props) => {
                 <div className='player-info'>
                   <div className='avatar1' style={{ position: "relative" }}>
                     <Button
-                      // className='d-flex justify-content-center align-items-center p-0'
-                      // className='bg-success d-flex justify-content-center align-items-center p-0'
+                      onClick={(e) => handleVotingPlayer(e, currentSong !== null ? currentSong._id : null, player.user_id )}
                       className='bg-warning d-flex justify-content-center align-items-center p-0'
                       title="Click here to vote"
                       style={{
@@ -401,25 +439,7 @@ const GameRoom = (props) => {
                 </div>
               </Col>
             ))}
-            {/* {dataArray.map((item, index) => (
-              <Col
-                key={index}
-                className='d-sm-none d-none d-md-flex flex-column justify-content-center align-items-center text-center rounded'
-                style={{
-                  minHeight: "120px",
-                }}
-              >
-                <div className='player-info'>
-                  <div className='avatar1'>
-                    <AvatarIcon
-                      imageUrl='https://robohash.org/31?set=set4'
-                      AvatarWidth='130'
-                    />
-                  </div>
-                  <div>Player {index + 1}</div>
-                </div>
-              </Col>
-            ))} */}
+
           </Row>
         </Container>
       </div>
