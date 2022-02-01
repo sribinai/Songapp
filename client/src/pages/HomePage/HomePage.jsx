@@ -65,6 +65,11 @@ const HomePage = () => {
           pathname: "/",
           search: "?logout=success",
         })
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "You have successfully logged out of your account.",
+        });
         return;
       }
     } catch (error) {
