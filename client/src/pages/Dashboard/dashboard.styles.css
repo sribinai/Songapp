@@ -8,8 +8,6 @@
 }
 
 .add-songs-div {
-  /* position: absolute; */
-  bottom: 0;
   background-color: rgb(39, 123, 201);
   border-top-left-radius: 60px;
   border-top-right-radius: 60px;
