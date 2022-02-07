@@ -10,11 +10,14 @@ const {
   addUser,
   removeUser,
   getUser,
+  addVotedDetails,
   getSongsDetails,
   getUsersInRoom,
   addUserSong,
+  checkAllVoted,
+  removeVotes,
 } = require("./utils/users");
-const { removePlayer } = require("./utils/dbOperations");
+const { deletePlayer, removeVotedSongs } = require("./utils/dbOperations");
 
 // Accessing dotenv variables
 dotenv.config({ path: "./config/config.env" });
@@ -75,7 +78,6 @@ conn.once("open", function () {
 const botName = "Playlist Bot";
 // Run socket with client connects
 io.on("connection", (socket) => {
-  // console.log(`New Sockt.IO connection : ${socket.id}`);
   // Join room Event
   socket.on(
     "join_room",
@@ -90,11 +92,12 @@ io.on("connection", (socket) => {
           songs_list,
           song_count,
         });
-        // console.log(user);
+        console.log('join room');
+        console.log(user);
         if (user) {
           // Welcome current user
           socket.join(user.room_id);
-          socket.broadcast.emit('user-connected', user.user_id);
+          // socket.broadcast.emit('user-connected', user.user_id);
           // socket.emit(
           //   "message",
           //   formatMessages(
@@ -145,9 +148,11 @@ io.on("connection", (socket) => {
 
   // Check game status
   socket.on("start_game", ({ room_data, room_players }) => {
-    // console.log("game start");
     const user = getUser(socket.id);
+    console.log('user outside loop');
+    console.log(user);
     if (user) {
+      console.log('user exists');
       io.to(user.room_id).emit("gameStatus", {
         game_status: true,
         room_data,
@@ -159,40 +164,94 @@ io.on("connection", (socket) => {
 
   //Listen to add songs event
   socket.on("add_songs", ({ name, new_song }) => {
-    // console.log("Adding Songs");
     const user = getUser(socket.id);
     if (user) {
       // Update user songs list and count function call
       addUserSong(socket.id, new_song);
       // io.to(user.room_id).emit(
-      //   "message",
-      //   formatMessages(botName, null, `${name} added new song.`)
-      // );
-      io.to(user.room_id).emit("roomUsers", {
-        room_id: user.room_id,
-        users: getUsersInRoom(user.room_id),
-      });
-    }
-  });
+        //   "message",
+        //   formatMessages(botName, null, `${name} added new song.`)
+        // );
+        io.to(user.room_id).emit("roomUsers", {
+          users: getUsersInRoom(user.room_id),
+        });
+      }
+    });
+    socket.on("send-random-song", ({ room_id, song_details }) => {
+      // console.log(song_details);
+      const user = getUser(socket.id);
+      if (user) {
+        io.to(user.room_id).emit("recieve-song", {
+          song_details,
+        });
+      }
+    })
+    
+    socket.on("check-votes", ({ room_id, song_id }) => {
+      let success, message;
+      const user = getUser(socket.id);
+      if (user) {
+        const all_voted = checkAllVoted(room_id);
+        if (!all_voted) {
+          success = false;
+          message = "All Players have not voted.";
+        } else {
+          success = true;
+          message = "Votes have been submitted.";
+          removeVotes(room_id);
+          removeVotedSongs(song_id)
+        }
+        io.to(user.room_id).emit("notification", {
+          success,
+          message,
+          all_voted: success,
+        });
+        io.to(user.room_id).emit("roomUsers", {
+          room_id: user.room_id,
+          users: getUsersInRoom(user.room_id),
+        });
+      }
+    });
+
+    socket.on("player-vote", ({ song_details }) => {
+      const user = getUser(socket.id);
+      if (user) {
+        addVotedDetails(socket.id, song_details);
+        // Delete the song id from active room details once voted
+        // while scoring check if anyone got the answer right or all got wrong
+        
+        // Send the updated data after adding the voted details of the player
+        io.to(user.room_id).emit("roomUsers", {
+          room_id: user.room_id,
+          users: getUsersInRoom(user.room_id),
+        });
+
+        io.to(user.room_id).emit("notification", {
+          success: true,
+          message: `${user.name} has voted.`,
+        });
+      }
+    })
 
   // Disconnect event
   socket.on("disconnect", () => {
-    // console.log(`User Disconnected: ${socket.id}`);
-    const user = removeUser(socket.id);
+    let user = getUser(socket.id);
     if (user) {
       // send message to all that user is disconnected
-      // socket.broadcast
-      //   .to(user.room_id)
-      //   .emit(
-      //     "message",
-      //     formatMessages(botName, null, `${user.name} has left the room.`)
-      //   );
-      // removePlayer(user.user_id, user.room_id)
-      // Send users and room Info
-      io.to(user.room_id).emit("roomUsers", {
-        room_id: user.room_id,
-        users: getUsersInRoom(user.room_id),
-      });
+      socket.broadcast
+        .to(user.room_id)
+        .emit(
+            "message",
+            formatMessages(botName, null, `${user.name} has left the room.`)
+          );
+        deletePlayer(user.user_id, user.room_id)
+        // Send users and room Info
+        user = removeUser(socket.id);
+        
+        io.to(user.room_id).emit("roomUsers", {
+          room_id: user.room_id,
+          users: getUsersInRoom(user.room_id),
+        });
     }
   });
 });

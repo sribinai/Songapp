@@ -12,4 +12,6 @@ router.post("/get-random-room-song", SongController.chooseRandomRoomSong);
 router.post("/vote-player", SongController.votePlayer);
 router.post("/fetch-player-vote", SongController.fetchUserVote);
 
+router.post("/delete-song-details", SongController.removeVotedSongs);
+
 module.exports = router;

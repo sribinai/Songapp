@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React from "react";
 import { Container, Row, Col, Form, InputGroup, Button } from "react-bootstrap";
-import axios from "axios";
-import io from "socket.io-client";
-
-import { DATA_URL } from "../../index";
-import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
-import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
 import {
   FaPlay,
   FaMusic,
@@ -19,350 +12,32 @@ import {
 
 import "./player-dashboard.styles.css";
 import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
-import FloatingTextBlock from "../../components/layouts/FloatingTextBlock/FloatingTextBlock";
 
-let socket;
-
-const PlayerDashboard = (props) => {
-  let history = useHistory();
-  const ENDPOINT = DATA_URL;
-  const [joinRoomStatus, setJoinRoomStatus] = useState(false);
-  const [userID, setUserID] = useState("");
-  const [roomID, setRoomID] = useState("");
-  const [roomPlayers, setRoomPlayers] = useState([]);
-  const [hostName, setHostName] = useState("");
-  const [guestName, setGuestName] = useState("");
-  const [roomDetails, setRoomDetails] = useState(null); // For room Details to be saved
-  const [message, setMessage] = useState("");
-  const [chatBoxData, setChatBoxData] = useState([]);
-
-  const [songCount, setSongCount] = useState(null);
-  const [songLink, setSongLink] = useState("");
-  const [songsList, setSongsList] = useState([]);
-  const [showRules, setShowRules] = useState(false);
-
-  // Function to set user Details
-  const setUserDetails = () => {
-    // Set userID, UserName/GuestName, RoomID
-    const room_id = props.location.search.split("=")[1];
-    setUserID(props.userInfo.data.id);
-    setGuestName(props.userInfo.data.user_name);
-    setRoomID(room_id);
-  };
-
-  // Function to fetch room Details
-  const fetchRoomDetails = async () => {
-    try {
-      const response = await axios.post(
-        `${DATA_URL}/playlist/api/room/get-room-details`,
-        {
-          room_id: roomID,
-        }
-      );
-      // console.log(response);
-      if (response.status === 200) {
-        setRoomDetails(response.data.roomDetails);
-        setHostName(response.data.host_name);
-      } else {
-        console.log(response.data.message);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: response.data.message,
-        });
-      }
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data.message);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: error.response.data.message,
-        });
-      } else {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: "Something went wrong.",
-        });
-      }
-    }
-  };
-
-  // Function to fetch songs of the user
-  const fetchSongs = async () => {
-    try {
-      const response = await axios.post(
-        `${DATA_URL}/playlist/api/song/get-player-songs`,
-        {
-          room_id: roomID,
-          player_id: userID,
-        }
-      );
-      // console.log(response);
-      if (response.status === 200) {
-        // Reset song input data to empty
-        setSongsList(response.data.songsData);
-        setSongCount(response.data.songsCount);
-        return;
-      }
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data.message);
-        // Swal.fire({
-        //   icon: "error",
-        //   title: "Oops..",
-        //   text: error.response.data.message,
-        // });
-      } else {
-        console.log(error);
-        // Swal.fire({
-        //   icon: "error",
-        //   title: "Oops..",
-        //   text: "Something went wrong.",
-        // });
-      }
-    }
-  };
-
-  useEffect(() => {
-    socket = io(ENDPOINT);
-    setUserDetails();
-    if (roomID.length !== 0 && userID.length !== 0) {
-      // Fetch all the details for this page
-      fetchRoomDetails();
-      if (songCount === null) {
-        // fetchPlayersDetails(); // Check if required later
-        fetchSongs();
-      } else {
-        if (!joinRoomStatus) {
-          socket.emit("join_room", {
-            user_id: userID,
-            room_id: roomID,
-            name: guestName,
-            songs_list: songsList,
-            song_count: songCount,
-          });
-          setJoinRoomStatus(true);
-        }
-      }
-
-      socket.on("message", (message) => {
-        console.log(message);
-        setChatBoxData((chatBoxData) => [...chatBoxData, message]);
-      });
-
-      socket.on("gameStatus", (data) => {
-        // console.log(data);
-        if (data.game_status === true) {
-          Swal.fire({
-            icon: "success",
-            title: "Game Started",
-            text: "Welcome, The game is ON...!!!",
-          });
-          history.push({
-            pathname: "/game-room",
-            search: `?room_id=${roomID}`,
-            state: {
-              user_id: userID,
-              room_data: data.room_data,
-              room_players: data.room_players,
-            },
-          });
-          return;
-        }
-      });
-
-      socket.on("roomUsers", ({ users }) => {
-        // console.log(users);
-        setRoomPlayers(users);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ENDPOINT, roomID, userID, songCount]);
-
-  useEffect(() => {
-    // Cleanup function to be run on Unmounting the component
-    return () => {
-      // socket.close();
-      socket.disconnect();
-    };
-  }, []);
-
-  // Function to emit Chat messages to Socket IO
-  const emitChatMessages = () => {
-    socket.emit("chat_message", {
-      user_id: userID,
-      room_id: roomID,
-      name: guestName,
-      message: message,
-    });
-  };
-
-  // Function to add songs to the list
-  const addSongs = async (e) => {
-    e.preventDefault();
-    // console.log("add songs function");
-    if (songLink === "") {
-      Swal.fire({
-        icon: "warning",
-        title: "Song Link Empty",
-        text: "Song Link cannot be empty.",
-      });
-      return;
-    }
-    try {
-      const response = await axios.post(
-        `${DATA_URL}/playlist/api/song/add-song`,
-        {
-          room_id: roomID,
-          player_id: userID,
-          song: songLink,
-        }
-      );
-      console.log(response);
-      if (response.status === 200) {
-        socket.emit("add_songs", {
-          name: guestName,
-          new_song: songLink,
-        });
-        fetchSongs();
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: response.data.message,
-        });
-        // Reset song input data to empty
-        setSongLink("");
-        return;
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: response.data.message,
-        });
-        return;
-      }
-    } catch (error) {
-      // console.log(error);
-      if (error.response.data.message) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: error.response.data.message,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops..",
-          text: "Something went wrong.",
-        });
-      }
-    }
-  };
-
-  const handleDeleteSong = async (e, song_id) => {
-    e.preventDefault();
-    try {
-      const deleteConfirm = await  Swal.fire({
-        title: "Are you sure to remove this song from the list?",
-        showDenyButton: true,
-        confirmButtonText: "Yes",
-      });
-      
-      if (deleteConfirm.isConfirmed) {
-          const response = await axios.post(
-            `${DATA_URL}/playlist/api/song/delete-song`,
-            {
-              song_id,
-              player_id: userID,
-            }
-          );
-          console.log(response);
-          if (response.status === 200) {
-            fetchSongs();
-            Swal.fire("Success", response.data.message, "success");
-            return;
-          }
-      }
-      
-    } catch (error) {
-      if (error.response) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.response.data.message,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.response,
-        });
-      }
-    }
-  };
-  
-  const handleStartGame = async (e) => {
-    e.preventDefault();
-    try {
-    if (userID === roomDetails.host_id) {
-      let countStatus = true;
-      // Fetch all users data and check if they have added atleast 3 songs for now
-      // emit roomID to fetch users songCount Details
-      socket.emit("request_song_details", { room_id: roomID });
-      socket.on("get_room_details", (data) => {
-        // console.log(data);
-        data.forEach((item) => {
-          if (item.song_count < 3) {
-            countStatus = false;
-          }
-        });
-        if (!countStatus) {
-          Swal.fire({
-            icon: "error",
-            title: "Songs Required",
-            text: "Every Player needs to add atleast 4 songs to continue.",
-          });
-          return false;
-        } else {
-
-        }
-      });
-      // Redirect to GameRoom emitting an event so others might also join
-      socket.emit("start_game", {
-        room_data: roomDetails,
-        room_players: roomPlayers,
-      });
-      return;
-    } else {
-      Swal.fire({
-        icon: "warning",
-        title: "Not Authorized",
-        text: "Only the Room Host can start the Game",
-      });
-      return;
-    }
-  } catch (error) {
-    if (error.response) {
-      console.log(error.response);
-    } else {
-      console.log(error);
-    }
-  }
-  };
+const PlayerDashboard = ({
+  GameStatus,
+  roomID,
+  hostName,
+  roomDetails,
+  roomPlayers,
+  songLink,
+  songsList,
+  onChangeSongLink,
+  showRules,
+  roomButtonOnClick,
+  onHideModal,
+  onClickAddSong,
+  onClickRemoveSong,
+  onClickStartGame,
+}) => {
 
   return (
-    <div className='main-container'>
-      <MainHeaderDiv
-        title='Exit Room'
-        routeName='Home'
-        redirectPromt={true}
-        promptMessage='Are you sure, you want to leave the room?'
-        userInfo={props.userInfo.data}
-      />
-      <div className='px-5 py-3 d-flex flex-column align-items-center'>
+    <>
+      <div
+        className={`${
+          GameStatus === "started" ? "d-none" : "d-flex"
+        } px-5 py-3 flex-column align-items-center`}
+        // style={{ overflowY: "scroll" }}
+      >
         <Container fluid>
           <Row
             className='mb-3 p-2 rounded'
@@ -390,16 +65,13 @@ const PlayerDashboard = (props) => {
               <Button
                 size='lg'
                 style={{ height: "60px", width: "100%", borderRadius: "10px" }}
-                onClick={() => setShowRules(true)}
+                onClick={roomButtonOnClick}
               >
                 Room Rules
               </Button>
             </Col>
           </Row>
-          <PlayInstructionsModal
-            show={showRules}
-            onHide={() => setShowRules(false)}
-          >
+          <PlayInstructionsModal show={showRules} onHide={onHideModal}>
             Game rules set by the Host.
           </PlayInstructionsModal>
         </Container>
@@ -424,7 +96,7 @@ const PlayerDashboard = (props) => {
                   <AvatarIcon
                     imageUrl='https://robohash.org/46?set=set4'
                     // statusDetails={true}
-                    statusDetails="connected"
+                    statusDetails='connected'
                     showStatus={true}
                   />
                   <span>{item.name}</span>
@@ -436,7 +108,11 @@ const PlayerDashboard = (props) => {
           </div>
         </Container>
       </div>
-      <div className='add-songs-div'>
+      <div
+        className={`${
+          GameStatus === "started" ? "d-none" : "d-block"
+        } add-songs-div`}
+      >
         <Container className='text-center py-3'>
           <Row className='mb-2'>
             <h3 className='text-white'>Add your songs here....</h3>
@@ -447,7 +123,7 @@ const PlayerDashboard = (props) => {
                 <Form.Control
                   type='url'
                   value={songLink}
-                  onChange={(e) => setSongLink(e.target.value)}
+                  onChange={onChangeSongLink}
                   placeholder='Place link here'
                 />
                 <InputGroup.Text className='px-1'>
@@ -461,7 +137,7 @@ const PlayerDashboard = (props) => {
               <Button
                 variant='light'
                 className='d-flex w-100 justify-content-center align-items-center'
-                onClick={addSongs}
+                onClick={onClickAddSong}
               >
                 <FaPlusCircle className='me-1 text-success' size={22} />
                 ADD
@@ -513,7 +189,7 @@ const PlayerDashboard = (props) => {
                   <Button
                     variant='danger'
                     className='d-flex w-100 justify-content-center align-items-center'
-                    onClick={(e) => handleDeleteSong(e, song._id)}
+                    onClick={(e) => onClickRemoveSong(e, song._id)}
                   >
                     <FaTrashAlt className='ms-1' size={22} />
                     REMOVE
@@ -522,22 +198,11 @@ const PlayerDashboard = (props) => {
               </Row>
             ))}
         </Container>
-        <button className='start-game-button' onClick={handleStartGame}>
+        <button className='start-game-button' onClick={onClickStartGame}>
           START GAME
         </button>
       </div>
-      <FloatingTextBlock
-        textMessages={chatBoxData}
-        message={message}
-        userID={userID}
-        setMessage={(e) => setMessage(e.target.value)}
-        onClick={(e) => {
-          e.preventDefault();
-          emitChatMessages();
-          setMessage("");
-        }}
-      />
-    </div>
+    </>
   );
 };
 
