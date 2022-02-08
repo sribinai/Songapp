@@ -141,13 +141,17 @@ io.on("connection", (socket) => {
   socket.on("request_song_details", ({ room_id }) => {
     const user = getUser(socket.id);
     const roomData = getSongsDetails(room_id);
+    console.log("request_song_details")
+    console.log(user)
     if (user) {
+      console.log(user)
       io.to(user.room_id).emit("get_room_details", roomData);
     }
   });
 
   // Check game status
-  socket.on("start_game", ({ room_data, room_players }) => {
+  socket.on("start_game", () => {
+  // socket.on("start_game", ({ room_data, room_players }) => {
     const user = getUser(socket.id);
     console.log('user outside loop');
     console.log(user);
@@ -155,9 +159,9 @@ io.on("connection", (socket) => {
       console.log('user exists');
       io.to(user.room_id).emit("gameStatus", {
         game_status: true,
-        room_data,
-        room_players,
-        users: getUsersInRoom(user.room_id),
+        // room_data,
+        // room_players,
+        // users: getUsersInRoom(user.room_id),
       });
     }
   });
@@ -168,70 +172,71 @@ io.on("connection", (socket) => {
     if (user) {
       // Update user songs list and count function call
       addUserSong(socket.id, new_song);
-      // io.to(user.room_id).emit(
-        //   "message",
-        //   formatMessages(botName, null, `${name} added new song.`)
-        // );
-        io.to(user.room_id).emit("roomUsers", {
-          users: getUsersInRoom(user.room_id),
-        });
-      }
-    });
-    socket.on("send-random-song", ({ room_id, song_details }) => {
-      // console.log(song_details);
-      const user = getUser(socket.id);
-      if (user) {
-        io.to(user.room_id).emit("recieve-song", {
-          song_details,
-        });
-      }
-    })
+      io.to(user.room_id).emit(
+        "message",
+        formatMessages(botName, null, `${name} added new song.`)
+      );
+      io.to(user.room_id).emit("roomUsers", {
+        users: getUsersInRoom(user.room_id),
+      });
+    }
+  });
+
+  socket.on("send-random-song", ({ room_id, song_details }) => {
+    // console.log(song_details);
+    const user = getUser(socket.id);
+    if (user) {
+      io.to(user.room_id).emit("recieve-song", {
+        song_details,
+      });
+    }
+  })
     
-    socket.on("check-votes", ({ room_id, song_id }) => {
-      let success, message;
-      const user = getUser(socket.id);
-      if (user) {
-        const all_voted = checkAllVoted(room_id);
-        if (!all_voted) {
-          success = false;
-          message = "All Players have not voted.";
-        } else {
-          success = true;
-          message = "Votes have been submitted.";
-          removeVotes(room_id);
-          removeVotedSongs(song_id)
-        }
-        io.to(user.room_id).emit("notification", {
-          success,
-          message,
-          all_voted: success,
-        });
-        io.to(user.room_id).emit("roomUsers", {
-          room_id: user.room_id,
-          users: getUsersInRoom(user.room_id),
-        });
+  socket.on("check-votes", ({ room_id, song_id }) => {
+    let success, message;
+    const user = getUser(socket.id);
+    if (user) {
+      const all_voted = checkAllVoted(room_id);
+      if (!all_voted) {
+        success = false;
+        message = "All Players have not voted.";
+      } else {
+        success = true;
+        message = "Votes have been submitted.";
+        removeVotes(room_id);
+        removeVotedSongs(song_id)
       }
-    });
+      io.to(user.room_id).emit("notification", {
+        success,
+        message,
+        all_voted: success,
+      });
+      io.to(user.room_id).emit("roomUsers", {
+        room_id: user.room_id,
+        users: getUsersInRoom(user.room_id),
+      });
+    }
+  });
 
-    socket.on("player-vote", ({ song_details }) => {
-      const user = getUser(socket.id);
-      if (user) {
-        addVotedDetails(socket.id, song_details);
-        // Delete the song id from active room details once voted
-        // while scoring check if anyone got the answer right or all got wrong
-        
-        // Send the updated data after adding the voted details of the player
-        io.to(user.room_id).emit("roomUsers", {
-          room_id: user.room_id,
-          users: getUsersInRoom(user.room_id),
-        });
+  socket.on("player-vote", ({ song_details }) => {
+    const user = getUser(socket.id);
+    if (user) {
+      addVotedDetails(socket.id, song_details);
+      // Delete the song id from active room details once voted
+      // while scoring check if anyone got the answer right or all got wrong
+      
+      // Send the updated data after adding the voted details of the player
+      io.to(user.room_id).emit("roomUsers", {
+        room_id: user.room_id,
+        users: getUsersInRoom(user.room_id),
+      });
 
-        io.to(user.room_id).emit("notification", {
-          success: true,
-          message: `${user.name} has voted.`,
-        });
-      }
-    })
+      io.to(user.room_id).emit("notification", {
+        success: true,
+        message: `${user.name} has voted.`,
+      });
+    }
+  })
 
   // Disconnect event
   socket.on("disconnect", () => {

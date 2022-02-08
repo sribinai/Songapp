@@ -65,6 +65,9 @@ const addUserSong = (id, new_song) => {
   // Add songs and soncount using the user index number
   users[userIndex].songs_list.push(new_song);
   users[userIndex].song_count = users[userIndex].song_count + 1;
+  console.log("addUserSong")
+  console.log(users);
+  console.log(users[userIndex]);
 
   return { user: users[userIndex] };
 };
