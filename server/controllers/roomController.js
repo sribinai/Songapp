@@ -54,7 +54,6 @@ const createRoom = async (req, res) => {
       // Data is being stored in DB
       let roomDetails = await roomModel.create({
         ...roomInfo,
-        players: [roomInfo.host_id],
       });
       // const roomData = new roomModel({ ...roomInfo, players: [host_id] });
       // await roomData.save();
