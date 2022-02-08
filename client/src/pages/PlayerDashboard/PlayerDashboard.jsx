@@ -5,7 +5,6 @@ import {
   FaPlay,
   FaMusic,
   FaCloudUploadAlt,
-  FaPlus,
   FaPlusCircle,
   FaTrashAlt,
 } from "react-icons/fa";

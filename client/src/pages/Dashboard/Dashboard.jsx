@@ -193,7 +193,7 @@ const Dashboard = (props) => {
           });
           return;
         }
-          handleFetchRoomSongs(roomID);
+          handleFetchRoomSongs(roomID, userID);
           console.log("start_game")
           // Redirect to GameRoom emitting an event so others might also join
           socket.emit("start_game");
@@ -375,12 +375,12 @@ const Dashboard = (props) => {
   };
 
   // Game Room function calls
-  const handleFetchRoomSongs = async (room_id, userID) => {
+  const handleFetchRoomSongs = async (room_id, player_id) => {
     try {
       console.log("handleFetchRoomSongs function");
       const response = await axios.post(
         `${DATA_URL}/playlist/api/song/get-room-songs`,
-        { room_id, player_id: userID }
+        { room_id, player_id }
       );
       if (response.status === 200) {
         console.log(response);
@@ -412,6 +412,8 @@ const Dashboard = (props) => {
         } else {
           console.log("fetchRef");
           console.log(fetchRef);
+          console.log(fetchRef.current);
+          console.log("call fetch roomSongs function");
           // fetchRef.current.click();
         }
       }

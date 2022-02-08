@@ -1,5 +1,4 @@
-import React, { useState, useEffect, forwardRef } from "react";
-import { useHistory } from "react-router-dom";
+import React, { forwardRef } from "react";
 import {
   Container,
   Row,
@@ -9,37 +8,21 @@ import {
   Button,
   Image,
 } from "react-bootstrap";
-import axios from "axios";
-import io from "socket.io-client";
-import Peer from "peerjs";
 
-import { DATA_URL } from "../../index";
-import Swal from "sweetalert2";
 import AvatarIcon from "../../components/AvatarIcon/AvatarIcon";
-import MainHeaderDiv from "../../components/layouts/MainHeaderDiv/MainHeaderDiv";
 import {
   FaPlay,
   FaMusic,
-  FaCloudUploadAlt,
-  FaCloudDownloadAlt,
 } from "react-icons/fa";
 import { FiRefreshCcw } from "react-icons/fi";
 import { MdWhereToVote } from "react-icons/md";
 import musicImage from "../../images/chatroomimg.png";
 
 import "./game-room.styles.css";
-import PlayInstructionsModal from "../../components/PlayInstructions/PlayInstructions";
-import FloatingTextBlock from "../../components/layouts/FloatingTextBlock/FloatingTextBlock";
-import { BiRefresh } from "react-icons/bi";
-import { NotifyToastContainer } from "../../components/NotifyToast/NotifyToast";
-
-// let socket;
-// let myPeer = new Peer();
 
 const GameRoom = (
   {
     GameStatus,
-    fetchRef,
     roomDetails,
     roomPlayers,
     currentSong,
@@ -49,7 +32,6 @@ const GameRoom = (
   },
   ref
 ) => {
-
   // if (notification) {
   //  <NotifyToastContainer title="Godson" message='This message is for Godson' type='success' />
   // }
